@@ -1,0 +1,1003 @@
+<!DOCTYPE html>
+<html lang="mr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta name="theme-color" content="#1a6b3c">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>केळी हिशोब साथी</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --g50:#f0faf4;--g100:#d6f0e0;--g200:#a8dbbf;--g400:#4caf7d;--g600:#1a6b3c;--g700:#145530;--g800:#0d3b22;
+  --a50:#fffbeb;--a400:#f59e0b;--a600:#b45309;
+  --r50:#fef2f2;--r400:#f87171;--r600:#dc2626;
+  --b50:#eff6ff;--b400:#60a5fa;--b600:#2563eb;
+  --gr50:#f9fafb;--gr100:#f3f4f6;--gr200:#e5e7eb;--gr400:#9ca3af;--gr600:#4b5563;--gr800:#1f2937;
+  --white:#fff;--font:'Noto Sans Devanagari','Inter',sans-serif;
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+body{font-family:var(--font);background:var(--gr50);color:var(--gr800);min-height:100vh;max-width:500px;margin:0 auto;padding-bottom:80px;}
+.app-header{background:linear-gradient(135deg,var(--g700),var(--g600));color:#fff;padding:14px 20px;position:sticky;top:0;z-index:100;display:flex;align-items:center;gap:12px;box-shadow:0 2px 8px rgba(0,0,0,.15);}
+.app-header .logo{width:34px;height:34px;background:rgba(255,255,255,.2);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;}
+.app-header h1{font-size:16px;font-weight:600;}
+.app-header p{font-size:11px;opacity:.8;}
+.hdr-back{background:none;border:none;color:#fff;font-size:22px;cursor:pointer;padding:4px;display:none;align-items:center;}
+.hdr-back.show{display:flex;}
+.bottom-nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:500px;background:#fff;border-top:1px solid var(--gr200);display:flex;z-index:100;box-shadow:0 -2px 10px rgba(0,0,0,.08);}
+.nav-btn{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:8px 4px 10px;border:none;background:none;cursor:pointer;gap:3px;font-family:var(--font);}
+.nav-btn .ni{font-size:22px;}.nav-btn .nl{font-size:10px;color:var(--gr400);font-weight:500;}
+.nav-btn.active .nl{color:var(--g600);font-weight:600;}
+.screen{display:none;padding:16px;}.screen.active{display:block;}
+/* stats */
+.stats-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px;}
+.stat-card{background:#fff;border-radius:12px;padding:14px 16px;box-shadow:0 1px 3px rgba(0,0,0,.08);border:1px solid var(--gr200);}
+.stat-card.full{grid-column:1/-1;}.stat-card.green{background:var(--g600);border-color:var(--g600);}
+.stat-card.green .sl{color:rgba(255,255,255,.75);}.stat-card.green .sv{color:#fff;}
+.stat-card.amber{background:var(--a50);border-color:#fde68a;}.stat-card.amber .sv{color:var(--a600);}
+.sl{font-size:11px;color:var(--gr400);font-weight:500;margin-bottom:4px;}
+.sv{font-size:20px;font-weight:700;color:var(--gr800);line-height:1;}
+.ssub{font-size:11px;color:var(--gr400);margin-top:3px;}
+.section-title{font-size:12px;font-weight:600;color:var(--gr400);text-transform:uppercase;letter-spacing:.5px;margin:18px 0 10px;}
+/* record card */
+.rc{background:#fff;border-radius:12px;padding:14px 16px;margin-bottom:10px;box-shadow:0 1px 3px rgba(0,0,0,.08);border:1px solid var(--gr200);cursor:pointer;position:relative;overflow:hidden;}
+.rc::before{content:'';position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--g400);}
+.rc.pend::before{background:var(--r400);}
+.rc-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6px;}
+.rc-trader{font-size:15px;font-weight:600;}.rc-date{font-size:12px;color:var(--gr400);}
+.badges{display:flex;gap:5px;margin-bottom:8px;flex-wrap:wrap;}
+.badge{font-size:11px;padding:2px 8px;border-radius:20px;font-weight:500;}
+.bg{background:var(--g100);color:var(--g700);}.bb{background:var(--b50);color:var(--b600);}.ba{background:var(--a50);color:var(--a600);}
+.rc-amts{display:flex;justify-content:space-between;}
+.ra{text-align:right;}.ra:first-child{text-align:left;}
+.al{font-size:11px;color:var(--gr400);}.av{font-size:14px;font-weight:600;}
+.av.pend{color:var(--r600);}.av.rcvd{color:var(--g600);}
+/* fab */
+.fab{position:fixed;bottom:88px;right:20px;width:56px;height:56px;background:var(--g600);border-radius:50%;border:none;color:#fff;font-size:28px;box-shadow:0 4px 14px rgba(26,107,60,.4);cursor:pointer;display:flex;align-items:center;justify-content:center;z-index:99;}
+/* forms */
+.fsec{background:#fff;border-radius:12px;padding:16px;margin-bottom:14px;box-shadow:0 1px 3px rgba(0,0,0,.08);border:1px solid var(--gr200);}
+.fst{font-size:13px;font-weight:600;color:var(--g600);margin-bottom:14px;padding-bottom:8px;border-bottom:1px solid var(--g100);}
+.field{margin-bottom:12px;}.field:last-child{margin-bottom:0;}
+.field label{font-size:13px;font-weight:500;color:var(--gr600);display:block;margin-bottom:5px;}
+.field input,.field select,.field textarea{width:100%;padding:10px 12px;border:1.5px solid var(--gr200);border-radius:8px;font-size:15px;font-family:var(--font);color:var(--gr800);background:#fff;transition:border-color .15s;-webkit-appearance:none;}
+.field input:focus,.field select:focus{outline:none;border-color:var(--g400);box-shadow:0 0 0 3px rgba(76,175,125,.12);}
+.field-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+/* weight dual input */
+.weight-dual{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+.weight-box{background:var(--gr50);border:1.5px solid var(--gr200);border-radius:8px;padding:10px 12px;}
+.weight-box label{font-size:11px;color:var(--gr400);font-weight:500;display:block;margin-bottom:4px;}
+.weight-box input{width:100%;border:none;background:transparent;font-size:16px;font-weight:600;font-family:var(--font);color:var(--gr800);padding:0;}
+.weight-box input:focus{outline:none;}
+.weight-box input::placeholder{color:var(--gr200);}
+.weight-box.focused{border-color:var(--g400);background:var(--g50);}
+/* calc box */
+.calc-box{background:var(--g50);border:1.5px solid var(--g100);border-radius:8px;padding:10px 14px;display:flex;justify-content:space-between;align-items:center;margin-top:6px;}
+.calc-box .cl{font-size:13px;color:var(--g700);font-weight:500;}
+.calc-box .cv{font-size:17px;font-weight:700;color:var(--g600);}
+.calc-box.red{background:var(--r50);border-color:#fecaca;}
+.calc-box.red .cl{color:var(--r600);}.calc-box.red .cv{color:var(--r600);}
+/* harvest type */
+.ht-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;}
+.ht-btn{padding:10px 6px;border:1.5px solid var(--gr200);border-radius:8px;background:#fff;font-size:12px;font-family:var(--font);cursor:pointer;text-align:center;color:var(--gr600);font-weight:500;line-height:1.3;}
+.ht-btn.active{border-color:var(--g400);background:var(--g50);color:var(--g700);}
+/* net income big */
+.net-big{background:var(--g600);border-radius:10px;padding:14px 16px;display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;}
+.net-big .nl2{color:rgba(255,255,255,.85);font-size:14px;font-weight:500;}
+.net-big .nv{color:#fff;font-size:24px;font-weight:700;}
+/* buttons */
+.btn-p{width:100%;padding:14px;background:var(--g600);color:#fff;border:none;border-radius:12px;font-size:16px;font-weight:600;font-family:var(--font);cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;}
+.btn-s{width:100%;padding:12px;background:#fff;color:var(--gr600);border:1.5px solid var(--gr200);border-radius:12px;font-size:15px;font-weight:500;font-family:var(--font);cursor:pointer;margin-top:8px;}
+.btn-d{width:100%;padding:12px;background:var(--r50);color:var(--r600);border:1.5px solid #fecaca;border-radius:12px;font-size:15px;font-weight:500;font-family:var(--font);cursor:pointer;margin-top:8px;}
+/* trader card */
+.tc{background:#fff;border-radius:12px;padding:14px 16px;margin-bottom:10px;box-shadow:0 1px 3px rgba(0,0,0,.08);border:1px solid var(--gr200);display:flex;align-items:center;gap:12px;cursor:pointer;}
+.ta{width:44px;height:44px;border-radius:50%;background:var(--g100);color:var(--g700);display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:700;flex-shrink:0;}
+.ti2{flex:1;min-width:0;}.tn{font-size:15px;font-weight:600;}.tm{font-size:12px;color:var(--gr400);margin-top:2px;}
+.tp{text-align:right;}.tp .amt{font-size:14px;font-weight:600;}.tp .lbl{font-size:11px;color:var(--gr400);}
+/* ledger */
+.lg-sum{background:#fff;border-radius:12px;padding:16px;margin-bottom:14px;box-shadow:0 1px 3px rgba(0,0,0,.08);border:1px solid var(--gr200);}
+.lg-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;}
+.lg-item{text-align:center;}.lg-val{font-size:15px;font-weight:700;}.lg-lbl{font-size:11px;color:var(--gr400);margin-top:2px;}
+/* empty */
+.empty{text-align:center;padding:40px 20px;color:var(--gr400);}
+.empty .ei{font-size:48px;margin-bottom:12px;}.empty .et{font-size:16px;font-weight:600;color:var(--gr600);margin-bottom:6px;}
+/* detail */
+.dh{background:var(--g600);color:#fff;padding:16px;border-radius:12px;margin-bottom:14px;}
+.dh h2{font-size:18px;font-weight:700;}.dh p{font-size:13px;opacity:.8;margin-top:4px;}
+.dr{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--gr100);font-size:14px;}
+.dr:last-child{border-bottom:none;}
+.dr .dl{color:var(--gr400);}.dr .dv{font-weight:600;}
+.dr .dv.g{color:var(--g600);}.dr .dv.r{color:var(--r600);}
+/* toast */
+.toast{position:fixed;bottom:96px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--gr800);color:#fff;padding:10px 20px;border-radius:24px;font-size:14px;font-weight:500;opacity:0;transition:all .25s;z-index:999;pointer-events:none;white-space:nowrap;}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+/* modal */
+.modal-ov{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:200;display:none;align-items:flex-end;justify-content:center;}
+.modal-ov.show{display:flex;}
+.modal-sh{background:#fff;border-radius:20px 20px 0 0;padding:20px;width:100%;max-width:500px;}
+.modal-h{width:36px;height:4px;background:var(--gr200);border-radius:2px;margin:0 auto 16px;}
+.modal-t{font-size:17px;font-weight:700;margin-bottom:16px;}
+/* hint */
+.hint{font-size:11px;color:var(--gr400);margin-top:3px;}
+/* labour info box */
+.lab-info{background:var(--a50);border:1.5px solid #fde68a;border-radius:8px;padding:10px 14px;margin-top:6px;font-size:13px;color:var(--a600);}
+/* receipt / photo upload */
+.receipt-block{margin-bottom:16px;padding-bottom:16px;border-bottom:1px solid var(--gr100);}
+.receipt-block:last-child{margin-bottom:0;padding-bottom:0;border-bottom:none;}
+.receipt-label{font-size:13px;font-weight:600;color:var(--gr600);margin-bottom:8px;}
+.photo-upload-area{border:1.5px dashed var(--gr200);border-radius:10px;padding:10px;cursor:pointer;transition:border-color .15s;min-height:64px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;}
+.photo-upload-area:active{border-color:var(--g400);background:var(--g50);}
+.upload-placeholder{display:flex;flex-direction:column;align-items:center;gap:4px;padding:6px 0;}
+.upload-placeholder.hidden{display:none;}
+.photo-preview-grid{display:flex;gap:8px;flex-wrap:wrap;width:100%;}
+.photo-thumb{position:relative;width:80px;height:80px;border-radius:8px;overflow:hidden;border:1.5px solid var(--gr200);flex-shrink:0;}
+.photo-thumb img{width:100%;height:100%;object-fit:cover;cursor:pointer;}
+.photo-thumb .del-btn{position:absolute;top:3px;right:3px;width:20px;height:20px;background:rgba(220,38,38,.85);border:none;border-radius:50%;color:#fff;font-size:12px;cursor:pointer;display:flex;align-items:center;justify-content:center;line-height:1;}
+.patti-add-row{display:flex;align-items:center;gap:10px;margin-top:8px;}
+.patti-add-btn{display:flex;align-items:center;gap:6px;padding:8px 14px;border:1.5px solid var(--g200);border-radius:8px;background:var(--g50);color:var(--g700);font-size:13px;font-weight:600;font-family:var(--font);cursor:pointer;}
+.patti-add-btn:disabled{opacity:.4;cursor:not-allowed;}
+.patti-count{font-size:12px;color:var(--gr400);font-weight:500;}
+/* lightbox */
+.lightbox{position:fixed;inset:0;background:rgba(0,0,0,.92);z-index:300;display:none;align-items:center;justify-content:center;flex-direction:column;}
+.lightbox.show{display:flex;}
+.lightbox img{max-width:95vw;max-height:85vh;border-radius:8px;object-fit:contain;}
+.lightbox-close{position:absolute;top:16px;right:16px;background:rgba(255,255,255,.15);border:none;color:#fff;width:36px;height:36px;border-radius:50%;font-size:20px;cursor:pointer;display:flex;align-items:center;justify-content:center;}
+</style>
+</head>
+<body>
+
+<div class="app-header">
+  <button class="hdr-back" id="hdrBack" onclick="goBack()">&#8592;</button>
+  <div class="logo">🌿</div>
+  <div>
+    <h1 id="hdrTitle">केळी हिशोब साथी</h1>
+    <p id="hdrSub">नोंदी · हिशोब · खाते</p>
+  </div>
+</div>
+
+<!-- DASHBOARD -->
+<div class="screen active" id="screen-dashboard">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;margin-top:4px;">
+    <span style="font-size:14px;color:var(--gr400);">एकूण सारांश</span>
+    <span id="dashDate" style="font-size:13px;color:var(--gr400);"></span>
+  </div>
+  <div class="stats-grid">
+    <div class="stat-card green full">
+      <div class="sl">एकूण निव्वळ उत्पन्न</div>
+      <div class="sv" id="dIncome">₹0</div>
+      <div class="ssub" id="dCount">0 नोंदी</div>
+    </div>
+    <div class="stat-card amber">
+      <div class="sl">थकबाकी</div>
+      <div class="sv" id="dPending">₹0</div>
+    </div>
+    <div class="stat-card">
+      <div class="sl">मिळाले</div>
+      <div class="sv" id="dReceived">₹0</div>
+    </div>
+    <div class="stat-card">
+      <div class="sl">एकूण वजन (Q)</div>
+      <div class="sv" id="dWeight">0.00</div>
+    </div>
+    <div class="stat-card">
+      <div class="sl">एकूण झाडे/घड</div>
+      <div class="sv" id="dTrees">0</div>
+    </div>
+    <div class="stat-card">
+      <div class="sl">एकूण मजुरी</div>
+      <div class="sv" id="dLabour">₹0</div>
+    </div>
+  </div>
+  <div class="section-title">अलीकडील नोंदी</div>
+  <div id="recentRecs"></div>
+</div>
+
+<!-- RECORDS LIST -->
+<div class="screen" id="screen-records">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;margin-top:4px;">
+    <span style="font-size:15px;font-weight:600;" id="recCount">सर्व नोंदी</span>
+    <select id="filterTrader" style="font-size:13px;padding:6px 10px;border:1.5px solid var(--gr200);border-radius:8px;background:#fff;font-family:var(--font);" onchange="renderRecList()">
+      <option value="">सर्व व्यापारी</option>
+    </select>
+  </div>
+  <div id="recList"></div>
+</div>
+
+<!-- ADD RECORD -->
+<div class="screen" id="screen-add">
+
+  <div class="fsec">
+    <div class="fst">📅 मूलभूत माहिती</div>
+    <div class="field">
+      <label>दिनांक</label>
+      <input type="date" id="rDate">
+    </div>
+    <div class="field">
+      <label>व्यापारी / पार्टी</label>
+      <select id="rTrader"><option value="">-- व्यापारी निवडा --</option></select>
+    </div>
+    <div class="field">
+      <label>वाहन क्रमांक <span style="color:var(--gr400);font-size:11px;">(पर्यायी)</span></label>
+      <input type="text" id="rVehicle" placeholder="MH-09 AB 1234">
+    </div>
+  </div>
+
+  <div class="fsec">
+    <div class="fst">🌿 हार्वेस्ट प्रकार</div>
+    <div class="ht-grid">
+      <button class="ht-btn active" onclick="setHT('ghad',this)">केळीचे घड</button>
+      <button class="ht-btn" onclick="setHT('box',this)">Box Packing</button>
+      <button class="ht-btn" onclick="setHT('fanaya',this)">फणाया 🍌</button>
+    </div>
+    <div id="htNote" style="font-size:12px;color:var(--gr400);margin-top:10px;padding:8px;background:var(--gr50);border-radius:8px;">
+      केळीचे घड: कपात/तारा लागते · मजुरी प्रति घड
+    </div>
+  </div>
+
+  <div class="fsec">
+    <div class="fst">⚖️ एकूण वजन</div>
+    <div class="weight-dual">
+      <div class="weight-box" id="twQ">
+        <label>क्विंटल (Q)</label>
+        <input type="number" id="rTWQ" placeholder="0" min="0" step="1" oninput="calc()">
+      </div>
+      <div class="weight-box" id="twKg">
+        <label>किलो (kg)</label>
+        <input type="number" id="rTWKg" placeholder="0" min="0" max="99" step="1" oninput="calc()">
+      </div>
+    </div>
+    <div class="hint">उदा: 2 क्विंटल 34 kg = 234 kg = 2.34 Q</div>
+  </div>
+
+  <div class="fsec" id="dedSec">
+    <div class="fst">📉 कपात / तारा</div>
+    <div class="weight-dual">
+      <div class="weight-box">
+        <label>क्विंटल (Q)</label>
+        <input type="number" id="rDedQ" placeholder="0" min="0" step="1" oninput="calc()">
+      </div>
+      <div class="weight-box">
+        <label>किलो (kg)</label>
+        <input type="number" id="rDedKg" placeholder="0" min="0" max="99" step="1" oninput="calc()">
+      </div>
+    </div>
+    <div class="hint">उदा: 1 क्विंटल 4 kg</div>
+    <div class="calc-box" style="margin-top:10px;">
+      <span class="cl">निव्वळ वजन (Q)</span>
+      <span class="cv" id="cNetW">0.00 Q</span>
+    </div>
+  </div>
+
+  <div class="fsec">
+    <div class="fst">💵 दर आणि उत्पन्न</div>
+    <div class="field">
+      <label>दर / क्विंटल (₹)</label>
+      <input type="number" id="rRate" placeholder="₹ 0" step="1" oninput="calc()">
+    </div>
+    <div class="calc-box">
+      <span class="cl">एकूण उत्पन्न</span>
+      <span class="cv" id="cGross">₹0</span>
+    </div>
+  </div>
+
+  <div class="fsec" id="labSec">
+    <div class="fst">🧑‍🌾 मजुरी</div>
+    <div id="labFields"></div>
+  </div>
+
+  <div class="fsec">
+    <div class="fst">💰 देयक</div>
+    <div class="net-big">
+      <span class="nl2">निव्वळ उत्पन्न</span>
+      <span class="nv" id="cNet">₹0</span>
+    </div>
+    <div class="field">
+      <label>मिळालेली रक्कम (₹)</label>
+      <input type="number" id="rRcvd" placeholder="0" step="1" oninput="calc()">
+    </div>
+    <div class="calc-box red">
+      <span class="cl">थकबाकी</span>
+      <span class="cv" id="cPend">₹0</span>
+    </div>
+  </div>
+
+  <div class="fsec">
+    <div class="fst">🧾 पावत्या (Receipts)</div>
+
+    <!-- Toll receipt BEFORE -->
+    <div class="receipt-block">
+      <div class="receipt-label">📄 टोल पावती — आधी (Before Harvest)</div>
+      <div class="photo-upload-area" onclick="triggerUpload('tollBefore')">
+        <input type="file" id="inp-tollBefore" accept="image/*" capture="environment" style="display:none" onchange="handlePhoto('tollBefore',this)">
+        <div id="prev-tollBefore" class="photo-preview-grid"></div>
+        <div class="upload-placeholder" id="ph-tollBefore">
+          <span style="font-size:28px;">📷</span>
+          <span style="font-size:13px;color:var(--gr400);">Camera किंवा Gallery</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Toll receipt AFTER -->
+    <div class="receipt-block">
+      <div class="receipt-label">📄 टोल पावती — नंतर (After Harvest)</div>
+      <div class="photo-upload-area" onclick="triggerUpload('tollAfter')">
+        <input type="file" id="inp-tollAfter" accept="image/*" capture="environment" style="display:none" onchange="handlePhoto('tollAfter',this)">
+        <div id="prev-tollAfter" class="photo-preview-grid"></div>
+        <div class="upload-placeholder" id="ph-tollAfter">
+          <span style="font-size:28px;">📷</span>
+          <span style="font-size:13px;color:var(--gr400);">Camera किंवा Gallery</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Patti receipt — up to 3 photos -->
+    <div class="receipt-block">
+      <div class="receipt-label">📋 पट्टी पावती (1–3 फोटो)</div>
+      <div id="prev-patti" class="photo-preview-grid"></div>
+      <div class="patti-add-row" id="patti-add-row">
+        <button class="patti-add-btn" onclick="triggerUpload('patti')">
+          <span style="font-size:20px;">➕</span>
+          <span>फोटो जोडा</span>
+        </button>
+        <input type="file" id="inp-patti" accept="image/*" capture="environment" style="display:none" onchange="handlePhoto('patti',this)">
+        <span class="patti-count" id="patti-count">0 / 3</span>
+      </div>
+      <div class="hint" style="margin-top:6px;">घड marks सारखे — 1, 2 किंवा 3 फोटो जोडता येतील</div>
+    </div>
+  </div>
+
+  <div class="fsec">
+    <div class="fst">📝 टीप</div>
+    <div class="field">
+      <textarea id="rNote" rows="3" placeholder="पर्यायी नोट्स..." style="resize:none;"></textarea>
+    </div>
+  </div>
+
+  <button class="btn-p" onclick="saveRec()">✅ नोंद जतन करा</button>
+  <button class="btn-s" onclick="showScreen('records')">रद्द करा</button>
+</div>
+
+<!-- RECORD DETAIL -->
+<div class="screen" id="screen-rec-detail">
+  <div id="recDetailBody"></div>
+</div>
+
+<!-- TRADERS -->
+<div class="screen" id="screen-traders">
+  <button class="btn-p" onclick="showAddTrader()" style="margin-bottom:16px;margin-top:4px;">➕ नवीन व्यापारी जोडा</button>
+  <div id="tradersList"></div>
+</div>
+
+<!-- ADD TRADER -->
+<div class="screen" id="screen-add-trader">
+  <div class="fsec">
+    <div class="fst">🏪 व्यापारी माहिती</div>
+    <div class="field"><label>नाव *</label><input type="text" id="tName" placeholder="व्यापारी नाव"></div>
+    <div class="field"><label>फोन</label><input type="tel" id="tPhone" placeholder="9876543210"></div>
+    <div class="field"><label>गाव / पत्ता</label><input type="text" id="tVillage" placeholder="गाव, तालुका"></div>
+    <div class="field"><label>टीप <span style="color:var(--gr400);font-size:11px;">(पर्यायी)</span></label><input type="text" id="tNote" placeholder=""></div>
+  </div>
+  <button class="btn-p" onclick="saveTrader()">✅ व्यापारी जतन करा</button>
+  <button class="btn-s" onclick="showScreen('traders')">रद्द करा</button>
+</div>
+
+<!-- TRADER DETAIL -->
+<div class="screen" id="screen-trader-detail">
+  <div id="traderDetailBody"></div>
+</div>
+
+<div class="bottom-nav">
+  <button class="nav-btn active" onclick="showScreen('dashboard')" id="nav-dashboard">
+    <span class="ni">🏠</span><span class="nl">डॅशबोर्ड</span>
+  </button>
+  <button class="nav-btn" onclick="showScreen('records')" id="nav-records">
+    <span class="ni">📋</span><span class="nl">नोंदी</span>
+  </button>
+  <button class="nav-btn" onclick="showScreen('traders')" id="nav-traders">
+    <span class="ni">🤝</span><span class="nl">व्यापारी</span>
+  </button>
+</div>
+
+<button class="fab" id="fabBtn" onclick="showAddRec()">＋</button>
+<div class="toast" id="toast"></div>
+
+<div class="modal-ov" id="payModal">
+  <div class="modal-sh">
+    <div class="modal-h"></div>
+    <div class="modal-t">💵 रक्कम जमा करा</div>
+    <div class="field"><label>जमा रक्कम (₹)</label><input type="number" id="payAmt" placeholder="0" step="1"></div>
+    <div style="font-size:13px;color:var(--gr400);margin-bottom:14px;" id="payInfo"></div>
+    <button class="btn-p" onclick="doPayment()">✅ जमा करा</button>
+    <button class="btn-s" onclick="closePay()">रद्द करा</button>
+  </div>
+</div>
+
+<!-- Lightbox for full photo view -->
+<div class="lightbox" id="lightbox" onclick="closeLightbox()">
+  <button class="lightbox-close" onclick="closeLightbox()">✕</button>
+  <img id="lightboxImg" src="" alt="पावती">
+</div>
+
+<script>
+// ── Photo state ────────────────────────────────────────────────────────────
+// photos stored as base64 strings
+let photos = { tollBefore: null, tollAfter: null, patti: [] };
+
+function resetPhotos() {
+  photos = { tollBefore: null, tollAfter: null, patti: [] };
+  renderPhotoUI('tollBefore');
+  renderPhotoUI('tollAfter');
+  renderPattiUI();
+}
+
+function triggerUpload(key) {
+  // For patti check limit
+  if (key === 'patti' && photos.patti.length >= 3) { toast('⚠️ जास्तीत जास्त 3 फोटो'); return; }
+  document.getElementById('inp-' + key).click();
+}
+
+function handlePhoto(key, input) {
+  if (!input.files || !input.files[0]) return;
+  const file = input.files[0];
+  const reader = new FileReader();
+  reader.onload = e => {
+    const data = e.target.result;
+    if (key === 'patti') {
+      if (photos.patti.length < 3) photos.patti.push(data);
+      renderPattiUI();
+    } else {
+      photos[key] = data;
+      renderPhotoUI(key);
+    }
+  };
+  reader.readAsDataURL(file);
+  input.value = ''; // reset so same file can be re-selected
+}
+
+function renderPhotoUI(key) {
+  const prevEl = document.getElementById('prev-' + key);
+  const phEl   = document.getElementById('ph-' + key);
+  if (!prevEl) return;
+  if (photos[key]) {
+    prevEl.innerHTML = `<div class="photo-thumb">
+      <img src="${photos[key]}" onclick="openLightbox('${key}',0)" alt="पावती">
+      <button class="del-btn" onclick="event.stopPropagation();deletePhoto('${key}',0)">✕</button>
+    </div>`;
+    if (phEl) phEl.classList.add('hidden');
+  } else {
+    prevEl.innerHTML = '';
+    if (phEl) phEl.classList.remove('hidden');
+  }
+}
+
+function renderPattiUI() {
+  const prevEl  = document.getElementById('prev-patti');
+  const addBtn  = document.getElementById('patti-add-row');
+  const countEl = document.getElementById('patti-count');
+  if (!prevEl) return;
+  prevEl.innerHTML = photos.patti.map((src, i) =>
+    `<div class="photo-thumb">
+      <img src="${src}" onclick="openLightbox('patti',${i})" alt="पट्टी ${i+1}">
+      <button class="del-btn" onclick="event.stopPropagation();deletePhoto('patti',${i})">✕</button>
+    </div>`
+  ).join('');
+  if (countEl) countEl.textContent = photos.patti.length + ' / 3';
+  const btn = addBtn ? addBtn.querySelector('.patti-add-btn') : null;
+  if (btn) btn.disabled = photos.patti.length >= 3;
+}
+
+function deletePhoto(key, idx) {
+  if (key === 'patti') {
+    photos.patti.splice(idx, 1);
+    renderPattiUI();
+  } else {
+    photos[key] = null;
+    renderPhotoUI(key);
+  }
+}
+
+// ── Lightbox ───────────────────────────────────────────────────────────────
+function openLightbox(key, idx) {
+  const src = key === 'patti' ? photos.patti[idx] : photos[key];
+  if (!src) return;
+  document.getElementById('lightboxImg').src = src;
+  document.getElementById('lightbox').classList.add('show');
+}
+function closeLightbox() {
+  document.getElementById('lightbox').classList.remove('show');
+}
+
+// ── Photo preview in record detail ────────────────────────────────────────
+function photoDetailHTML(rec) {
+  const hasAny = rec.photoTollBefore || rec.photoTollAfter || (rec.photoPatti && rec.photoPatti.length);
+  if (!hasAny) return '';
+  const thumb = (src, label, key, idx) =>
+    `<div style="text-align:center;">
+      <div class="photo-thumb" style="width:72px;height:72px;margin:0 auto 4px;">
+        <img src="${src}" onclick="viewDetailPhoto('${key}',${idx})" alt="${label}">
+      </div>
+      <div style="font-size:10px;color:var(--gr400);">${label}</div>
+    </div>`;
+
+  let html = '<div class="fsec"><div class="fst">🧾 पावत्या</div><div style="display:flex;gap:10px;flex-wrap:wrap;">';
+  if (rec.photoTollBefore) html += thumb(rec.photoTollBefore, 'टोल (आधी)', 'tb', 0);
+  if (rec.photoTollAfter)  html += thumb(rec.photoTollAfter,  'टोल (नंतर)', 'ta', 0);
+  if (rec.photoPatti) rec.photoPatti.forEach((s,i) => { html += thumb(s, 'पट्टी '+(i+1), 'pt', i); });
+  html += '</div></div>';
+  return html;
+}
+
+// store current detail record photos for lightbox
+let detailPhotos = {};
+function viewDetailPhoto(key, idx) {
+  let src = '';
+  if (key === 'tb') src = detailPhotos.tollBefore;
+  else if (key === 'ta') src = detailPhotos.tollAfter;
+  else if (key === 'pt') src = (detailPhotos.patti || [])[idx];
+  if (!src) return;
+  document.getElementById('lightboxImg').src = src;
+  document.getElementById('lightbox').classList.add('show');
+}
+
+// ── DB ─────────────────────────────────────────────────────────────────────
+const DB = {
+  recs: () => JSON.parse(localStorage.getItem('khs2_recs') || '[]'),
+  saveRecs: d => localStorage.setItem('khs2_recs', JSON.stringify(d)),
+  traders: () => JSON.parse(localStorage.getItem('khs2_traders') || '[]'),
+  saveTraders: d => localStorage.setItem('khs2_traders', JSON.stringify(d)),
+};
+
+// ── State ──────────────────────────────────────────────────────────────────
+let curScreen = 'dashboard';
+let history2 = [];
+let curHT = 'ghad';   // harvest type: ghad | box | fanaya
+let curPayId = null;
+
+const NAV = ['dashboard','records','traders'];
+const TITLES = {
+  dashboard:['केळी हिशोब साथी','नोंदी · हिशोब · खाते'],
+  records:['सर्व नोंदी','काढणी यादी'],
+  add:['नवीन नोंद','माहिती भरा'],
+  traders:['व्यापारी','सर्व व्यापारी'],
+  'add-trader':['नवीन व्यापारी','माहिती भरा'],
+  'rec-detail':['नोंद तपशील',''],
+  'trader-detail':['व्यापारी खाते',''],
+};
+
+// ── Nav ────────────────────────────────────────────────────────────────────
+function showScreen(name, push=true) {
+  if (push && curScreen !== name) history2.push(curScreen);
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  const el = document.getElementById('screen-' + name);
+  if (el) el.classList.add('active');
+  curScreen = name;
+  const t = TITLES[name] || ['केळी हिशोब साथी',''];
+  document.getElementById('hdrTitle').textContent = t[0];
+  document.getElementById('hdrSub').textContent = t[1];
+  const isNav = NAV.includes(name);
+  document.getElementById('hdrBack').classList.toggle('show', !isNav);
+  document.getElementById('fabBtn').style.display = (name==='dashboard'||name==='records') ? 'flex' : 'none';
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  const nmap = {dashboard:'nav-dashboard',records:'nav-records',traders:'nav-traders'};
+  if (nmap[name]) document.getElementById(nmap[name]).classList.add('active');
+  if (name==='dashboard') renderDash();
+  if (name==='records') renderRecList();
+  if (name==='traders') renderTradersList();
+}
+function goBack() {
+  if (history2.length) showScreen(history2.pop(), false);
+  else showScreen('dashboard', false);
+}
+
+// ── Helpers ────────────────────────────────────────────────────────────────
+const fmt = n => '₹' + Math.round(n).toLocaleString('en-IN');
+const fmtQ = n => parseFloat(n).toFixed(2) + ' Q';
+const uid = () => Date.now().toString(36) + Math.random().toString(36).slice(2);
+function toast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2500);
+}
+function today() { return new Date().toISOString().slice(0,10); }
+function fmtDate(d) { if(!d) return ''; const p=d.split('-'); return p[2]+'/'+p[1]+'/'+p[0]; }
+function initials(n) { return n.split(' ').slice(0,2).map(w=>w[0]).join('').toUpperCase(); }
+
+// Convert dual Q+kg input to total Q
+function dualToQ(q, kg) {
+  const Q = parseFloat(q) || 0;
+  const K = parseFloat(kg) || 0;
+  return Q + K / 100;
+}
+
+// ── Dashboard ──────────────────────────────────────────────────────────────
+function renderDash() {
+  const recs = DB.recs();
+  document.getElementById('dashDate').textContent = fmtDate(today());
+  const tot = (f) => recs.reduce((s,r) => s+(r[f]||0), 0);
+  document.getElementById('dIncome').textContent = fmt(tot('netIncome'));
+  document.getElementById('dReceived').textContent = fmt(tot('received'));
+  document.getElementById('dPending').textContent = fmt(tot('pending'));
+  document.getElementById('dWeight').textContent = tot('netWeightQ').toFixed(2);
+  document.getElementById('dTrees').textContent = tot('ghads');
+  document.getElementById('dLabour').textContent = fmt(tot('totalLabour'));
+  document.getElementById('dCount').textContent = recs.length + ' नोंदी';
+  const recent = [...recs].sort((a,b)=>b.createdAt-a.createdAt).slice(0,5);
+  const el = document.getElementById('recentRecs');
+  el.innerHTML = recent.length ? recent.map(rcCard).join('') :
+    '<div class="empty"><div class="ei">🌿</div><div class="et">अजून नोंद नाही</div><div>+ बटण दाबून पहिली नोंद जोडा</div></div>';
+}
+
+// ── Record card HTML ───────────────────────────────────────────────────────
+function rcCard(r) {
+  const hasPend = (r.pending||0) > 0;
+  const htLabel = {ghad:'केळीचे घड',box:'Box Packing',fanaya:'फणाया 🍌'}[r.harvestType]||'';
+  return `<div class="rc ${hasPend?'pend':''}" onclick="showRecDetail('${r.id}')">
+    <div class="rc-top"><div class="rc-trader">${r.traderName||'अज्ञात'}</div><div class="rc-date">${fmtDate(r.date)}</div></div>
+    <div class="badges">
+      ${htLabel?`<span class="badge bg">${htLabel}</span>`:''}
+      <span class="badge bb">${fmtQ(r.netWeightQ||0)}</span>
+      ${r.vehicle?`<span class="badge ba">${r.vehicle}</span>`:''}
+    </div>
+    <div class="rc-amts">
+      <div class="ra"><div class="al">निव्वळ उत्पन्न</div><div class="av">${fmt(r.netIncome||0)}</div></div>
+      <div class="ra"><div class="al">मिळाले</div><div class="av rcvd">${fmt(r.received||0)}</div></div>
+      <div class="ra"><div class="al">थकबाकी</div><div class="av ${hasPend?'pend':''}">${fmt(r.pending||0)}</div></div>
+    </div>
+  </div>`;
+}
+
+// ── Records list ───────────────────────────────────────────────────────────
+function renderRecList() {
+  const recs = DB.recs();
+  const traders = DB.traders();
+  const fEl = document.getElementById('filterTrader');
+  const sel = fEl.value;
+  fEl.innerHTML = '<option value="">सर्व व्यापारी</option>' +
+    traders.map(t=>`<option value="${t.id}" ${sel===t.id?'selected':''}>${t.name}</option>`).join('');
+  let list = [...recs].sort((a,b)=>b.createdAt-a.createdAt);
+  if (sel) list = list.filter(r=>r.traderId===sel);
+  document.getElementById('recCount').textContent = `सर्व नोंदी (${list.length})`;
+  const el = document.getElementById('recList');
+  el.innerHTML = list.length ? list.map(rcCard).join('') :
+    '<div class="empty"><div class="ei">📋</div><div class="et">नोंद नाही</div></div>';
+}
+
+// ── Add record ─────────────────────────────────────────────────────────────
+function showAddRec() {
+  document.getElementById('rDate').value = today();
+  ['rTrader','rVehicle','rTWQ','rTWKg','rDedQ','rDedKg','rRate','rRcvd','rNote'].forEach(id => {
+    document.getElementById(id).value = '';
+  });
+  document.querySelectorAll('.ht-btn').forEach((b,i) => b.classList.toggle('active', i===0));
+  curHT = 'ghad';
+  updateHTUI();
+  populateTraderDrop();
+  calc();
+  resetPhotos();
+  showScreen('add');
+}
+
+function setHT(type, btn) {
+  curHT = type;
+  document.querySelectorAll('.ht-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  updateHTUI();
+  calc();
+}
+
+function updateHTUI() {
+  const notes = {
+    ghad:   'केळीचे घड: कपात/तारा ✅ · मजुरी प्रति घड ✅',
+    box:    'Box Packing: कपात/तारा ❌ · मजुरी प्रति घड ✅',
+    fanaya: 'फणाया 🍌: कपात/तारा ✅ · मजुरी प्रति घड ✅'
+  };
+  document.getElementById('htNote').textContent = notes[curHT];
+
+  // Deduction: only for ghad & fanaya, NOT box
+  document.getElementById('dedSec').style.display = curHT === 'box' ? 'none' : 'block';
+
+  // Labour: ALL 3 types need it (per ghad)
+  const labSec = document.getElementById('labSec');
+  const labFields = document.getElementById('labFields');
+  labSec.style.display = 'block';
+  labFields.innerHTML = `
+    <div class="field-row">
+      <div class="field">
+        <label>एकूण घड संख्या</label>
+        <input type="number" id="rGhads" placeholder="0" min="0" step="1" oninput="calc()">
+      </div>
+      <div class="field">
+        <label>मजुरी / घड (₹)</label>
+        <input type="number" id="rLabRate" placeholder="10" min="0" step="1" oninput="calc()">
+        <div class="hint">रिकामे = ₹10 / घड</div>
+      </div>
+    </div>
+    <div class="calc-box" style="margin-top:4px;">
+      <span class="cl">एकूण मजुरी (घड × दर)</span>
+      <span class="cv" id="cLab">₹0</span>
+    </div>
+    <div class="lab-info" id="labCalcInfo">उदा: 10 घड × ₹10 = ₹100</div>
+  `;
+}
+
+function calc() {
+  // Total weight
+  const twQ = parseFloat(document.getElementById('rTWQ').value) || 0;
+  const twKg = parseFloat(document.getElementById('rTWKg').value) || 0;
+  const totalQ = dualToQ(twQ, twKg);
+
+  // Deduction (only for ghad/fanaya)
+  let dedQ = 0;
+  if (curHT !== 'box') {
+    const dQ = parseFloat(document.getElementById('rDedQ').value) || 0;
+    const dKg = parseFloat(document.getElementById('rDedKg').value) || 0;
+    dedQ = dualToQ(dQ, dKg);
+  }
+
+  const netQ = Math.max(0, totalQ - dedQ);
+  const rate = parseFloat(document.getElementById('rRate').value) || 0;
+  const gross = netQ * rate;
+
+  // Labour — all 3 harvest types have per-ghad labour
+  let labour = 0;
+  const gEl = document.getElementById('rGhads');
+  const lEl = document.getElementById('rLabRate');
+  const ghads = gEl ? (parseFloat(gEl.value) || 0) : 0;
+  const effectiveRate = (lEl && lEl.value.trim() !== '') ? (parseFloat(lEl.value) || 10) : 10;
+  labour = ghads * effectiveRate;
+  const cLab = document.getElementById('cLab');
+  const labInfo = document.getElementById('labCalcInfo');
+  if (cLab) cLab.textContent = fmt(labour);
+  if (labInfo) labInfo.textContent = `${ghads} घड × ₹${effectiveRate} = ₹${Math.round(labour)}`;
+
+  const net = gross - labour;
+  const rcvd = parseFloat(document.getElementById('rRcvd').value) || 0;
+  const pend = Math.max(0, net - rcvd);
+
+  if (document.getElementById('cNetW')) document.getElementById('cNetW').textContent = netQ.toFixed(2) + ' Q';
+  document.getElementById('cGross').textContent = fmt(gross);
+  document.getElementById('cNet').textContent = fmt(net);
+  document.getElementById('cPend').textContent = fmt(pend);
+}
+
+function populateTraderDrop() {
+  const sel = document.getElementById('rTrader');
+  sel.innerHTML = '<option value="">-- व्यापारी निवडा --</option>' +
+    DB.traders().map(t=>`<option value="${t.id}">${t.name}</option>`).join('');
+}
+
+function saveRec() {
+  const traderId = document.getElementById('rTrader').value;
+  if (!traderId) { toast('⚠️ व्यापारी निवडा'); return; }
+  const twQ = parseFloat(document.getElementById('rTWQ').value) || 0;
+  const twKg = parseFloat(document.getElementById('rTWKg').value) || 0;
+  if (!twQ && !twKg) { toast('⚠️ वजन टाका'); return; }
+  const rate = parseFloat(document.getElementById('rRate').value) || 0;
+  if (!rate) { toast('⚠️ दर टाका'); return; }
+
+  const trader = DB.traders().find(t=>t.id===traderId);
+  const totalQ = dualToQ(twQ, twKg);
+
+  let dedQ = 0, dQv = 0, dKgv = 0;
+  if (curHT !== 'box') {
+    dQv = parseFloat(document.getElementById('rDedQ').value) || 0;
+    dKgv = parseFloat(document.getElementById('rDedKg').value) || 0;
+    dedQ = dualToQ(dQv, dKgv);
+  }
+
+  const netQ = Math.max(0, totalQ - dedQ);
+  const gross = netQ * rate;
+
+  let ghads = 0, labRate = 10, labour = 0;
+  const gEl = document.getElementById('rGhads');
+  const lEl = document.getElementById('rLabRate');
+  ghads = gEl ? (parseFloat(gEl.value) || 0) : 0;
+  labRate = (lEl && lEl.value.trim() !== '') ? (parseFloat(lEl.value) || 10) : 10;
+  labour = ghads * labRate;
+
+  const net = gross - labour;
+  const rcvd = parseFloat(document.getElementById('rRcvd').value) || 0;
+  const pend = Math.max(0, net - rcvd);
+
+  const rec = {
+    id: uid(), createdAt: Date.now(),
+    date: document.getElementById('rDate').value,
+    traderId, traderName: trader ? trader.name : '',
+    vehicle: document.getElementById('rVehicle').value,
+    harvestType: curHT,
+    totalWQ: twQ, totalWKg: twKg, totalWeightQ: totalQ,
+    dedQ: dQv, dedKg: dKgv, deductionQ: dedQ,
+    netWeightQ: netQ,
+    rate, grossIncome: gross,
+    ghads, labourRate: labRate, totalLabour: labour,
+    netIncome: net,
+    received: rcvd, pending: pend,
+    note: document.getElementById('rNote').value,
+    photoTollBefore: photos.tollBefore,
+    photoTollAfter:  photos.tollAfter,
+    photoPatti:      [...photos.patti],
+  };
+
+  const recs = DB.recs();
+  recs.push(rec);
+  DB.saveRecs(recs);
+  toast('✅ नोंद जतन झाली!');
+  showScreen('records');
+}
+
+// ── Record Detail ──────────────────────────────────────────────────────────
+function showRecDetail(id) {
+  const r = DB.recs().find(x=>x.id===id);
+  if (!r) return;
+  const htL = {ghad:'केळीचे घड',box:'Box Packing',fanaya:'फणाया 🍌'}[r.harvestType]||'';
+  const isBox = r.harvestType === 'box';
+
+  let wtSection = `
+    <div class="dr"><span class="dl">एकूण वजन</span><span class="dv">${r.totalWQ||0} Q ${r.totalWKg||0} kg</span></div>
+    ${!isBox?`<div class="dr"><span class="dl">कपात/तारा</span><span class="dv">${r.dedQ||0} Q ${r.dedKg||0} kg</span></div>`:''}
+    <div class="dr"><span class="dl">निव्वळ वजन</span><span class="dv g">${fmtQ(r.netWeightQ||0)}</span></div>
+    <div class="dr"><span class="dl">दर / Q</span><span class="dv">${fmt(r.rate||0)}</span></div>
+    <div class="dr"><span class="dl">एकूण उत्पन्न (gross)</span><span class="dv g">${fmt(r.grossIncome||0)}</span></div>
+  `;
+
+  let labSection = `
+    <div class="fsec">
+      <div class="fst">🧑‍🌾 मजुरी</div>
+      <div class="dr"><span class="dl">एकूण घड</span><span class="dv">${r.ghads||0}</span></div>
+      <div class="dr"><span class="dl">मजुरी / घड</span><span class="dv">${fmt(r.labourRate||10)}</span></div>
+      <div class="dr"><span class="dl">एकूण मजुरी (${r.ghads||0} × ₹${r.labourRate||10})</span><span class="dv r">${fmt(r.totalLabour||0)}</span></div>
+    </div>
+  `;
+
+  // store photos for lightbox access
+  detailPhotos = { tollBefore: r.photoTollBefore, tollAfter: r.photoTollAfter, patti: r.photoPatti || [] };
+
+  document.getElementById('recDetailBody').innerHTML = `
+    <div class="dh"><h2>${r.traderName||'अज्ञात'}</h2><p>${fmtDate(r.date)}${r.vehicle?' · '+r.vehicle:''} · ${htL}</p></div>
+    <div class="fsec">
+      <div class="fst">⚖️ वजन व दर</div>
+      ${wtSection}
+    </div>
+    ${labSection}
+    <div class="fsec">
+      <div class="fst">💰 देयक</div>
+      <div class="dr"><span class="dl">निव्वळ उत्पन्न</span><span class="dv g" style="font-size:18px;">${fmt(r.netIncome||0)}</span></div>
+      <div class="dr"><span class="dl">मिळालेली रक्कम</span><span class="dv g">${fmt(r.received||0)}</span></div>
+      <div class="dr"><span class="dl">थकबाकी</span><span class="dv r" style="font-size:18px;">${fmt(r.pending||0)}</span></div>
+    </div>
+    ${photoDetailHTML(r)}
+    ${r.note?`<div class="fsec"><div class="fst">📝 टीप</div><p style="font-size:14px;color:var(--gr600);">${r.note}</p></div>`:''}
+    ${(r.pending||0)>0
+      ? `<button class="btn-p" onclick="openPay('${r.id}')">💵 रक्कम जमा करा</button>`
+      : `<div style="background:var(--g50);border:1.5px solid var(--g100);border-radius:12px;padding:12px;text-align:center;color:var(--g700);font-weight:600;margin-bottom:8px;">✅ पूर्ण पेमेंट झाले</div>`
+    }
+    <button class="btn-d" onclick="delRec('${r.id}')">🗑️ नोंद हटवा</button>
+  `;
+
+  document.getElementById('hdrSub').textContent = r.traderName||'';
+  showScreen('rec-detail');
+}
+
+function delRec(id) {
+  if (!confirm('ही नोंद हटवायची आहे का?')) return;
+  DB.saveRecs(DB.recs().filter(r=>r.id!==id));
+  toast('🗑️ नोंद हटवली'); goBack();
+}
+
+// ── Payment ────────────────────────────────────────────────────────────────
+function openPay(id) {
+  const r = DB.recs().find(x=>x.id===id);
+  if (!r) return;
+  curPayId = id;
+  document.getElementById('payAmt').value = '';
+  document.getElementById('payInfo').textContent = `थकबाकी: ${fmt(r.pending||0)}`;
+  document.getElementById('payModal').classList.add('show');
+}
+function closePay() { document.getElementById('payModal').classList.remove('show'); curPayId=null; }
+function doPayment() {
+  const amt = parseFloat(document.getElementById('payAmt').value)||0;
+  if (!amt) { toast('⚠️ रक्कम टाका'); return; }
+  const recs = DB.recs();
+  const idx = recs.findIndex(r=>r.id===curPayId);
+  if (idx<0) return;
+  recs[idx].received = (recs[idx].received||0) + amt;
+  recs[idx].pending = Math.max(0,(recs[idx].netIncome||0)-recs[idx].received);
+  DB.saveRecs(recs);
+  closePay(); toast('✅ रक्कम जमा झाली!');
+  showRecDetail(curPayId);
+}
+
+// ── Traders ────────────────────────────────────────────────────────────────
+function renderTradersList() {
+  const traders = DB.traders();
+  const recs = DB.recs();
+  const el = document.getElementById('tradersList');
+  if (!traders.length) {
+    el.innerHTML='<div class="empty"><div class="ei">🤝</div><div class="et">व्यापारी नाही</div></div>'; return;
+  }
+  el.innerHTML = traders.map(t => {
+    const tr = recs.filter(r=>r.traderId===t.id);
+    const pend = tr.reduce((s,r)=>s+(r.pending||0),0);
+    const inc = tr.reduce((s,r)=>s+(r.netIncome||0),0);
+    return `<div class="tc" onclick="showTraderDetail('${t.id}')">
+      <div class="ta">${initials(t.name)}</div>
+      <div class="ti2">
+        <div class="tn">${t.name}</div>
+        <div class="tm">${t.village||''}${t.phone?' · '+t.phone:''}</div>
+        <div class="tm">${tr.length} नोंदी · ${fmt(inc)}</div>
+      </div>
+      <div class="tp">
+        <div class="amt" style="color:${pend>0?'var(--r600)':'var(--g600)'};">${fmt(pend)}</div>
+        <div class="lbl">थकबाकी</div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function showAddTrader() {
+  ['tName','tPhone','tVillage','tNote'].forEach(id => document.getElementById(id).value = '');
+  showScreen('add-trader');
+}
+
+function saveTrader() {
+  const name = document.getElementById('tName').value.trim();
+  if (!name) { toast('⚠️ नाव टाका'); return; }
+  const traders = DB.traders();
+  traders.push({
+    id: uid(), createdAt: Date.now(),
+    name,
+    phone: document.getElementById('tPhone').value.trim(),
+    village: document.getElementById('tVillage').value.trim(),
+    note: document.getElementById('tNote').value.trim(),
+  });
+  DB.saveTraders(traders);
+  toast('✅ व्यापारी जोडला!');
+  showScreen('traders');
+}
+
+function showTraderDetail(id) {
+  const t = DB.traders().find(x=>x.id===id);
+  if (!t) return;
+  const recs = DB.recs().filter(r=>r.traderId===id).sort((a,b)=>b.createdAt-a.createdAt);
+  const totInc = recs.reduce((s,r)=>s+(r.netIncome||0),0);
+  const totRcvd = recs.reduce((s,r)=>s+(r.received||0),0);
+  const totPend = recs.reduce((s,r)=>s+(r.pending||0),0);
+  const totW = recs.reduce((s,r)=>s+(r.netWeightQ||0),0);
+  const totLab = recs.reduce((s,r)=>s+(r.totalLabour||0),0);
+
+  document.getElementById('traderDetailBody').innerHTML = `
+    <div class="dh"><h2>${t.name}</h2><p>${t.village||''}${t.phone?' · '+t.phone:''}</p></div>
+    <div class="lg-sum">
+      <div class="lg-grid">
+        <div class="lg-item"><div class="lg-val" style="color:var(--g600);">${fmt(totInc)}</div><div class="lg-lbl">एकूण उत्पन्न</div></div>
+        <div class="lg-item"><div class="lg-val" style="color:var(--b600);">${fmt(totRcvd)}</div><div class="lg-lbl">मिळाले</div></div>
+        <div class="lg-item"><div class="lg-val" style="color:var(--r600);">${fmt(totPend)}</div><div class="lg-lbl">थकबाकी</div></div>
+      </div>
+      <div style="border-top:1px solid var(--gr100);margin-top:12px;padding-top:10px;display:flex;justify-content:space-between;font-size:12px;color:var(--gr400);">
+        <span>${recs.length} नोंदी · ${totW.toFixed(2)} Q</span>
+        <span>मजुरी: ${fmt(totLab)}</span>
+      </div>
+    </div>
+    <div class="section-title">नोंदी यादी</div>
+    ${recs.length ? recs.map(rcCard).join('') : '<div class="empty"><div class="ei">📋</div><div class="et">नोंद नाही</div></div>'}
+    <button class="btn-d" style="margin-top:16px;" onclick="delTrader('${t.id}')">🗑️ व्यापारी हटवा</button>
+  `;
+
+  document.getElementById('hdrSub').textContent = t.name;
+  showScreen('trader-detail');
+}
+
+function delTrader(id) {
+  if (!confirm('हा व्यापारी हटवायचा आहे का?')) return;
+  DB.saveTraders(DB.traders().filter(t=>t.id!==id));
+  toast('🗑️ व्यापारी हटवला'); goBack();
+}
+
+// ── Init ───────────────────────────────────────────────────────────────────
+document.addEventListener('DOMContentLoaded', () => {
+  renderDash();
+  updateHTUI();
+  document.getElementById('payModal').addEventListener('click', e => { if(e.target.id==='payModal') closePay(); });
+});
+</script>
+</body>
+</html>
