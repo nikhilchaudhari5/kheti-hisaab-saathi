@@ -1,2 +1,2 @@
-# kheti-hisaab-saathi
-केळी हिशोब साथी app
+# kheti-hisaab
+केळी हिशोब 
