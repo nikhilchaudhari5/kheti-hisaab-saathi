@@ -2,13 +2,14 @@
 <html lang="mr">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>केळी हिशोब </title>
 <link rel="manifest" href="manifest.json">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 :root{--green:#1a6b3c;--green-light:#e8f5ee;--red:#dc2626;--red-light:#fee2e2;--blue:#1d4ed8;--blue-light:#dbeafe;--card:#fff;--bg:#f1f5f9;--border:#e2e8f0;--text:#1e293b;--muted:#64748b}
+html,body{width:100%;min-height:100%;overflow-x:hidden}
 body{font-family:'Noto Sans Devanagari','Inter',sans-serif;background:var(--bg);color:var(--text);max-width:500px;margin:0 auto;min-height:100vh;position:relative;overflow-x:hidden}
 .app-header{background:var(--green);color:#fff;padding:12px 16px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;box-shadow:0 2px 8px rgba(0,0,0,.2)}
 .app-header h1{font-size:18px;font-weight:700}
@@ -96,6 +97,13 @@ body{font-family:'Noto Sans Devanagari','Inter',sans-serif;background:var(--bg);
 .farm-header{background:var(--green-light);border-radius:8px;padding:8px 12px;font-weight:700;color:var(--green);margin:12px 0 8px;font-size:14px}
 .input-error{border-color:var(--red)!important}
 .error-msg{color:var(--red);font-size:12px;margin-top:4px}
+.pay-history-row{display:flex;justify-content:space-between;align-items:flex-start;padding:10px 0;border-bottom:1px solid var(--bg)}
+.pay-history-row:last-child{border-bottom:none}
+.pay-mode-badge{display:inline-flex;align-items:center;gap:4px;padding:3px 10px;border-radius:20px;font-size:12px;font-weight:600;background:var(--green-light);color:var(--green)}
+.pay-mode-badge.cheque{background:#fef3c7;color:#92400e}
+.pay-mode-badge.rtgs{background:#dbeafe;color:#1e40af}
+.pay-mode-badge.phonepay,.pay-mode-badge.gpay,.pay-mode-badge.upi{background:#f3e8ff;color:#7e22ce}
+#printArea{display:none}
 @media print{
 body>*:not(#printArea){display:none!important}
 #printArea{display:block!important}
@@ -127,13 +135,38 @@ body>*:not(#printArea){display:none!important}
 .print-amount-box .aval{font-size:16px;font-weight:700;color:#1a6b3c}
 .print-amount-box.pending .aval{color:#dc2626}
 }
-.pay-history-row{display:flex;justify-content:space-between;align-items:flex-start;padding:10px 0;border-bottom:1px solid var(--bg)}
-.pay-history-row:last-child{border-bottom:none}
-.pay-mode-badge{display:inline-flex;align-items:center;gap:4px;padding:3px 10px;border-radius:20px;font-size:12px;font-weight:600;background:var(--green-light);color:var(--green)}
-.pay-mode-badge.cheque{background:#fef3c7;color:#92400e}
-.pay-mode-badge.rtgs{background:#dbeafe;color:#1e40af}
-.pay-mode-badge.phonepay,.pay-mode-badge.gpay,.pay-mode-badge.upi{background:#f3e8ff;color:#7e22ce}
-#printArea{display:none}
+
+@media (max-width: 600px){
+body{max-width:100%;margin:0}
+.app-header{padding:10px 12px}
+.app-header h1{font-size:16px}
+.screen{padding:10px 10px 88px}
+.card,.stat-card,.rec-card{padding:12px}
+.stat-grid{gap:8px}
+.row2{grid-template-columns:1fr}
+.toggle-group{flex-wrap:wrap}
+.toggle-btn{min-width:0;font-size:12px;padding:9px 8px}
+.form-input{font-size:16px;padding:12px}
+.pay-btn,.danger-btn,.sheet-btn{min-height:46px;font-size:16px}
+.fab{bottom:78px;right:12px}
+.bottom-nav{max-width:100%;left:0;transform:none}
+.sheet{width:100%;max-width:100%;border-radius:16px 16px 0 0;padding:16px}
+.photo-slots{grid-template-columns:1fr 1fr}
+.detail-header{padding:12px}
+.detail-header h2{font-size:15px}
+#formOverlay,#detailOverlay,#traderFormOverlay,#ledgerOverlay{
+position:fixed;
+inset:0;
+width:100%;
+max-width:none;
+left:0;
+transform:none;
+background:#fff;
+z-index:150;
+overflow-y:auto;
+-webkit-overflow-scrolling:touch;
+}
+}
 </style>
 </head>
 <body>
@@ -145,29 +178,36 @@ body>*:not(#printArea){display:none!important}
 <button class="lang-btn" id="langBtn">EN</button>
 </div>
 </header>
+
 <div class="screen active" id="screen-dash">
 <div class="stat-grid" id="dash-stats"></div>
 <div class="sec-title" id="lbl-recent">अलीकडील नोंदी</div>
 <div id="dash-recent"></div>
 </div>
+
 <div class="screen" id="screen-farmM">
 <div class="stat-grid" id="farmM-stats"></div>
 <div class="sec-title">मोरगाव नोंदी</div>
 <div id="farmM-records"></div>
 </div>
+
 <div class="screen" id="screen-farmP">
 <div class="stat-grid" id="farmP-stats"></div>
 <div class="sec-title">पाटोंदी नोंदी</div>
 <div id="farmP-records"></div>
 </div>
+
 <div class="screen" id="screen-records">
 <div id="all-records"></div>
 </div>
+
 <div class="screen" id="screen-traders">
 <button class="pay-btn" id="addTraderBtn" style="margin-bottom:12px">+ <span data-t="addTrader">व्यापारी जोडा</span></button>
 <div id="traders-list"></div>
 </div>
+
 <button class="fab" id="fabBtn">+</button>
+
 <nav class="bottom-nav">
 <button class="nav-tab active" data-tab="dash"><span class="nav-icon">🏠</span><span data-t="dashboard">डॅशबोर्ड</span></button>
 <button class="nav-tab" data-tab="farmM"><span class="nav-icon">🌿</span><span data-t="farmM">शेत म</span></button>
@@ -177,7 +217,7 @@ body>*:not(#printArea){display:none!important}
 </nav>
 </div>
 
-<div id="formOverlay" style="display:none;position:fixed;inset:0;background:#fff;z-index:150;overflow-y:auto;max-width:500px;left:50%;transform:translateX(-50%)">
+<div id="formOverlay" style="display:none;position:fixed;inset:0;background:#fff;z-index:150;overflow-y:auto;max-width:none;left:0;transform:none">
 <div class="detail-header">
 <button class="back-btn" id="formBack">←</button>
 <h2 id="formTitle">नवीन नोंद</h2>
@@ -233,7 +273,7 @@ body>*:not(#printArea){display:none!important}
 </div>
 </div>
 
-<div id="detailOverlay" style="display:none;position:fixed;inset:0;background:#fff;z-index:150;overflow-y:auto;max-width:500px;left:50%;transform:translateX(-50%)">
+<div id="detailOverlay" style="display:none;position:fixed;inset:0;background:#fff;z-index:150;overflow-y:auto;max-width:none;left:0;transform:none">
 <div class="detail-header">
 <button class="back-btn" id="detailBack">←</button>
 <h2 id="detailTitle">नोंद तपशील</h2>
@@ -241,7 +281,7 @@ body>*:not(#printArea){display:none!important}
 <div style="padding:12px 12px 80px" id="detailBody"></div>
 </div>
 
-<div id="traderFormOverlay" style="display:none;position:fixed;inset:0;background:#fff;z-index:150;overflow-y:auto;max-width:500px;left:50%;transform:translateX(-50%)">
+<div id="traderFormOverlay" style="display:none;position:fixed;inset:0;background:#fff;z-index:150;overflow-y:auto;max-width:none;left:0;transform:none">
 <div class="detail-header">
 <button class="back-btn" id="traderFormBack">←</button>
 <h2 id="traderFormTitle">व्यापारी जोडा</h2>
@@ -255,7 +295,7 @@ body>*:not(#printArea){display:none!important}
 </div>
 </div>
 
-<div id="ledgerOverlay" style="display:none;position:fixed;inset:0;background:#fff;z-index:150;overflow-y:auto;max-width:500px;left:50%;transform:translateX(-50%)">
+<div id="ledgerOverlay" style="display:none;position:fixed;inset:0;background:#fff;z-index:150;overflow-y:auto;max-width:none;left:0;transform:none">
 <div class="detail-header">
 <button class="back-btn" id="ledgerBack">←</button>
 <h2 id="ledgerTitle">व्यापारी खातेवही</h2>
@@ -275,6 +315,7 @@ body>*:not(#printArea){display:none!important}
 <button class="lightbox-close" onclick="closeLightbox()">✕</button>
 <img id="lightboxImg" src="" alt="">
 </div>
+
 <div class="toast" id="toast"></div>
 <div id="printArea"></div>
 
@@ -306,8 +347,7 @@ valPayAmt:'रक्कम टाका!',payDate:'पेमेंट तार�
 payRef:'संदर्भ / नोट',payRefHint:'चेक नं. / UTR / Transaction ID',
 optional:'ऐच्छिक',modeCash:'रोख',modeCheque:'चेक',modeRTGS:'RTGS / NEFT',
 modePhonePe:'PhonePe',modeGPay:'Google Pay',modeUPI:'UPI',
-payHistory:'पेमेंट इतिहास',noPayments:'पेमेंट नाही'
-},
+payHistory:'पेमेंट इतिहास',noPayments:'पेमेंट नाही'},
 en:{appName:'Kheti Hisaab Saathi',dashboard:'Dashboard',farmM:'Farm M',farmP:'Farm P',
 records:'Records',traders:'Traders',addRecord:'New Record',totalIncome:'Total Income',
 pending:'Pending',received:'Received',weight:'Total Weight',ghads:'Ghads',labour:'Labour',
@@ -334,8 +374,8 @@ valPayAmt:'Enter amount!',payDate:'Payment Date',payMode:'Payment Mode',
 payRef:'Reference / Note',payRefHint:'Cheque no. / UTR / Transaction ID',
 optional:'optional',modeCash:'Cash',modeCheque:'Cheque',modeRTGS:'RTGS / NEFT',
 modePhonePe:'PhonePe',modeGPay:'Google Pay',modeUPI:'UPI',
-payHistory:'Payment History',noPayments:'No payments yet'
-}};
+payHistory:'Payment History',noPayments:'No payments yet'}
+};
 let curLang=localStorage.getItem('lang')||'mr';
 function t(k){return LANG[curLang][k]||k;}
 
@@ -382,6 +422,82 @@ document.getElementById('langBtn').addEventListener('click',()=>{
   renderAll();
 });
 
+function statCardsHTML(stats){
+  return`<div class="stat-card"><div class="stat-label">${t('totalIncome')}</div><div class="stat-val">₹${fmt(stats.income)}</div></div>
+<div class="stat-card"><div class="stat-label">${t('pending')}</div><div class="stat-val red">₹${fmt(stats.pending)}</div></div>
+<div class="stat-card"><div class="stat-label">${t('received')}</div><div class="stat-val">₹${fmt(stats.received)}</div></div>
+<div class="stat-card"><div class="stat-label">${t('weight')} Q</div><div class="stat-val blue">${fmtQ(stats.weightQ)}</div></div>
+<div class="stat-card"><div class="stat-label">${t('ghads')}</div><div class="stat-val blue">${stats.ghads}</div></div>
+<div class="stat-card"><div class="stat-label">${t('labour')}</div><div class="stat-val">₹${fmt(stats.labour)}</div></div>`;
+}
+
+function computeStats(records,farmFilter){
+  let income=0,pending=0,received=0,weightQ=0,ghads=0,labour=0;
+  records.forEach(r=>{
+    const hasM=['M','MP'].includes(r.farmType);
+    const hasP=['P','MP'].includes(r.farmType);
+    if(farmFilter==='M'&&!hasM)return;
+    if(farmFilter==='P'&&!hasP)return;
+    if(farmFilter==='M'){income+=r.m_netIncome||0;labour+=r.m_totalLabour||0;weightQ+=r.m_netWeightQ||0;ghads+=r.m_ghads||0;}
+    else if(farmFilter==='P'){income+=r.p_netIncome||0;labour+=r.p_totalLabour||0;weightQ+=r.p_netWeightQ||0;ghads+=r.p_ghads||0;}
+    else{income+=r.combinedNetIncome||0;labour+=r.combinedLabour||0;weightQ+=r.combinedNetWeightQ||0;ghads+=(r.m_ghads||0)+(r.p_ghads||0);}
+    received+=r.received||0;pending+=r.pending||0;
+  });
+  return{income,pending,received,weightQ,ghads,labour};
+}
+
+function recCardHTML(r){
+  const hasPend=(r.pending||0)>0;
+  const farmBadge=r.farmType==='M'?`<span class="badge badge-m">शेत म</span>`:r.farmType==='P'?`<span class="badge badge-p">शेत प</span>`:`<span class="badge badge-mp">म+प</span>`;
+  const inc=r.combinedNetIncome||0;
+  return`<div class="rec-card ${hasPend?'pending':''}" data-id="${r.id}" onclick="openDetail('${r.id}')">
+    <div class="rec-top"><span class="rec-trader">${r.traderName||'?'}</span><span class="rec-income ${hasPend?'pending':''}">₹${fmt(inc)}</span></div>
+    <div class="rec-meta">${fmtDate(r.date)} ${farmBadge} ${fmtQ(r.combinedNetWeightQ||0)}Q ${hasPend?`<span style="color:var(--red)">थकबाकी ₹${fmt(r.pending)}</span>`:''}</div>
+  </div>`;
+}
+
+function renderDash(){
+  const recs=getRecords();
+  document.getElementById('dash-stats').innerHTML=statCardsHTML(computeStats(recs,null));
+  const recent=[...recs].sort((a,b)=>b.date.localeCompare(a.date)).slice(0,5);
+  const el=document.getElementById('dash-recent');
+  el.innerHTML=recent.length?recent.map(r=>recCardHTML(r)).join(''):`<div class="empty-state"><span class="emoji">🌱</span>${t('noRecords')}</div>`;
+}
+
+function renderFarmScreen(farm){
+  const recs=getRecords().filter(r=>r.farmType===farm||r.farmType==='MP');
+  document.getElementById('farm'+farm+'-stats').innerHTML=statCardsHTML(computeStats(recs,farm));
+  const el=document.getElementById('farm'+farm+'-records');
+  const sorted=[...recs].sort((a,b)=>b.date.localeCompare(a.date));
+  el.innerHTML=sorted.length?sorted.map(r=>recCardHTML(r)).join(''):`<div class="empty-state"><span class="emoji">🌿</span>${t('noRecords')}</div>`;
+}
+
+function renderAllRecords(){
+  const recs=[...getRecords()].sort((a,b)=>b.date.localeCompare(a.date));
+  const el=document.getElementById('all-records');
+  el.innerHTML=recs.length?recs.map(r=>recCardHTML(r)).join(''):`<div class="empty-state"><span class="emoji">📋</span>${t('noRecords')}</div>`;
+}
+
+function renderTraders(){
+  const traders=getTraders(),recs=getRecords();
+  const el=document.getElementById('traders-list');
+  if(!traders.length){el.innerHTML=`<div class="empty-state"><span class="emoji">🤝</span>${t('noTraders')}</div>`;return;}
+  el.innerHTML=traders.map(tr=>{
+    const trRecs=recs.filter(r=>r.traderId===tr.id);
+    const totInc=trRecs.reduce((s,r)=>s+(r.combinedNetIncome||0),0);
+    const totPend=trRecs.reduce((s,r)=>s+(r.pending||0),0);
+    const initials=tr.name.split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase();
+    return`<div class="card trader-card" onclick="openLedger('${tr.id}')">
+      <div class="trader-avatar">${initials}</div>
+      <div class="trader-info">
+        <div class="trader-name">${tr.name}</div>
+        <div class="trader-meta">${tr.phone||''} ${tr.village?'· '+tr.village:''}</div>
+        <div class="trader-meta" style="margin-top:4px">${trRecs.length} ${t('records_count')} · ₹${fmt(totInc)} <span style="color:var(--red)">थकबाकी ₹${fmt(totPend)}</span></div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
 document.querySelectorAll('.nav-tab').forEach(btn=>{
   btn.addEventListener('click',()=>{
     curTab=btn.dataset.tab;
@@ -396,6 +512,7 @@ document.querySelectorAll('.nav-tab').forEach(btn=>{
     renderAll();
   });
 });
+
 document.getElementById('fabBtn').addEventListener('click',openAddForm);
 document.getElementById('pdfBtn').addEventListener('click', async () => {
   if (navigator.share && /Android|iPhone/i.test(navigator.userAgent)) {
@@ -456,88 +573,6 @@ function renderAll(){
   renderTraders();
   const hasRecs=getRecords().length>0;
   document.getElementById('pdfBtn').style.display=(curTab==='dash'&&hasRecs)?'block':'none';
-}
-
-function computeStats(records,farmFilter){
-  let income=0,pending=0,received=0,weightQ=0,ghads=0,labour=0;
-  records.forEach(r=>{
-    const hasM=['M','MP'].includes(r.farmType);
-    const hasP=['P','MP'].includes(r.farmType);
-    if(farmFilter==='M'&&!hasM)return;
-    if(farmFilter==='P'&&!hasP)return;
-    if(farmFilter==='M'){
-      income+=r.m_netIncome||0;labour+=r.m_totalLabour||0;weightQ+=r.m_netWeightQ||0;ghads+=r.m_ghads||0;
-    } else if(farmFilter==='P'){
-      income+=r.p_netIncome||0;labour+=r.p_totalLabour||0;weightQ+=r.p_netWeightQ||0;ghads+=r.p_ghads||0;
-    } else {
-      income+=r.combinedNetIncome||0;labour+=r.combinedLabour||0;
-      weightQ+=r.combinedNetWeightQ||0;ghads+=(r.m_ghads||0)+(r.p_ghads||0);
-    }
-    received+=r.received||0;pending+=r.pending||0;
-  });
-  return{income,pending,received,weightQ,ghads,labour};
-}
-
-function statCardsHTML(stats){
-  return`<div class="stat-card"><div class="stat-label">${t('totalIncome')}</div><div class="stat-val">₹${fmt(stats.income)}</div></div>
-<div class="stat-card"><div class="stat-label">${t('pending')}</div><div class="stat-val red">₹${fmt(stats.pending)}</div></div>
-<div class="stat-card"><div class="stat-label">${t('received')}</div><div class="stat-val">₹${fmt(stats.received)}</div></div>
-<div class="stat-card"><div class="stat-label">${t('weight')} Q</div><div class="stat-val blue">${fmtQ(stats.weightQ)}</div></div>
-<div class="stat-card"><div class="stat-label">${t('ghads')}</div><div class="stat-val blue">${stats.ghads}</div></div>
-<div class="stat-card"><div class="stat-label">${t('labour')}</div><div class="stat-val">₹${fmt(stats.labour)}</div></div>`;
-}
-
-function renderDash(){
-  const recs=getRecords();
-  document.getElementById('dash-stats').innerHTML=statCardsHTML(computeStats(recs,null));
-  const recent=[...recs].sort((a,b)=>b.date.localeCompare(a.date)).slice(0,5);
-  const el=document.getElementById('dash-recent');
-  el.innerHTML=recent.length?recent.map(r=>recCardHTML(r)).join(''):`<div class="empty-state"><span class="emoji">🌱</span>${t('noRecords')}</div>`;
-}
-
-function recCardHTML(r){
-  const hasPend=(r.pending||0)>0;
-  const farmBadge=r.farmType==='M'?`<span class="badge badge-m">शेत म</span>`:
-    r.farmType==='P'?`<span class="badge badge-p">शेत प</span>`:`<span class="badge badge-mp">म+प</span>`;
-  const inc=r.combinedNetIncome||0;
-  return`<div class="rec-card ${hasPend?'pending':''}" data-id="${r.id}" onclick="openDetail('${r.id}')">
-    <div class="rec-top"><span class="rec-trader">${r.traderName||'?'}</span><span class="rec-income ${hasPend?'pending':''}">₹${fmt(inc)}</span></div>
-    <div class="rec-meta">${fmtDate(r.date)} ${farmBadge} ${fmtQ(r.combinedNetWeightQ||0)}Q ${hasPend?`<span style="color:var(--red)">थकबाकी ₹${fmt(r.pending)}</span>`:''}</div>
-  </div>`;
-}
-
-function renderFarmScreen(farm){
-  const recs=getRecords().filter(r=>r.farmType===farm||r.farmType==='MP');
-  document.getElementById('farm'+farm+'-stats').innerHTML=statCardsHTML(computeStats(recs,farm));
-  const el=document.getElementById('farm'+farm+'-records');
-  const sorted=[...recs].sort((a,b)=>b.date.localeCompare(a.date));
-  el.innerHTML=sorted.length?sorted.map(r=>recCardHTML(r)).join(''):`<div class="empty-state"><span class="emoji">🌿</span>${t('noRecords')}</div>`;
-}
-
-function renderAllRecords(){
-  const recs=[...getRecords()].sort((a,b)=>b.date.localeCompare(a.date));
-  const el=document.getElementById('all-records');
-  el.innerHTML=recs.length?recs.map(r=>recCardHTML(r)).join(''):`<div class="empty-state"><span class="emoji">📋</span>${t('noRecords')}</div>`;
-}
-
-function renderTraders(){
-  const traders=getTraders(),recs=getRecords();
-  const el=document.getElementById('traders-list');
-  if(!traders.length){el.innerHTML=`<div class="empty-state"><span class="emoji">🤝</span>${t('noTraders')}</div>`;return;}
-  el.innerHTML=traders.map(tr=>{
-    const trRecs=recs.filter(r=>r.traderId===tr.id);
-    const totInc=trRecs.reduce((s,r)=>s+(r.combinedNetIncome||0),0);
-    const totPend=trRecs.reduce((s,r)=>s+(r.pending||0),0);
-    const initials=tr.name.split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase();
-    return`<div class="card trader-card" onclick="openLedger('${tr.id}')">
-      <div class="trader-avatar">${initials}</div>
-      <div class="trader-info">
-        <div class="trader-name">${tr.name}</div>
-        <div class="trader-meta">${tr.phone||''} ${tr.village?'· '+tr.village:''}</div>
-        <div class="trader-meta" style="margin-top:4px">${trRecs.length} ${t('records_count')} · ₹${fmt(totInc)} <span style="color:var(--red)">थकबाकी ₹${fmt(totPend)}</span></div>
-      </div>
-    </div>`;
-  }).join('');
 }
 
 function openAddForm(){
@@ -647,7 +682,7 @@ function recalcAll(){
     const netEl=document.getElementById(`f_${fm}_netInc`);
     if(netEl)netEl.textContent=`${t('netIncome')}: ₹${fmt(c.net)}`;
     const amt3El=document.getElementById(`f_${fm}_3pctAmt`);
-    if(amt3El)amt3El.textContent=is3?`(-${fmtQ(c.threePct)} Q)`:'';
+    if(amt3El)amt3El.textContent=is3?`(-${fmtQ(c.threePct)} Q)`:''; 
     totalNet+=c.net;totalWQ+=c.netWQ;totalLabour+=c.labCost;totalGross+=c.gross;
     const lbl=fm==='M'?t('farmMLong'):t('farmPLong');
     summaryRows+=`<div class="summary-row"><span>${lbl}: ${fmtQ(c.netWQ)}Q → ₹${fmt(c.gross)} (मजुरी ₹${fmt(c.labCost)})</span><span style="font-weight:700">₹${fmt(c.net)}</span></div>`;
@@ -768,8 +803,7 @@ function openDetail(id){
   document.getElementById('detailOverlay').style.display='block';
   document.getElementById('detailTitle').textContent=t('recordDetail');
   const htLabel=r.harvestType==='ghad'?'केळीचे घड':r.harvestType==='box'?'Box Packing':'फणाया';
-  const farmBadge=r.farmType==='M'?`<span class="badge badge-m">शेत म</span>`:
-    r.farmType==='P'?`<span class="badge badge-p">शेत प</span>`:`<span class="badge badge-mp">म+प</span>`;
+  const farmBadge=r.farmType==='M'?`<span class="badge badge-m">शेत म</span>`:r.farmType==='P'?`<span class="badge badge-p">शेत प</span>`:`<span class="badge badge-mp">म+प</span>`;
   let html=`<div class="card">
     <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px">${farmBadge}<span class="badge" style="background:#f1f5f9;color:var(--muted)">${htLabel}</span></div>
     <div class="detail-row"><span class="label">${t('trader')}</span><span class="val">${r.traderName}</span></div>
@@ -816,8 +850,7 @@ function openDetail(id){
   </div>`;
   if(r.note)html+=`<div class="card"><div class="detail-row"><span class="label">${t('note')}</span><span class="val">${r.note}</span></div></div>`;
   const modeIcon={'cash':'💵','cheque':'🏦','rtgs':'🔁','phonepay':'📱','gpay':'📱','upi':'📲'};
-  const modeLabel={'cash':t('modeCash'),'cheque':t('modeCheque'),'rtgs':t('modeRTGS'),
-    'phonepay':t('modePhonePe'),'gpay':t('modeGPay'),'upi':t('modeUPI')};
+  const modeLabel={'cash':t('modeCash'),'cheque':t('modeCheque'),'rtgs':t('modeRTGS'),'phonepay':t('modePhonePe'),'gpay':t('modeGPay'),'upi':t('modeUPI')};
   if(r.payments && r.payments.length){
     html+=`<div class="farm-header">💳 ${t('payHistory')}</div><div class="card">`;
     r.payments.forEach((p,i)=>{
@@ -887,13 +920,11 @@ function savePayment(id){
   r.received=(r.received||0)+amt;
   r.pending=Math.max(0,r.combinedNetIncome-r.received);
   if(!r.payments) r.payments=[];
-  r.payments.push({
-    amt, date:payDate, mode:payMode, ref:payRef,
-    addedAt:Date.now()
-  });
+  r.payments.push({amt, date:payDate, mode:payMode, ref:payRef, addedAt:Date.now()});
   saveRecords(recs);closeSheet();openDetail(id);
   showToast(t('paymentSaved'));renderAll();
 }
+
 function deleteRecord(id){
   if(!confirm(t('confirmDelete')))return;
   saveRecords(getRecords().filter(r=>r.id!==id));
@@ -946,15 +977,9 @@ function deleteTrader(id){
 }
 document.getElementById('ledgerBack').addEventListener('click',()=>{document.getElementById('ledgerOverlay').style.display='none';});
 
-function closeSheet(){document.getElementById('sheetOverlay').classList.remove('open');}
-function openLightbox(src){
-  document.getElementById('lightboxImg').src=src;
-  document.getElementById('lightbox').classList.add('open');
-}
-function closeLightbox(){
-  document.getElementById('lightbox').classList.remove('open');
-  setTimeout(()=>{document.getElementById('lightboxImg').src='';},300);
-}
+function closeSheet(){document.getElementById('sheetOverlay').classList.remove('open')}
+function openLightbox(src){document.getElementById('lightboxImg').src=src;document.getElementById('lightbox').classList.add('open')}
+function closeLightbox(){document.getElementById('lightbox').classList.remove('open');setTimeout(()=>{document.getElementById('lightboxImg').src=''},300)}
 
 function generatePDF(){
   const recs=getRecords().slice().sort((a,b)=>a.date.localeCompare(b.date));
@@ -1034,9 +1059,7 @@ function generatePDF(){
     };
     if(r.farmType==='M'||r.farmType==='MP')html+=pSection('M','m_');
     if(r.farmType==='P'||r.farmType==='MP')html+=pSection('P','p_');
-    if(r.farmType==='MP')html+=`<div class="print-h3">── एकत्रित ─────────</div>
-      <div class="print-row"><span>एकूण निव्वळ वजन</span><span>${fmtQ(r.combinedNetWeightQ)} Q</span></div>
-      <div class="print-row" style="font-weight:700"><span>एकूण निव्वळ उत्पन्न</span><span>₹${fmt(r.combinedNetIncome)}</span></div>`;
+    if(r.farmType==='MP')html+=`<div class="print-h3">── एकत्रित ─────────</div><div class="print-row"><span>एकूण निव्वळ वजन</span><span>${fmtQ(r.combinedNetWeightQ)} Q</span></div><div class="print-row" style="font-weight:700"><span>एकूण निव्वळ उत्पन्न</span><span>₹${fmt(r.combinedNetIncome)}</span></div>`;
     html+=`<div class="print-h3">── देयक ──────────────────</div>
     <div class="print-amount-box">
       <span class="alabel">निव्वळ उत्पन्न</span><span class="aval">₹${fmt(r.combinedNetIncome)}</span>
@@ -1079,7 +1102,7 @@ applyLang();
 document.getElementById('f_date').value=today();
 renderAll();
 </script>
-  <script>
+<script>
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
     navigator.serviceWorker.register('./sw.js');
