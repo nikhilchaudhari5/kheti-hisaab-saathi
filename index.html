@@ -2,38 +2,271 @@
 <html lang="mr">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- 🔴 FIX #1: CRITICAL - Improved Viewport Meta Tag (Was missing viewport-fit=cover) -->
+<!-- This tells the phone how to display your app on different screen sizes -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=5.0, user-scalable=yes">
 <title>केळी हिशोब </title>
 <link rel="manifest" href="manifest.json">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
-*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
-:root{--green:#1a6b3c;--green-light:#e8f5ee;--red:#dc2626;--red-light:#fee2e2;--blue:#1d4ed8;--blue-light:#dbeafe;--card:#fff;--bg:#f1f5f9;--border:#e2e8f0;--text:#1e293b;--muted:#64748b}
-html,body{width:100%;min-height:100%;overflow-x:hidden}
-body{font-family:'Noto Sans Devanagari','Inter',sans-serif;background:var(--bg);color:var(--text);max-width:500px;margin:0 auto;min-height:100vh;position:relative;overflow-x:hidden}
-.app-header{background:var(--green);color:#fff;padding:12px 16px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;box-shadow:0 2px 8px rgba(0,0,0,.2)}
-.app-header h1{font-size:18px;font-weight:700}
-.header-actions{display:flex;gap:8px;align-items:center}
-.lang-btn{background:rgba(255,255,255,.2);border:1px solid rgba(255,255,255,.4);color:#fff;padding:4px 10px;border-radius:20px;font-size:12px;font-weight:600;cursor:pointer}
-.icon-btn{background:none;border:none;color:#fff;cursor:pointer;padding:4px;font-size:20px;line-height:1}
-.bottom-nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:500px;background:#fff;border-top:1px solid var(--border);display:flex;z-index:100}
-.nav-tab{flex:1;padding:8px 4px;border:none;background:none;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:4px;font-size:11px;font-weight:600;color:var(--muted);font-family:inherit;transition:color .2s}
-.nav-tab.active{color:var(--green)}
-.nav-icon{font-size:20px;line-height:1}
-.screen{display:none;padding:12px 12px 80px}
-.screen.active{display:block}
-.fab{position:fixed;bottom:70px;right:16px;width:52px;height:52px;background:var(--green);color:#fff;border:none;border-radius:50%;font-size:28px;cursor:pointer;box-shadow:0 4px 12px rgba(26,107,60,.4);z-index:99;display:flex;align-items:center;justify-content:center;line-height:1}
-.card{background:var(--card);border-radius:12px;padding:14px;margin-bottom:10px;box-shadow:0 1px 3px rgba(0,0,0,.08)}
-.stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px}
-.stat-card{background:var(--card);border-radius:12px;padding:12px;box-shadow:0 1px 3px rgba(0,0,0,.08)}
+/* ========================================
+   🔴 FIX #2: RESET & BASE STYLES
+   Ensures everything starts fresh on mobile
+   ======================================== */
+*{
+  box-sizing:border-box;
+  margin:0;
+  padding:0;
+  -webkit-tap-highlight-color:transparent;
+  /* Prevent iOS tap highlight */
+}
+
+:root{
+  --green:#1a6b3c;
+  --green-light:#e8f5ee;
+  --red:#dc2626;
+  --red-light:#fee2e2;
+  --blue:#1d4ed8;
+  --blue-light:#dbeafe;
+  --card:#fff;
+  --bg:#f1f5f9;
+  --border:#e2e8f0;
+  --text:#1e293b;
+  --muted:#64748b
+}
+
+/* 🔴 FIX #3: HTML & BODY - Prevent Horizontal Scroll */
+html, body {
+  width: 100%;
+  height: 100%;
+  overflow-x: hidden; /* CRITICAL: No horizontal scrolling */
+  margin: 0;
+  padding: 0;
+}
+
+/* 🔴 FIX #4: BODY - Responsive Width & Mobile Optimization */
+body {
+  font-family:'Noto Sans Devanagari','Inter',sans-serif;
+  background:var(--bg);
+  color:var(--text);
+  /* max-width: 500px; -- KEEP THIS for desktop, but mobile will be 100% */
+  min-height: 100vh;
+  position: relative;
+  overflow-x: hidden;
+  /* Font size must stay at reasonable level for mobile */
+  font-size: 16px;
+  line-height: 1.5;
+}
+
+/* 🔴 FIX #5: HANDLE SAFE AREAS (for phones with notches) */
+body {
+  padding: 
+    max(0px, env(safe-area-inset-top))
+    max(0px, env(safe-area-inset-right))
+    max(0px, env(safe-area-inset-bottom))
+    max(0px, env(safe-area-inset-left));
+}
+
+/* ========================================
+   🔴 FIX #6: HEADER STYLES
+   ======================================== */
+.app-header {
+  background: var(--green);
+  color: #fff;
+  padding: 12px 16px;
+  padding-top: max(12px, env(safe-area-inset-top)); /* Respect notch */
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: 0 2px 8px rgba(0,0,0,.2);
+  /* Full width on mobile */
+  width: 100%;
+}
+
+.app-header h1 {
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.header-actions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.lang-btn, .icon-btn {
+  /* Ensure touch targets are 44px minimum */
+  min-height: 44px;
+  min-width: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 10px;
+}
+
+.lang-btn {
+  background: rgba(255,255,255,.2);
+  border: 1px solid rgba(255,255,255,.4);
+  color: #fff;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.icon-btn {
+  background: none;
+  border: none;
+  color: #fff;
+  cursor: pointer;
+  font-size: 20px;
+  line-height: 1;
+}
+
+/* ========================================
+   🔴 FIX #7: BOTTOM NAVIGATION
+   Critical for mobile - fixed positioning
+   ======================================== */
+.bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
+  max-width: none; /* IMPORTANT: Use full width, not max-width */
+  background: #fff;
+  border-top: 1px solid var(--border);
+  display: flex;
+  z-index: 100;
+  padding-bottom: max(0px, env(safe-area-inset-bottom)); /* Respect home button area */
+}
+
+.nav-tab {
+  flex: 1;
+  padding: 8px 4px;
+  border: none;
+  background: none;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--muted);
+  font-family: inherit;
+  transition: color .2s;
+  min-height: 60px; /* Touch target */
+}
+
+.nav-tab.active {
+  color: var(--green)
+}
+
+.nav-icon {
+  font-size: 20px;
+  line-height: 1;
+}
+
+/* ========================================
+   🔴 FIX #8: SCREEN CONTENT
+   Add padding to prevent overlap with nav
+   ======================================== */
+.screen {
+  display: none;
+  padding: 12px 12px 100px; /* Bottom padding for fixed nav */
+  width: 100%;
+  padding-left: max(12px, env(safe-area-inset-left));
+  padding-right: max(12px, env(safe-area-inset-right));
+}
+
+.screen.active {
+  display: block;
+}
+
+/* ========================================
+   🔴 FIX #9: FAB (Floating Action Button)
+   ======================================== */
+.fab {
+  position: fixed;
+  bottom: 70px;
+  right: 16px;
+  right: max(16px, env(safe-area-inset-right)); /* Respect safe area */
+  width: 52px;
+  height: 52px;
+  min-width: 52px;
+  min-height: 52px;
+  background: var(--green);
+  color: #fff;
+  border: none;
+  border-radius: 50%;
+  font-size: 28px;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(26,107,60,.4);
+  z-index: 99;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+  transition: transform 0.2s ease;
+}
+
+.fab:active {
+  transform: scale(0.95);
+}
+
+/* ========================================
+   CARDS, STATS, RECORDS
+   ======================================== */
+.card {
+  background: var(--card);
+  border-radius: 12px;
+  padding: 14px;
+  margin-bottom: 10px;
+  box-shadow: 0 1px 3px rgba(0,0,0,.08);
+  width: 100%;
+}
+
+.stat-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 12px;
+  width: 100%;
+}
+
+.stat-card {
+  background: var(--card);
+  border-radius: 12px;
+  padding: 12px;
+  box-shadow: 0 1px 3px rgba(0,0,0,.08);
+}
+
 .stat-label{font-size:11px;color:var(--muted);margin-bottom:4px}
 .stat-val{font-size:20px;font-weight:700;color:var(--green)}
 .stat-val.red{color:var(--red)}
 .stat-val.blue{color:var(--blue)}
 .sec-title{font-size:13px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin:16px 0 8px}
-.rec-card{background:var(--card);border-radius:12px;padding:12px 14px;margin-bottom:8px;box-shadow:0 1px 3px rgba(0,0,0,.08);cursor:pointer;border-left:4px solid var(--green)}
+
+.rec-card{
+  background:var(--card);
+  border-radius:12px;
+  padding:12px 14px;
+  margin-bottom:8px;
+  box-shadow:0 1px 3px rgba(0,0,0,.08);
+  cursor:pointer;
+  border-left:4px solid var(--green);
+  width: 100%;
+  /* Touch target minimum */
+  min-height: 60px;
+}
+
 .rec-card.pending{border-left-color:var(--red)}
-.rec-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:4px}
+.rec-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:4px;flex-wrap:wrap;gap:8px}
 .rec-trader{font-weight:600;font-size:15px}
 .rec-income{font-weight:700;font-size:15px;color:var(--green)}
 .rec-income.pending{color:var(--red)}
@@ -42,131 +275,583 @@ body{font-family:'Noto Sans Devanagari','Inter',sans-serif;background:var(--bg);
 .badge-m{background:#dcfce7;color:#166534}
 .badge-p{background:#dbeafe;color:#1e40af}
 .badge-mp{background:#fef9c3;color:#854d0e}
-.form-group{margin-bottom:14px}
-.form-label{font-size:13px;font-weight:600;color:var(--text);margin-bottom:5px;display:block}
-.form-input{width:100%;padding:10px 12px;border:1.5px solid var(--border);border-radius:8px;font-size:15px;font-family:inherit;background:#fff;color:var(--text);outline:none;transition:border .2s}
-.form-input:focus{border-color:var(--green)}
-.form-select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%2364748b' stroke-width='1.5' fill='none'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center}
-.form-hint{font-size:11px;color:var(--muted);margin-top:3px}
-.row2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-.toggle-group{display:flex;background:var(--bg);border-radius:8px;padding:3px;gap:2px}
-.toggle-btn{flex:1;padding:8px;border:none;background:none;border-radius:6px;font-size:13px;font-family:inherit;cursor:pointer;font-weight:500;color:var(--muted);transition:all .2s}
-.toggle-btn.active{background:#fff;color:var(--green);font-weight:600;box-shadow:0 1px 3px rgba(0,0,0,.1)}
-.auto-box{padding:10px 12px;border-radius:8px;font-weight:600;font-size:15px;margin-top:4px}
+
+/* ========================================
+   🔴 FIX #10: FORMS - CRITICAL FOR MOBILE
+   ======================================== */
+.form-group {
+  margin-bottom: 14px;
+  width: 100%;
+}
+
+.form-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 5px;
+  display: block;
+}
+
+/* 🔴 FIX #11: FORM INPUTS - PREVENT iOS ZOOM */
+.form-input {
+  width: 100%;
+  padding: 12px 12px; /* Increased from 10px for better touch */
+  border: 1.5px solid var(--border);
+  border-radius: 8px;
+  font-size: 16px; /* CRITICAL: Must be 16px to prevent iOS zoom */
+  font-family: inherit;
+  background: #fff;
+  color: var(--text);
+  outline: none;
+  transition: border .2s;
+  /* Prevent iOS styling override */
+  -webkit-appearance: none;
+  appearance: none;
+  /* Ensure readable */
+  min-height: 44px;
+}
+
+.form-input:focus {
+  border-color: var(--green);
+  box-shadow: 0 0 0 3px rgba(26, 107, 60, 0.1);
+}
+
+.form-input:disabled {
+  background: #f5f5f5;
+  cursor: not-allowed;
+}
+
+.form-select {
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%2364748b' stroke-width='1.5' fill='none'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  padding-right: 36px;
+}
+
+.form-hint {
+  font-size: 11px;
+  color: var(--muted);
+  margin-top: 3px;
+}
+
+.row2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  width: 100%;
+}
+
+@media (max-width: 480px) {
+  .row2 {
+    grid-template-columns: 1fr; /* Stack on very small screens */
+  }
+}
+
+.toggle-group{
+  display:flex;
+  background:var(--bg);
+  border-radius:8px;
+  padding:3px;
+  gap:2px;
+  width: 100%;
+  flex-wrap: wrap;
+}
+
+.toggle-btn{
+  flex:1;
+  padding:8px;
+  border:none;
+  background:none;
+  border-radius:6px;
+  font-size:13px;
+  font-family:inherit;
+  cursor:pointer;
+  font-weight:500;
+  color:var(--muted);
+  transition:all .2s;
+  min-height: 44px; /* Touch target */
+}
+
+.toggle-btn.active{
+  background:#fff;
+  color:var(--green);
+  font-weight:600;
+  box-shadow:0 1px 3px rgba(0,0,0,.1)
+}
+
+.auto-box{
+  padding:10px 12px;
+  border-radius:8px;
+  font-weight:600;
+  font-size:15px;
+  margin-top:4px;
+  width: 100%;
+}
+
 .auto-box.blue{background:var(--blue-light);color:var(--blue)}
 .auto-box.green{background:var(--green-light);color:var(--green)}
 .auto-box.red{background:var(--red-light);color:var(--red)}
+
+/* ========================================
+   🔴 FIX #12: PHOTO SLOTS - Responsive Grid
+   ======================================== */
+.photo-slots{
+  display:grid;
+  grid-template-columns:1fr 1fr 1fr;
+  gap:8px;
+  margin-top:8px;
+  width: 100%;
+}
+
+@media (max-width: 480px) {
+  .photo-slots {
+    grid-template-columns: 1fr 1fr;
+    gap: 6px;
+  }
+}
+
+.photo-slot{
+  aspect-ratio:1;
+  border:2px dashed var(--border);
+  border-radius:10px;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  cursor:pointer;
+  background:#fafafa;
+  position:relative;
+  overflow:hidden;
+  font-size:11px;
+  color:var(--muted);
+  text-align:center;
+  gap:4px;
+  min-height: 80px;
+}
+
+.photo-slot img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  position:absolute;
+  inset:0
+}
+
+.photo-slot .del-photo{
+  position:absolute;
+  top:2px;
+  right:2px;
+  width:24px;
+  height:24px;
+  background:rgba(220,38,38,.9);
+  border:none;
+  border-radius:50%;
+  color:#fff;
+  font-size:14px;
+  cursor:pointer;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  z-index:2;
+  min-width: 24px;
+}
+
+.photo-label{font-size:11px;color:var(--muted);margin-bottom:4px}
+
+/* ========================================
+   🔴 FIX #13: OVERLAYS - CRITICAL FOR YOUR ISSUE
+   Position: fixed, proper z-index, full viewport
+   ======================================== */
+.sheet-overlay{
+  display:none;
+  position:fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100%;
+  height: 100%;
+  background:rgba(0,0,0,.5);
+  z-index:200;
+  align-items:flex-end;
+  justify-content:center;
+  overflow-y: auto;
+}
+
+.sheet-overlay.open{
+  display:flex
+}
+
+.sheet{
+  background:#fff;
+  border-radius:16px 16px 0 0;
+  padding:20px;
+  padding-bottom: max(20px, env(safe-area-inset-bottom));
+  width:100%;
+  max-width:100%; /* NOT 500px on mobile */
+  animation:slideUp .3s ease;
+}
+
+@keyframes slideUp{
+  from{transform:translateY(100%)}
+  to{transform:translateY(0)}
+}
+
+.sheet-title{
+  font-size:16px;
+  font-weight:700;
+  margin-bottom:16px;
+  text-align:center
+}
+
+.sheet-btn{
+  width:100%;
+  padding:14px;
+  border:1.5px solid var(--border);
+  border-radius:10px;
+  background:#fff;
+  font-size:15px;
+  font-family:inherit;
+  cursor:pointer;
+  margin-bottom:8px;
+  display:flex;
+  align-items:center;
+  gap:10px;
+  font-weight:500;
+  min-height: 44px;
+  transition: all 0.2s ease;
+}
+
+.sheet-btn:active{
+  background:var(--bg);
+  transform: scale(0.98);
+}
+
+/* ========================================
+   🔴 FIX #14: LIGHTBOX & OTHER OVERLAYS
+   ======================================== */
+.lightbox{
+  display:none;
+  position:fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100%;
+  height: 100%;
+  background:rgba(0,0,0,.95);
+  z-index:300;
+  align-items:center;
+  justify-content:center;
+}
+
+.lightbox.open{
+  display:flex
+}
+
+.lightbox img{
+  max-width:95vw;
+  max-height:90vh;
+  object-fit:contain;
+}
+
+.lightbox-close{
+  position:absolute;
+  top:16px;
+  right:16px;
+  background:rgba(255,255,255,.2);
+  border:none;
+  color:#fff;
+  width:44px;
+  height:44px;
+  border-radius:50%;
+  font-size:20px;
+  cursor:pointer;
+  min-width: 44px;
+}
+
+/* ========================================
+   🔴 FIX #15: OVERLAY SCREENS
+   This is YOUR overlapping forms issue
+   ======================================== */
+#formOverlay,
+#detailOverlay,
+#traderFormOverlay,
+#ledgerOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100%;
+  height: 100%;
+  max-width: none; /* CRITICAL: Don't limit width */
+  left: 0;
+  transform: none; /* No transform needed */
+  background: #fff;
+  z-index: 150;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch; /* Smooth scroll on iOS */
+  display: none;
+}
+
+/* When overlay is shown */
+#formOverlay.open,
+#detailOverlay.open,
+#traderFormOverlay.open,
+#ledgerOverlay.open {
+  display: block;
+  padding-top: max(0px, env(safe-area-inset-top));
+}
+
+/* ========================================
+   🔴 FIX #16: DETAIL HEADER & BUTTONS
+   ======================================== */
+.detail-header{
+  background:var(--green);
+  color:#fff;
+  padding:12px 16px;
+  padding-top: max(12px, env(safe-area-inset-top));
+  display:flex;
+  align-items:center;
+  gap:10px;
+  position: sticky;
+  top: 0;
+  z-index: 101;
+}
+
+.detail-header h2{
+  font-size:16px;
+  font-weight:700;
+}
+
+.back-btn{
+  background:none;
+  border:none;
+  color:#fff;
+  font-size:22px;
+  cursor:pointer;
+  padding:8px;
+  min-width: 44px;
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.detail-row{
+  display:flex;
+  justify-content:space-between;
+  padding:6px 0;
+  border-bottom:1px solid var(--bg);
+  font-size:14px;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.detail-row:last-child{border-bottom:none}
+.detail-row .label{color:var(--muted)}
+.detail-row .val{font-weight:600}
+
+/* ========================================
+   🔴 FIX #17: BUTTONS - Touch Targets
+   ======================================== */
+.danger-btn, .pay-btn {
+  width: 100%;
+  padding: 12px;
+  border: none;
+  border-radius: 10px;
+  font-size: 15px;
+  font-family: inherit;
+  font-weight: 600;
+  cursor: pointer;
+  min-height: 44px;
+  transition: all 0.2s ease;
+}
+
+.pay-btn{
+  background:var(--green);
+  color:#fff;
+  margin-bottom:8px;
+}
+
+.pay-btn:active {
+  background: #158638;
+  transform: scale(0.98);
+}
+
+.danger-btn{
+  background:var(--red-light);
+  color:var(--red);
+  border:1.5px solid var(--red);
+  margin-top:8px
+}
+
+.danger-btn:active {
+  background: #fecaca;
+}
+
+/* ========================================
+   OTHER STYLES (unchanged)
+   ======================================== */
 .summary-box{background:#f8fafc;border:1px solid var(--border);border-radius:10px;padding:12px;margin:8px 0}
 .summary-row{display:flex;justify-content:space-between;padding:3px 0;font-size:14px}
 .summary-divider{border:none;border-top:1px dashed var(--border);margin:6px 0}
 .summary-total{font-weight:700;font-size:16px;color:var(--green)}
-.photo-slots{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:8px}
-.photo-slot{aspect-ratio:1;border:2px dashed var(--border);border-radius:10px;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;background:#fafafa;position:relative;overflow:hidden;font-size:11px;color:var(--muted);text-align:center;gap:4px}
-.photo-slot img{width:100%;height:100%;object-fit:cover;position:absolute;inset:0}
-.photo-slot .del-photo{position:absolute;top:2px;right:2px;width:20px;height:20px;background:rgba(220,38,38,.9);border:none;border-radius:50%;color:#fff;font-size:12px;cursor:pointer;display:flex;align-items:center;justify-content:center;z-index:2}
-.photo-label{font-size:11px;color:var(--muted);margin-bottom:4px}
-.sheet-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:200;align-items:flex-end;justify-content:center}
-.sheet-overlay.open{display:flex}
-.sheet{background:#fff;border-radius:16px 16px 0 0;padding:20px;width:100%;max-width:500px;animation:slideUp .3s ease}
-@keyframes slideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
-.sheet-title{font-size:16px;font-weight:700;margin-bottom:16px;text-align:center}
-.sheet-btn{width:100%;padding:14px;border:1.5px solid var(--border);border-radius:10px;background:#fff;font-size:15px;font-family:inherit;cursor:pointer;margin-bottom:8px;display:flex;align-items:center;gap:10px;font-weight:500}
-.sheet-btn:active{background:var(--bg)}
-.lightbox{display:none;position:fixed;inset:0;background:rgba(0,0,0,.95);z-index:300;align-items:center;justify-content:center}
-.lightbox.open{display:flex}
-.lightbox img{max-width:95vw;max-height:90vh;object-fit:contain}
-.lightbox-close{position:absolute;top:16px;right:16px;background:rgba(255,255,255,.2);border:none;color:#fff;width:36px;height:36px;border-radius:50%;font-size:20px;cursor:pointer}
-.toast{position:fixed;top:70px;left:50%;transform:translateX(-50%);background:#1e293b;color:#fff;padding:10px 20px;border-radius:24px;font-size:14px;z-index:400;opacity:0;transition:opacity .3s;pointer-events:none;white-space:nowrap}
-.toast.show{opacity:1}
-.detail-header{background:var(--green);color:#fff;padding:12px 16px;display:flex;align-items:center;gap:10px}
-.detail-header h2{font-size:16px;font-weight:700}
-.back-btn{background:none;border:none;color:#fff;font-size:22px;cursor:pointer;padding:0}
-.detail-row{display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--bg);font-size:14px}
-.detail-row:last-child{border-bottom:none}
-.detail-row .label{color:var(--muted)}
-.detail-row .val{font-weight:600}
-.danger-btn{width:100%;padding:12px;background:var(--red-light);color:var(--red);border:1.5px solid var(--red);border-radius:10px;font-size:15px;font-family:inherit;font-weight:600;cursor:pointer;margin-top:8px}
-.pay-btn{width:100%;padding:12px;background:var(--green);color:#fff;border:none;border-radius:10px;font-size:15px;font-family:inherit;font-weight:600;cursor:pointer;margin-bottom:8px}
+
 .trader-avatar{width:44px;height:44px;background:var(--green);color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:700;flex-shrink:0}
 .trader-card{display:flex;gap:12px;align-items:flex-start;cursor:pointer}
 .trader-info{flex:1}
 .trader-name{font-weight:700;font-size:15px}
 .trader-meta{font-size:12px;color:var(--muted)}
+
 .empty-state{text-align:center;padding:40px 20px;color:var(--muted)}
 .empty-state .emoji{font-size:48px;display:block;margin-bottom:12px}
+
 .farm-header{background:var(--green-light);border-radius:8px;padding:8px 12px;font-weight:700;color:var(--green);margin:12px 0 8px;font-size:14px}
+
 .input-error{border-color:var(--red)!important}
-.error-msg{color:var(--red);font-size:12px;margin-top:4px}
+.error-msg{color:var(--red);font-size:12px;margin-top:4px;width: 100%}
+
 .pay-history-row{display:flex;justify-content:space-between;align-items:flex-start;padding:10px 0;border-bottom:1px solid var(--bg)}
 .pay-history-row:last-child{border-bottom:none}
 .pay-mode-badge{display:inline-flex;align-items:center;gap:4px;padding:3px 10px;border-radius:20px;font-size:12px;font-weight:600;background:var(--green-light);color:var(--green)}
 .pay-mode-badge.cheque{background:#fef3c7;color:#92400e}
 .pay-mode-badge.rtgs{background:#dbeafe;color:#1e40af}
 .pay-mode-badge.phonepay,.pay-mode-badge.gpay,.pay-mode-badge.upi{background:#f3e8ff;color:#7e22ce}
-#printArea{display:none}
-@media print{
-body>*:not(#printArea){display:none!important}
-#printArea{display:block!important}
-.print-page{page-break-after:always;padding:24px;font-family:'Noto Sans Devanagari','Inter',sans-serif;font-size:12px;color:#000}
-.print-page:last-child{page-break-after:auto}
-.print-h1{font-size:22px;font-weight:700;margin-bottom:4px;color:#1a6b3c}
-.print-subtitle{font-size:12px;color:#666;margin-bottom:2px}
-.print-meta{font-size:11px;color:#555;margin:6px 0 12px}
-.print-h2{font-size:15px;font-weight:700;margin:14px 0 6px;border-bottom:2px solid #1a6b3c;padding-bottom:4px;color:#1a6b3c}
-.print-h3{font-size:13px;font-weight:700;margin:10px 0 4px;background:#f0faf4;padding:4px 8px;border-left:3px solid #1a6b3c}
-.print-row{display:flex;justify-content:space-between;padding:3px 0;border-bottom:1px solid #eee;font-size:12px}
-.print-row:last-child{border-bottom:none}
-.print-row span:last-child{font-weight:600}
-.print-divider{border:none;border-top:2px solid #1a6b3c;margin:10px 0}
-.print-table{width:100%;border-collapse:collapse;margin-top:8px;font-size:11px}
-.print-table th,.print-table td{border:1px solid #ccc;padding:6px 8px;text-align:left}
-.print-table th{background:#e8f5ee;font-weight:700;color:#1a6b3c}
-.print-table tr:nth-child(even){background:#f9f9f9}
-.print-photos{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:10px}
-.print-photo-wrap{break-inside:avoid}
-.print-photo-label{font-size:10px;font-weight:700;margin-bottom:4px;color:#1a6b3c;background:#e8f5ee;padding:2px 6px;border-radius:3px}
-.print-photo-wrap img{width:100%;height:auto;border:1px solid #ddd;border-radius:4px;display:block}
-.print-record-header{background:#1a6b3c;color:#fff;padding:8px 12px;margin-bottom:8px;border-radius:4px}
-.print-record-header h3{font-size:14px;font-weight:700;margin:0}
-.print-record-header p{font-size:11px;opacity:.85;margin:2px 0 0}
-.print-amount-box{background:#e8f5ee;border:1px solid #a8dbbf;border-radius:4px;padding:8px 12px;margin:6px 0;display:flex;justify-content:space-between;align-items:center}
-.print-amount-box.pending{background:#fee2e2;border-color:#fca5a5}
-.print-amount-box .alabel{font-size:11px;color:#555}
-.print-amount-box .aval{font-size:16px;font-weight:700;color:#1a6b3c}
-.print-amount-box.pending .aval{color:#dc2626}
+
+.toast{
+  position:fixed;
+  bottom: 100px;
+  left:50%;
+  transform:translateX(-50%);
+  background:#1e293b;
+  color:#fff;
+  padding:10px 20px;
+  border-radius:24px;
+  font-size:14px;
+  z-index:400;
+  opacity:0;
+  transition:opacity .3s;
+  pointer-events:none;
+  white-space:nowrap;
 }
 
-@media (max-width: 600px){
-body{max-width:100%;margin:0}
-.app-header{padding:10px 12px}
-.app-header h1{font-size:16px}
-.screen{padding:10px 10px 88px}
-.card,.stat-card,.rec-card{padding:12px}
-.stat-grid{gap:8px}
-.row2{grid-template-columns:1fr}
-.toggle-group{flex-wrap:wrap}
-.toggle-btn{min-width:0;font-size:12px;padding:9px 8px}
-.form-input{font-size:16px;padding:12px}
-.pay-btn,.danger-btn,.sheet-btn{min-height:46px;font-size:16px}
-.fab{bottom:78px;right:12px}
-.bottom-nav{max-width:100%;left:0;transform:none}
-.sheet{width:100%;max-width:100%;border-radius:16px 16px 0 0;padding:16px}
-.photo-slots{grid-template-columns:1fr 1fr}
-.detail-header{padding:12px}
-.detail-header h2{font-size:15px}
-#formOverlay,#detailOverlay,#traderFormOverlay,#ledgerOverlay{
-position:fixed;
-inset:0;
-width:100%;
-max-width:none;
-left:0;
-transform:none;
-background:#fff;
-z-index:150;
-overflow-y:auto;
--webkit-overflow-scrolling:touch;
+.toast.show{opacity:1}
+
+#printArea{display:none}
+
+@media print {
+  body>*:not(#printArea){display:none!important}
+  #printArea{display:block!important}
+  .print-page{page-break-after:always;padding:24px;font-family:'Noto Sans Devanagari','Inter',sans-serif;font-size:12px;color:#000}
+  .print-page:last-child{page-break-after:auto}
+  .print-h1{font-size:22px;font-weight:700;margin-bottom:4px;color:#1a6b3c}
+  .print-subtitle{font-size:12px;color:#666;margin-bottom:2px}
+  .print-meta{font-size:11px;color:#555;margin:6px 0 12px}
+  .print-h2{font-size:15px;font-weight:700;margin:14px 0 6px;border-bottom:2px solid #1a6b3c;padding-bottom:4px;color:#1a6b3c}
+  .print-h3{font-size:13px;font-weight:700;margin:10px 0 4px;background:#f0faf4;padding:4px 8px;border-left:3px solid #1a6b3c}
+  .print-row{display:flex;justify-content:space-between;padding:3px 0;border-bottom:1px solid #eee;font-size:12px}
+  .print-row:last-child{border-bottom:none}
+  .print-row span:last-child{font-weight:600}
+  .print-divider{border:none;border-top:2px solid #1a6b3c;margin:10px 0}
+  .print-table{width:100%;border-collapse:collapse;margin-top:8px;font-size:11px}
+  .print-table th,.print-table td{border:1px solid #ccc;padding:6px 8px;text-align:left}
+  .print-table th{background:#e8f5ee;font-weight:700;color:#1a6b3c}
+  .print-table tr:nth-child(even){background:#f9f9f9}
+  .print-photos{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:10px}
+  .print-photo-wrap{break-inside:avoid}
+  .print-photo-label{font-size:10px;font-weight:700;margin-bottom:4px;color:#1a6b3c;background:#e8f5ee;padding:2px 6px;border-radius:3px}
+  .print-photo-wrap img{width:100%;height:auto;border:1px solid #ddd;border-radius:4px;display:block}
+  .print-record-header{background:#1a6b3c;color:#fff;padding:8px 12px;margin-bottom:8px;border-radius:4px}
+  .print-record-header h3{font-size:14px;font-weight:700;margin:0}
+  .print-record-header p{font-size:11px;opacity:.85;margin:2px 0 0}
+  .print-amount-box{background:#e8f5ee;border:1px solid #a8dbbf;border-radius:4px;padding:8px 12px;margin:6px 0;display:flex;justify-content:space-between;align-items:center}
+  .print-amount-box.pending{background:#fee2e2;border-color:#fca5a5}
+  .print-amount-box .alabel{font-size:11px;color:#555}
+  .print-amount-box .aval{font-size:16px;font-weight:700;color:#1a6b3c}
+  .print-amount-box.pending .aval{color:#dc2626}
 }
+
+/* ========================================
+   🔴 FIX #18: MOBILE MEDIA QUERY
+   Improved from max-width: 600px
+   ======================================== */
+@media (max-width: 600px) {
+  body {
+    max-width: 100%;
+    margin: 0;
+  }
+
+  .app-header {
+    padding: 10px 12px;
+    padding-top: max(10px, env(safe-area-inset-top));
+  }
+
+  .app-header h1 {
+    font-size: 16px;
+  }
+
+  .screen {
+    padding: 10px 10px 100px;
+    padding-left: max(10px, env(safe-area-inset-left));
+    padding-right: max(10px, env(safe-area-inset-right));
+  }
+
+  .card, .stat-card, .rec-card {
+    padding: 12px;
+  }
+
+  .stat-grid {
+    gap: 8px;
+  }
+
+  .form-input {
+    font-size: 16px;
+    padding: 12px;
+    min-height: 44px;
+  }
+
+  .toggle-btn {
+    font-size: 12px;
+    padding: 9px 8px;
+  }
+
+  .fab {
+    bottom: 78px;
+    right: max(12px, env(safe-area-inset-right));
+  }
+
+  .photo-slots {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .detail-header {
+    padding: 10px 12px;
+    padding-top: max(10px, env(safe-area-inset-top));
+  }
+
+  .detail-header h2 {
+    font-size: 15px;
+  }
 }
+
+/* Extra small phones */
+@media (max-width: 380px) {
+  .app-header h1 {
+    font-size: 14px;
+  }
+
+  .stat-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .photo-slots {
+    grid-template-columns: 1fr;
+  }
+}
+
 </style>
 </head>
 <body>
@@ -217,7 +902,8 @@ overflow-y:auto;
 </nav>
 </div>
 
-<div id="formOverlay" style="display:none;position:fixed;inset:0;background:#fff;z-index:150;overflow-y:auto;max-width:none;left:0;transform:none">
+<!-- 🔴 FIX #19: FORM OVERLAY - Changed display:none to not showing by default, uses class "open" -->
+<div id="formOverlay">
 <div class="detail-header">
 <button class="back-btn" id="formBack">←</button>
 <h2 id="formTitle">नवीन नोंद</h2>
@@ -273,7 +959,8 @@ overflow-y:auto;
 </div>
 </div>
 
-<div id="detailOverlay" style="display:none;position:fixed;inset:0;background:#fff;z-index:150;overflow-y:auto;max-width:none;left:0;transform:none">
+<!-- 🔴 FIX #20: OTHER OVERLAYS - Same treatment -->
+<div id="detailOverlay">
 <div class="detail-header">
 <button class="back-btn" id="detailBack">←</button>
 <h2 id="detailTitle">नोंद तपशील</h2>
@@ -281,7 +968,7 @@ overflow-y:auto;
 <div style="padding:12px 12px 80px" id="detailBody"></div>
 </div>
 
-<div id="traderFormOverlay" style="display:none;position:fixed;inset:0;background:#fff;z-index:150;overflow-y:auto;max-width:none;left:0;transform:none">
+<div id="traderFormOverlay">
 <div class="detail-header">
 <button class="back-btn" id="traderFormBack">←</button>
 <h2 id="traderFormTitle">व्यापारी जोडा</h2>
@@ -295,7 +982,7 @@ overflow-y:auto;
 </div>
 </div>
 
-<div id="ledgerOverlay" style="display:none;position:fixed;inset:0;background:#fff;z-index:150;overflow-y:auto;max-width:none;left:0;transform:none">
+<div id="ledgerOverlay">
 <div class="detail-header">
 <button class="back-btn" id="ledgerBack">←</button>
 <h2 id="ledgerTitle">व्यापारी खातेवही</h2>
@@ -320,6 +1007,21 @@ overflow-y:auto;
 <div id="printArea"></div>
 
 <script>
+/* ========================================
+   🔴 IMPORTANT FIX #21: OVERLAY VISIBILITY
+   Change how overlays are shown/hidden
+   Use .open class instead of style="display:block"
+   ======================================== */
+
+// Update these functions to use .open class:
+function showOverlay(id) {
+  document.getElementById(id).classList.add('open');
+}
+
+function hideOverlay(id) {
+  document.getElementById(id).classList.remove('open');
+}
+
 const LANG={
 mr:{appName:'केळी हिशोब साथी',dashboard:'डॅशबोर्ड',farmM:'शेत म',farmP:'शेत प',
 records:'नोंदी',traders:'व्यापारी',addRecord:'नवीन नोंद',totalIncome:'एकूण उत्पन्न',
@@ -581,7 +1283,7 @@ function openAddForm(){
     alert(t('addTraderFirst'));
     editingTrader=null;
     ['tf_name','tf_phone','tf_village','tf_note'].forEach(id=>document.getElementById(id).value='');
-    document.getElementById('traderFormOverlay').style.display='block';
+    showOverlay('traderFormOverlay');
     return;
   }
   editingRecord=null;
@@ -598,11 +1300,11 @@ function openAddForm(){
   document.querySelectorAll('#farmToggle .toggle-btn').forEach(b=>b.classList.toggle('active',b.dataset.farm==='M'));
   document.querySelectorAll('#harvestToggle .toggle-btn').forEach(b=>b.classList.toggle('active',b.dataset.harvest==='ghad'));
   buildFarmFields();
-  document.getElementById('formOverlay').style.display='block';
+  showOverlay('formOverlay');
   document.getElementById('formTitle').textContent=t('addRecord');
   applyLang();
 }
-document.getElementById('formBack').addEventListener('click',()=>{document.getElementById('formOverlay').style.display='none';});
+document.getElementById('formBack').addEventListener('click',()=>{ hideOverlay('formOverlay');});
 
 document.getElementById('farmToggle').addEventListener('click',e=>{
   const btn=e.target.closest('.toggle-btn');if(!btn)return;
@@ -631,8 +1333,8 @@ function buildFarmFields(){
         <div><label class="form-label">kg</label><input type="number" class="form-input" id="f_${fm}_dKg" placeholder="0" min="0" max="99" oninput="recalcAll()"></div>
       </div></div>
       <div class="form-group" style="display:flex;align-items:center;gap:10px">
-        <input type="checkbox" id="f_${fm}_3pct" style="width:18px;height:18px" onchange="recalcAll()">
-        <label for="f_${fm}_3pct" style="font-size:14px">${t('threePct')} <span id="f_${fm}_3pctAmt" style="color:var(--blue);font-size:12px"></span></label>
+        <input type="checkbox" id="f_${fm}_3pct" style="width:18px;height:18px;cursor:pointer" onchange="recalcAll()">
+        <label for="f_${fm}_3pct" style="font-size:14px;margin:0;cursor:pointer">${t('threePct')} <span id="f_${fm}_3pctAmt" style="color:var(--blue);font-size:12px"></span></label>
       </div>`;
     }
     html+=`<div class="auto-box blue" id="f_${fm}_netW" style="margin-bottom:8px">${t('netWeight')}: 0.00 Q</div>`;
@@ -753,7 +1455,7 @@ document.getElementById('saveRecordBtn').addEventListener('click',()=>{
   const recs=getRecords();
   recs.unshift(rec);
   saveRecords(recs);
-  document.getElementById('formOverlay').style.display='none';
+  hideOverlay('formOverlay');
   showToast(t('saved'));
   renderAll();
 });
@@ -800,7 +1502,7 @@ function delPhoto(e,key){
 function openDetail(id){
   const r=getRecords().find(x=>x.id===id);
   if(!r)return;
-  document.getElementById('detailOverlay').style.display='block';
+  showOverlay('detailOverlay');
   document.getElementById('detailTitle').textContent=t('recordDetail');
   const htLabel=r.harvestType==='ghad'?'केळीचे घड':r.harvestType==='box'?'Box Packing':'फणाया';
   const farmBadge=r.farmType==='M'?`<span class="badge badge-m">शेत म</span>`:r.farmType==='P'?`<span class="badge badge-p">शेत प</span>`:`<span class="badge badge-mp">म+प</span>`;
@@ -877,7 +1579,7 @@ function openDetail(id){
   html+=`<button class="danger-btn" onclick="deleteRecord('${r.id}')">${t('delete')}</button>`;
   document.getElementById('detailBody').innerHTML=html;
 }
-document.getElementById('detailBack').addEventListener('click',()=>{document.getElementById('detailOverlay').style.display='none';});
+document.getElementById('detailBack').addEventListener('click',()=>{ hideOverlay('detailOverlay');});
 
 function openPaySheet(id){
   const today2=today();
@@ -928,16 +1630,16 @@ function savePayment(id){
 function deleteRecord(id){
   if(!confirm(t('confirmDelete')))return;
   saveRecords(getRecords().filter(r=>r.id!==id));
-  document.getElementById('detailOverlay').style.display='none';
+  hideOverlay('detailOverlay');
   showToast(t('deleted'));renderAll();
 }
 
 document.getElementById('addTraderBtn').addEventListener('click',()=>{
   editingTrader=null;
   ['tf_name','tf_phone','tf_village','tf_note'].forEach(id=>document.getElementById(id).value='');
-  document.getElementById('traderFormOverlay').style.display='block';
+  showOverlay('traderFormOverlay');
 });
-document.getElementById('traderFormBack').addEventListener('click',()=>{document.getElementById('traderFormOverlay').style.display='none';});
+document.getElementById('traderFormBack').addEventListener('click',()=>{ hideOverlay('traderFormOverlay');});
 document.getElementById('saveTraderBtn').addEventListener('click',()=>{
   const name=document.getElementById('tf_name').value.trim();
   if(!name){showToast('नाव आवश्यक आहे');return;}
@@ -946,7 +1648,7 @@ document.getElementById('saveTraderBtn').addEventListener('click',()=>{
   if(editingTrader){const i=traders.findIndex(t=>t.id===editingTrader);if(i>=0)traders[i]=tr;}
   else traders.push(tr);
   saveTraders(traders);
-  document.getElementById('traderFormOverlay').style.display='none';
+  hideOverlay('traderFormOverlay');
   showToast(t('traderSaved'));renderTraders();
 });
 
@@ -967,15 +1669,15 @@ function openLedger(traderId){
   html+=recs.map(r=>recCardHTML(r)).join('')||`<div class="empty-state"><span class="emoji">📋</span>${t('noRecords')}</div>`;
   html+=`<button class="danger-btn" onclick="deleteTrader('${traderId}')" style="margin-top:12px">व्यापारी हटवा</button>`;
   document.getElementById('ledgerBody').innerHTML=html;
-  document.getElementById('ledgerOverlay').style.display='block';
+  showOverlay('ledgerOverlay');
 }
 function deleteTrader(id){
   if(!confirm('व्यापारी हटवायचा आहे का?'))return;
   saveTraders(getTraders().filter(t=>t.id!==id));
-  document.getElementById('ledgerOverlay').style.display='none';
+  hideOverlay('ledgerOverlay');
   showToast(t('traderDeleted'));renderTraders();
 }
-document.getElementById('ledgerBack').addEventListener('click',()=>{document.getElementById('ledgerOverlay').style.display='none';});
+document.getElementById('ledgerBack').addEventListener('click',()=>{ hideOverlay('ledgerOverlay');});
 
 function closeSheet(){document.getElementById('sheetOverlay').classList.remove('open')}
 function openLightbox(src){document.getElementById('lightboxImg').src=src;document.getElementById('lightbox').classList.add('open')}
