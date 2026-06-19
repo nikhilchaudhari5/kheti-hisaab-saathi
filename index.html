@@ -2,10 +2,8 @@
 <html lang="mr">
 <head>
 <meta charset="UTF-8">
-<!-- 🔴 FIX #1: CRITICAL - Improved Viewport Meta Tag (Was missing viewport-fit=cover) -->
-<!-- This tells the phone how to display your app on different screen sizes -->
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=5.0, user-scalable=yes">
-<title>केळी हिशोब </title>
+<title>केळी हिशोब</title>
 <link rel="manifest" href="manifest.json">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
@@ -1033,7 +1031,6 @@ body {
 </nav>
 </div>
 
-<!-- 🔴 FIX #19: FORM OVERLAY - Changed display:none to not showing by default, uses class "open" -->
 <div id="formOverlay">
 <div class="detail-header">
 <button class="back-btn" id="formBack">←</button>
@@ -1090,7 +1087,6 @@ body {
 </div>
 </div>
 
-<!-- 🔴 FIX #20: OTHER OVERLAYS - Same treatment -->
 <div id="detailOverlay">
 <div class="detail-header">
 <button class="back-btn" id="detailBack">←</button>
@@ -1113,7 +1109,6 @@ body {
 </div>
 </div>
 
-<!-- EDIT CONFIRM OVERLAY - FULL SCREEN -->
 <div id="editConfirmOverlay">
 <div class="detail-header">
 <button class="back-btn" id="editConfirmBack">←</button>
@@ -1138,23 +1133,22 @@ body {
 </div>
 </div>
 
-<!-- ACTION MENU OVERLAY -->
-<div class="action-menu-overlay" id="actionMenuOverlay" onclick="closeActionMenu()">
-  <div class="action-menu-box" onclick="event.stopPropagation()">
-    <div class="action-menu-header">
-      <div class="trader" id="actionMenuTrader">व्यापारी</div>
-      <div class="meta" id="actionMenuMeta">तारीख · शेत · ₹ रक्कम</div>
-    </div>
-    <button class="action-menu-btn view" id="actionMenuView">👁️ तपशील पहा (View Details)</button>
-    <button class="action-menu-btn edit" id="actionMenuEdit">✏️ संपादित करा (Edit)</button>
-    <button class="action-menu-btn delete" id="actionMenuDelete">🗑️ हटवा (Delete)</button>
-    <button class="action-menu-cancel" onclick="closeActionMenu()">रद्द करा (Cancel)</button>
-  </div>
-</div>
-
 <div class="lightbox" id="lightbox" onclick="closeLightbox()">
 <button class="lightbox-close" onclick="closeLightbox()">✕</button>
 <img id="lightboxImg" src="" alt="">
+</div>
+
+<div class="action-menu-overlay" id="actionMenuOverlay" onclick="closeActionMenu()">
+  <div class="action-menu-box" onclick="event.stopPropagation()">  
+    <div class="action-menu-header">    
+      <div class="trader" id="actionMenuTrader"></div>    
+      <div class="meta" id="actionMenuMeta"></div>  
+    </div>  
+    <button class="action-menu-btn view" id="actionMenuView">👁️ तपशील पहा (View Details)</button>  
+    <button class="action-menu-btn edit" id="actionMenuEdit">✏️ संपादित करा (Edit)</button>  
+    <button class="action-menu-btn delete" id="actionMenuDelete">🗑️ हटवा (Delete)</button>  
+    <button class="action-menu-cancel" onclick="closeActionMenu()">रद्द करा (Cancel)</button>
+  </div>
 </div>
 
 <div class="toast" id="toast"></div>
@@ -1193,7 +1187,7 @@ traderDeleted:'व्यापारी हटवला',noRecords:'कोणत
 noTraders:'कोणतेही व्यापारी नाहीत 🤝',recentRecords:'अलीकडील नोंदी',
 combinedSummary:'एकत्रित सारांश',allRecords:'सर्व नोंदी',
 farmMFull:'मोरगाव काढचं शेत',farmPFull:'पाटोंदी काढचं शेत',
-deduction:'कपात/तारा',threePct:'3% अतिरिक्त',netWeight:'निव्वळ वजन (Q)',
+deduction:'कपात/तारा',threePct:'3% अतिरिक्त',netWeight:'निव्व वजन (Q)',
 grossIncome:'एकूण उत्पन्न',netIncome:'निव्वळ उत्पन्न',totalLabour:'एकूण मजुरी',
 labourRate:'मजुरी दर/घड',ghadsCount:'घड संख्या',recordDetail:'नोंद तपशील',
 ledger:'खातेवही',records_count:'नोंदी',totalWeight:'एकूण वजन Q',
@@ -1325,6 +1319,7 @@ function handlePressStart(e){
     openActionMenu(card.dataset.id);   // CHANGED: open menu, not the form
   },550);
 }
+
 function handlePressEnd(e){
   clearTimeout(pressTimer);
   if(pressedCard)pressedCard.classList.remove('pressing');
@@ -1340,7 +1335,7 @@ function showEditHint(){
   const div=document.createElement('div');
   div.id='editHintToast';
   div.className='edit-hint-toast';
-  div.textContent='✏️ संपादित/हटवण्यासाठी नोंदीवर दाबून ठेवा (Long-press for options)';}
+  div.textContent='✏️ संपादित/हटवण्यासाठी नोंदीवर दाबून ठेवा (Long-press for options)';
   document.body.appendChild(div);
   setTimeout(()=>div.classList.add('show'),50);
   setTimeout(()=>{div.classList.remove('show');setTimeout(()=>div.remove(),300);},3000);
@@ -1541,7 +1536,7 @@ function performUpdate(){
     rec[`${p}_ghads`]=ghads;rec[`${p}_labourRate`]=labRate;rec[`${p}_totalLabour`]=c.labCost;
     rec[`${p}_grossIncome`]=c.gross;rec[`${p}_netIncome`]=c.net;
     totalNet+=c.net;totalWQ+=c.netWQ;totalLabour+=c.labCost;totalGross+=c.gross;
-   const prefix=farms.length>1?`${fm}_`:'';
+    const prefix=farms.length>1?`${fm}_`:'';
     rec[`${p}_photoTollBefore`]=photoTargets[prefix+'tollBefore']||rec[`${p}_photoTollBefore`]||null;
     rec[`${p}_photoTollAfter`]=photoTargets[prefix+'tollAfter']||rec[`${p}_photoTollAfter`]||null;
     const newPatti=[0,1,2].map(i=>photoTargets[`${prefix}patti_${i}`]||null).filter(Boolean);
@@ -1828,7 +1823,7 @@ document.getElementById('saveRecordBtn').addEventListener('click',()=>{
   if(editingRecord){
     openEditConfirm();   // EDIT mode → show confirmation first
   } else {
-    saveRecord();         // ADD mode → save directly (unchanged)
+    saveRecord();        // ADD mode → save directly (unchanged)
   }
 });
 
