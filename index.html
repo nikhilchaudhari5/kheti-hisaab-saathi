@@ -825,6 +825,50 @@ body {
 .action-menu-btn.edit{color:var(--blue)}
 .action-menu-btn.view{color:var(--text)}
 .action-menu-btn.delete{color:var(--red)}
+
+/* ===== GHAD BREAKDOWN CARD (NEW) ===== */
+.ghad-breakdown-card{
+  background:var(--card);
+  border-radius:12px;
+  padding:12px;
+  box-shadow:0 1px 3px rgba(0,0,0,.08);
+}
+.ghad-breakdown-card .stat-label{font-size:11px;color:var(--muted);margin-bottom:6px}
+.ghad-line{
+  display:flex;
+  justify-content:space-between;
+  align-items:baseline;
+  padding:3px 0;
+  font-size:13px;
+}
+.ghad-line .ghad-tag{color:var(--muted)}
+.ghad-line .ghad-num{font-weight:700}
+.ghad-line.total{
+  border-top:1px solid var(--border);
+  margin-top:4px;
+  padding-top:6px;
+}
+.ghad-line.total .ghad-num{color:var(--green);font-size:18px}
+.ghad-line.solo .ghad-num{color:var(--blue)}
+.ghad-line.combined .ghad-num{color:#854d0e}
+
+/* ===== DASHBOARD COMBINED SECTION (NEW) ===== */
+.combined-section-header{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  margin:18px 0 8px;
+}
+.combined-section-header .sec-title{margin:0}
+.combined-count-badge{
+  background:#fef9c3;
+  color:#854d0e;
+  font-size:11px;
+  font-weight:700;
+  padding:2px 10px;
+  border-radius:10px;
+}
+
 .action-menu-cancel{
   width:100%;
   padding:14px;
@@ -997,16 +1041,23 @@ body {
 <div class="stat-grid" id="dash-stats"></div>
 <div class="sec-title" id="lbl-recent">अलीकडील नोंदी</div>
 <div id="dash-recent"></div>
+<div class="combined-section-header" id="combinedHeader" style="display:none">
+  <div class="sec-title">🌿🌿 एकत्रित नोंदी (Combined)</div>
+  <div class="combined-count-badge" id="combinedCountBadge">0</div>
+</div>
+<div id="dash-combined"></div>
 </div>
 
 <div class="screen" id="screen-farmM">
 <div class="stat-grid" id="farmM-stats"></div>
+<div class="ghad-breakdown-card" id="farmM-ghadBreakdown"></div>
 <div class="sec-title">मोरगाव नोंदी</div>
 <div id="farmM-records"></div>
 </div>
 
 <div class="screen" id="screen-farmP">
 <div class="stat-grid" id="farmP-stats"></div>
+<div class="ghad-breakdown-card" id="farmP-ghadBreakdown"></div>
 <div class="sec-title">पाटोंदी नोंदी</div>
 <div id="farmP-records"></div>
 </div>
@@ -1279,6 +1330,30 @@ function statCardsHTML(stats){
 <div class="stat-card"><div class="stat-label">${t('weight')} Q</div><div class="stat-val blue">${fmtQ(stats.weightQ)}</div></div>
 <div class="stat-card"><div class="stat-label">${t('ghads')}</div><div class="stat-val blue">${stats.ghads}</div></div>
 <div class="stat-card"><div class="stat-label">${t('labour')}</div><div class="stat-val">₹${fmt(stats.labour)}</div></div>`;
+}
+
+/* ===== GHAD BREAKDOWN: Solo vs Combined-share (NEW) ===== */
+function computeGhadBreakdown(records, farm){
+  let solo=0, fromCombined=0;
+  const p=farm.toLowerCase();
+  records.forEach(r=>{
+    if(r.farmType===farm){
+      solo += r[`${p}_ghads`]||0;
+    } else if(r.farmType==='MP'){
+      fromCombined += r[`${p}_ghads`]||0;
+    }
+  });
+  return { solo, fromCombined, total: solo+fromCombined };
+}
+
+function ghadBreakdownHTML(farm){
+  const recs=getRecords();
+  const b=computeGhadBreakdown(recs, farm);
+  const farmLabel=farm==='M'?'शेत म':'शेत प';
+  return `<div class="stat-label">घड तपशील (${farmLabel})</div>
+    <div class="ghad-line solo"><span class="ghad-tag">फक्त ${farmLabel} (एकटे)</span><span class="ghad-num">${b.solo}</span></div>
+    <div class="ghad-line combined"><span class="ghad-tag">एकत्रित (म+प) मधून</span><span class="ghad-num">${b.fromCombined}</span></div>
+    <div class="ghad-line total"><span class="ghad-tag">एकूण घड</span><span class="ghad-num">${b.total}</span></div>`;
 }
 
 function computeStats(records,farmFilter){
@@ -1573,11 +1648,21 @@ function renderDash(){
   const recent=[...recs].sort((a,b)=>b.date.localeCompare(a.date)).slice(0,5);
   const el=document.getElementById('dash-recent');
   el.innerHTML=recent.length?recent.map(r=>recCardHTML(r)).join(''):`<div class="empty-state"><span class="emoji">🌱</span>${t('noRecords')}</div>`;
+
+  // NEW: Combined (Both farm) records section
+  const combinedRecs=[...recs].filter(r=>r.farmType==='MP').sort((a,b)=>b.date.localeCompare(a.date));
+  document.getElementById('combinedCountBadge').textContent=combinedRecs.length;
+  document.getElementById('combinedHeader').style.display=combinedRecs.length?'flex':'none';
+  const combinedEl=document.getElementById('dash-combined');
+  combinedEl.innerHTML=combinedRecs.length
+    ? combinedRecs.map(r=>recCardHTML(r)).join('')
+    : '';
 }
 
 function renderFarmScreen(farm){
   const recs=getRecords().filter(r=>r.farmType===farm||r.farmType==='MP');
   document.getElementById('farm'+farm+'-stats').innerHTML=statCardsHTML(computeStats(recs,farm));
+  document.getElementById('farm'+farm+'-ghadBreakdown').innerHTML=ghadBreakdownHTML(farm);
   const el=document.getElementById('farm'+farm+'-records');
   const sorted=[...recs].sort((a,b)=>b.date.localeCompare(a.date));
   el.innerHTML=sorted.length?sorted.map(r=>recCardHTML(r)).join(''):`<div class="empty-state"><span class="emoji">🌿</span>${t('noRecords')}</div>`;
@@ -1685,7 +1770,7 @@ function renderAll(){
   const hasRecs=getRecords().length>0;
   document.getElementById('pdfBtn').style.display=(curTab==='dash'&&hasRecs)?'block':'none';
   // Attach long-press to all record-list containers (NEW)
-  ['dash-recent','farmM-records','farmP-records','all-records'].forEach(id=>{
+  ['dash-recent','farmM-records','farmP-records','all-records','dash-combined'].forEach(id=>{
     const el=document.getElementById(id);
     if(el && !el.dataset.longPressAttached){
       attachLongPress(el);
@@ -1736,9 +1821,49 @@ document.getElementById('harvestToggle').addEventListener('click',e=>{
 });
 
 function buildFarmFields(){
-  const farms=curFarm==='MP'?['M','P']:[curFarm];
+  const isCombined = curFarm==='MP';
   let html='';
-  farms.forEach(fm=>{
+
+  if(isCombined){
+    html+=`<div class="farm-header">🌿🌿 ${t('farmMLong')} + ${t('farmPLong')} — एकत्रित मोजणी</div>`;
+    html+=`<div class="form-group"><div class="sec-title" style="margin-top:8px">${t('weight')} (एकत्रित — गाडी एकदाच वजन होते)</div><div class="row2">
+      <div><label class="form-label">Q</label><input type="number" class="form-input" id="f_C_wQ" placeholder="0" min="0" oninput="recalcAll()"></div>
+      <div><label class="form-label">kg</label><input type="number" class="form-input" id="f_C_wKg" placeholder="0" min="0" max="99" oninput="recalcAll()"></div>
+    </div><div class="form-hint">दोन्ही शेतांची मिळून एकूण गाडी वजन (2 Q + 34 kg = 2.34 Q)</div></div>`;
+
+    if(curHarvest!=='box'){
+      html+=`<div class="form-group"><div class="sec-title" style="margin-top:8px">${t('deduction')} (एकत्रित)</div><div class="row2">
+        <div><label class="form-label">Q</label><input type="number" class="form-input" id="f_C_dQ" placeholder="0" min="0" oninput="recalcAll()"></div>
+        <div><label class="form-label">kg</label><input type="number" class="form-input" id="f_C_dKg" placeholder="0" min="0" max="99" oninput="recalcAll()"></div>
+      </div></div>
+      <div class="form-group" style="display:flex;align-items:center;gap:10px">
+        <input type="checkbox" id="f_C_3pct" style="width:18px;height:18px;cursor:pointer" onchange="recalcAll()">
+        <label for="f_C_3pct" style="font-size:14px;margin:0;cursor:pointer">${t('threePct')} <span id="f_C_3pctAmt" style="color:var(--blue);font-size:12px"></span></label>
+      </div>`;
+    }
+
+    html+=`<div class="auto-box blue" id="f_C_netW" style="margin-bottom:8px">${t('netWeight')}: 0.00 Q</div>`;
+    html+=`<div class="auto-box green" id="f_C_grossInc" style="margin-bottom:12px">एकत्रित उत्पन्न (Gross): ₹0</div>`;
+
+    html+=`<div class="sec-title">पावत्या (एकत्रित — फक्त एकदाच अपलोड करा)</div>`;
+    html+=photoSectionHTML('tollBefore','टोल आधी',1);
+    html+=photoSectionHTML('tollAfter','टोल नंतर',1);
+    html+=photoSectionHTML('patti','पट्टी',3);
+
+    html+=`<div class="sec-title" style="margin-top:18px">👷 प्रत्येक शेताची मजुरी (वेगवेगळी)</div>`;
+
+    ['M','P'].forEach(fm=>{
+      const label=fm==='M'?t('farmMFull'):t('farmPFull');
+      html+=`<div class="farm-header" style="margin-top:10px">🌿 ${label}</div>`;
+      html+=`<div class="form-group"><div class="row2">
+        <div><label class="form-label">${t('ghadsCount')}</label><input type="number" class="form-input" id="f_${fm}_ghads" placeholder="0" min="0" oninput="recalcAll()"></div>
+        <div><label class="form-label">${t('labourRate')}</label><input type="number" class="form-input" id="f_${fm}_labRate" placeholder="10" min="0" oninput="recalcAll()"></div>
+      </div>
+      <div class="auto-box blue" style="margin-top:6px;font-size:13px" id="f_${fm}_labFormula">0 × ₹10 = ₹0</div></div>`;
+    });
+
+  } else {
+    const fm=curFarm;
     const label=fm==='M'?t('farmMFull'):t('farmPFull');
     html+=`<div class="farm-header">🌿 ${label}</div>`;
     html+=`<div class="form-group"><div class="sec-title" style="margin-top:8px">${t('weight')}</div><div class="row2">
@@ -1762,12 +1887,12 @@ function buildFarmFields(){
     </div>
     <div class="auto-box blue" style="margin-top:6px;font-size:13px" id="f_${fm}_labFormula">0 × ₹10 = ₹0</div></div>
     <div class="auto-box green" id="f_${fm}_netInc" style="margin-bottom:8px">${t('netIncome')}: ₹0</div>`;
-    const prefix=farms.length>1?`${fm}_`:'';
-    html+=`<div class="sec-title">${farms.length>1?label+' — ':''}पावत्या</div>`;
-    html+=photoSectionHTML(prefix+'tollBefore',`${farms.length>1?label+' — ':''}टोल आधी`,1);
-    html+=photoSectionHTML(prefix+'tollAfter',`${farms.length>1?label+' — ':''}टोल नंतर`,1);
-    html+=photoSectionHTML(prefix+'patti',`${farms.length>1?label+' — ':''}पट्टी`,3);
-  });
+    html+=`<div class="sec-title">पावत्या</div>`;
+    html+=photoSectionHTML('tollBefore','टोल आधी',1);
+    html+=photoSectionHTML('tollAfter','टोल नंतर',1);
+    html+=photoSectionHTML('patti','पट्टी',3);
+  }
+
   document.getElementById('farmFields').innerHTML=html;
   recalcAll();
 }
@@ -1782,11 +1907,49 @@ function photoSectionHTML(key,label,max){
 }
 
 function recalcAll(){
-  const farms=curFarm==='MP'?['M','P']:[curFarm];
   const rate=Number(document.getElementById('f_rate')?.value||0);
-  let totalNet=0,totalWQ=0,totalLabour=0,totalGross=0;
-  let summaryRows='';
-  farms.forEach(fm=>{
+  let totalNet=0, totalGross=0, totalLabour=0, netWQ=0;
+
+  if(curFarm==='MP'){
+    const Q=Number(document.getElementById('f_C_wQ')?.value||0);
+    const kg=Number(document.getElementById('f_C_wKg')?.value||0);
+    const dQ=curHarvest!=='box'?Number(document.getElementById('f_C_dQ')?.value||0):0;
+    const dKg=curHarvest!=='box'?Number(document.getElementById('f_C_dKg')?.value||0):0;
+    const is3=curHarvest!=='box'?(document.getElementById('f_C_3pct')?.checked||false):false;
+
+    const c=calcFarm(Q,kg,dQ,dKg,is3,0,0,rate);
+    netWQ=c.netWQ;
+    totalGross=c.gross;
+
+    const netWEl=document.getElementById('f_C_netW');
+    if(netWEl)netWEl.textContent=`${t('netWeight')}: ${fmtQ(c.netWQ)} Q`;
+    const grossEl=document.getElementById('f_C_grossInc');
+    if(grossEl)grossEl.textContent=`एकत्रित उत्पन्न (Gross): ₹${fmt(c.gross)}`;
+    const amt3El=document.getElementById('f_C_3pctAmt');
+    if(amt3El)amt3El.textContent=is3?`(-${fmtQ(c.threePct)} Q)`:'';
+
+    let summaryRows='';
+    ['M','P'].forEach(fm=>{
+      const ghads=Number(document.getElementById(`f_${fm}_ghads`)?.value||0);
+      const labRate=Number(document.getElementById(`f_${fm}_labRate`)?.value||10)||10;
+      const labCost=ghads*labRate;
+      totalLabour+=labCost;
+      const labEl=document.getElementById(`f_${fm}_labFormula`);
+      if(labEl)labEl.textContent=`${ghads} × ₹${labRate} = ₹${fmt(labCost)}`;
+      const lbl=fm==='M'?t('farmMLong'):t('farmPLong');
+      summaryRows+=`<div class="summary-row"><span>${lbl} मजुरी: ${ghads} घड × ₹${labRate}</span><span style="font-weight:700">₹${fmt(labCost)}</span></div>`;
+    });
+
+    totalNet=totalGross-totalLabour;
+
+    document.getElementById('combinedSummary').style.display='block';
+    document.getElementById('combinedBox').innerHTML=
+      `<div class="summary-row"><span>एकत्रित वजन: ${fmtQ(netWQ)}Q</span><span style="font-weight:700">₹${fmt(totalGross)}</span></div>`+
+      summaryRows+
+      `<hr class="summary-divider"><div class="summary-row summary-total"><span>निव्वळ उत्पन्न (Gross − मजुरी)</span><span>₹${fmt(totalNet)}</span></div>`;
+
+  } else {
+    const fm=curFarm;
     const Q=Number(document.getElementById(`f_${fm}_wQ`)?.value||0);
     const kg=Number(document.getElementById(`f_${fm}_wKg`)?.value||0);
     const dQ=curHarvest!=='box'?Number(document.getElementById(`f_${fm}_dQ`)?.value||0):0;
@@ -1795,6 +1958,7 @@ function recalcAll(){
     const ghads=Number(document.getElementById(`f_${fm}_ghads`)?.value||0);
     const labRate=Number(document.getElementById(`f_${fm}_labRate`)?.value||10)||10;
     const c=calcFarm(Q,kg,dQ,dKg,is3,ghads,labRate,rate);
+
     const netWEl=document.getElementById(`f_${fm}_netW`);
     if(netWEl)netWEl.textContent=`${t('netWeight')}: ${fmtQ(c.netWQ)} Q`;
     const labEl=document.getElementById(`f_${fm}_labFormula`);
@@ -1802,21 +1966,16 @@ function recalcAll(){
     const netEl=document.getElementById(`f_${fm}_netInc`);
     if(netEl)netEl.textContent=`${t('netIncome')}: ₹${fmt(c.net)}`;
     const amt3El=document.getElementById(`f_${fm}_3pctAmt`);
-    if(amt3El)amt3El.textContent=is3?`(-${fmtQ(c.threePct)} Q)`:''; 
-    totalNet+=c.net;totalWQ+=c.netWQ;totalLabour+=c.labCost;totalGross+=c.gross;
-    const lbl=fm==='M'?t('farmMLong'):t('farmPLong');
-    summaryRows+=`<div class="summary-row"><span>${lbl}: ${fmtQ(c.netWQ)}Q → ₹${fmt(c.gross)} (मजुरी ₹${fmt(c.labCost)})</span><span style="font-weight:700">₹${fmt(c.net)}</span></div>`;
-  });
+    if(amt3El)amt3El.textContent=is3?`(-${fmtQ(c.threePct)} Q)`:'';
+
+    totalNet=c.net; totalGross=c.gross; totalLabour=c.labCost; netWQ=c.netWQ;
+    document.getElementById('combinedSummary').style.display='none';
+  }
+
   const rec=Number(document.getElementById('f_received')?.value||0);
   const pend=Math.max(0,totalNet-rec);
   document.getElementById('f_netDisplay').textContent=`${t('netIncome')}: ₹${fmt(totalNet)}`;
   document.getElementById('f_pendingDisplay').textContent=`${t('pending')}: ₹${fmt(pend)}`;
-  if(curFarm==='MP'){
-    document.getElementById('combinedSummary').style.display='block';
-    document.getElementById('combinedBox').innerHTML=summaryRows+`<hr class="summary-divider"><div class="summary-row summary-total"><span>एकूण: ${fmtQ(totalWQ)}Q</span><span>₹${fmt(totalNet)}</span></div>`;
-  } else {
-    document.getElementById('combinedSummary').style.display='none';
-  }
 }
 
 document.getElementById('saveRecordBtn').addEventListener('click',()=>{
@@ -1837,25 +1996,52 @@ function saveRecord(){
   if(!trader){errEl.textContent=t('valTrader');errEl.style.display='block';return;}
   const rate=Number(document.getElementById('f_rate').value||0);
   if(!rate){errEl.textContent=t('valRate');errEl.style.display='block';return;}
-  const farms=curFarm==='MP'?['M','P']:[curFarm];
-  let hasWeight=false;
-  farms.forEach(fm=>{
-    const Q=Number(document.getElementById(`f_${fm}_wQ`)?.value||0);
-    const kg=Number(document.getElementById(`f_${fm}_wKg`)?.value||0);
-    if(Q>0||kg>0)hasWeight=true;
-  });
-  if(!hasWeight){errEl.textContent=t('valWeight');errEl.style.display='block';return;}
 
   const date=document.getElementById('f_date').value;
   const received=Number(document.getElementById('f_received').value||0);
   const note=document.getElementById('f_note').value;
   const vehicle=document.getElementById('f_vehicle').value;
   const rec={id:genId(),createdAt:Date.now(),date,traderId,traderName:trader.name,vehicle,harvestType:curHarvest,farmType:curFarm,rate,note,received};
-  let totalNet=0,totalWQ=0,totalLabour=0,totalGross=0;
 
-  farms.forEach(fm=>{
+  let totalNet=0, totalGross=0, totalLabour=0, netWQ=0;
+
+  if(curFarm==='MP'){
+    const Q=Number(document.getElementById('f_C_wQ')?.value||0);
+    const kg=Number(document.getElementById('f_C_wKg')?.value||0);
+    if(Q<=0 && kg<=0){errEl.textContent=t('valWeight');errEl.style.display='block';return;}
+
+    const dQ=curHarvest!=='box'?Number(document.getElementById('f_C_dQ')?.value||0):0;
+    const dKg=curHarvest!=='box'?Number(document.getElementById('f_C_dKg')?.value||0):0;
+    const is3=curHarvest!=='box'?(document.getElementById('f_C_3pct')?.checked||false):false;
+    const c=calcFarm(Q,kg,dQ,dKg,is3,0,0,rate);
+    netWQ=c.netWQ; totalGross=c.gross;
+
+    rec.c_totalWQ=Q; rec.c_totalWKg=kg; rec.c_totalWeightQ=c.totalWQ;
+    rec.c_dedQ=dQ; rec.c_dedKg=dKg; rec.c_deductionQ=c.dedQ;
+    rec.c_is3Pct=is3; rec.c_threePctDed=c.threePct; rec.c_netWeightQ=c.netWQ;
+    rec.c_grossIncome=c.gross;
+    rec.c_photoTollBefore=photoTargets['tollBefore']||null;
+    rec.c_photoTollAfter=photoTargets['tollAfter']||null;
+    rec.c_photoPatti=[0,1,2].map(i=>photoTargets[`patti_${i}`]||null).filter(Boolean);
+
+    ['M','P'].forEach(fm=>{
+      const ghads=Number(document.getElementById(`f_${fm}_ghads`)?.value||0);
+      const labRate=Number(document.getElementById(`f_${fm}_labRate`)?.value||10)||10;
+      const labCost=ghads*labRate;
+      const p=fm.toLowerCase();
+      rec[`${p}_ghads`]=ghads;
+      rec[`${p}_labourRate`]=labRate;
+      rec[`${p}_totalLabour`]=labCost;
+      totalLabour+=labCost;
+    });
+    totalNet=totalGross-totalLabour;
+
+  } else {
+    const fm=curFarm;
     const Q=Number(document.getElementById(`f_${fm}_wQ`)?.value||0);
     const kg=Number(document.getElementById(`f_${fm}_wKg`)?.value||0);
+    if(Q<=0 && kg<=0){errEl.textContent=t('valWeight');errEl.style.display='block';return;}
+
     const dQ=curHarvest!=='box'?Number(document.getElementById(`f_${fm}_dQ`)?.value||0):0;
     const dKg=curHarvest!=='box'?Number(document.getElementById(`f_${fm}_dKg`)?.value||0):0;
     const is3=curHarvest!=='box'?(document.getElementById(`f_${fm}_3pct`)?.checked||false):false;
@@ -1863,22 +2049,25 @@ function saveRecord(){
     const labRate=Number(document.getElementById(`f_${fm}_labRate`)?.value||10)||10;
     const c=calcFarm(Q,kg,dQ,dKg,is3,ghads,labRate,rate);
     const p=fm.toLowerCase();
+
     rec[`${p}_totalWQ`]=Q;rec[`${p}_totalWKg`]=kg;rec[`${p}_totalWeightQ`]=c.totalWQ;
     rec[`${p}_dedQ`]=dQ;rec[`${p}_dedKg`]=dKg;rec[`${p}_deductionQ`]=c.dedQ;
     rec[`${p}_is3Pct`]=is3;rec[`${p}_threePctDed`]=c.threePct;rec[`${p}_netWeightQ`]=c.netWQ;
     rec[`${p}_ghads`]=ghads;rec[`${p}_labourRate`]=labRate;rec[`${p}_totalLabour`]=c.labCost;
     rec[`${p}_grossIncome`]=c.gross;rec[`${p}_netIncome`]=c.net;
-    totalNet+=c.net;totalWQ+=c.netWQ;totalLabour+=c.labCost;totalGross+=c.gross;
-    const prefix=farms.length>1?`${fm}_`:'';
-    rec[`${p}_photoTollBefore`]=photoTargets[prefix+'tollBefore']||null;
-    rec[`${p}_photoTollAfter`]=photoTargets[prefix+'tollAfter']||null;
-    rec[`${p}_photoPatti`]=[0,1,2].map(i=>photoTargets[`${prefix}patti_${i}`]||null).filter(Boolean);
-  });
-  if(curFarm==='P'){rec.m_totalWQ=0;rec.m_netWeightQ=0;rec.m_netIncome=0;rec.m_totalLabour=0;rec.m_grossIncome=0;rec.m_ghads=0;}
-  if(curFarm==='M'){rec.p_totalWQ=0;rec.p_netWeightQ=0;rec.p_netIncome=0;rec.p_totalLabour=0;rec.p_grossIncome=0;rec.p_ghads=0;}
-  rec.combinedNetWeightQ=totalWQ;rec.combinedGrossIncome=totalGross;
-  rec.combinedLabour=totalLabour;rec.combinedNetIncome=totalNet;
+    rec[`${p}_photoTollBefore`]=photoTargets['tollBefore']||null;
+    rec[`${p}_photoTollAfter`]=photoTargets['tollAfter']||null;
+    rec[`${p}_photoPatti`]=[0,1,2].map(i=>photoTargets[`patti_${i}`]||null).filter(Boolean);
+
+    totalNet=c.net; totalGross=c.gross; totalLabour=c.labCost; netWQ=c.netWQ;
+  }
+
+  rec.combinedNetWeightQ=netWQ;
+  rec.combinedGrossIncome=totalGross;
+  rec.combinedLabour=totalLabour;
+  rec.combinedNetIncome=totalNet;
   rec.pending=Math.max(0,totalNet-received);
+
   const recs=getRecords();
   recs.unshift(rec);
   saveRecords(recs);
@@ -1964,13 +2153,45 @@ function openDetail(id){
     }
     return h;
   };
-  if(r.farmType==='M'||r.farmType==='MP') html+=farmRows('M','m_');
-  if(r.farmType==='P'||r.farmType==='MP') html+=farmRows('P','p_');
   if(r.farmType==='MP'){
-    html+=`<div class="farm-header">📊 एकत्रित</div><div class="card">
-      <div class="detail-row"><span class="label">${t('netWeight')}</span><span class="val">${fmtQ(r.combinedNetWeightQ)} Q</span></div>
-      <div class="detail-row"><span class="label">${t('netIncome')}</span><span class="val" style="color:var(--green);font-size:16px">₹${fmt(r.combinedNetIncome)}</span></div>
+    html+=`<div class="farm-header">🌿🌿 एकत्रित मोजणी</div><div class="card">`;
+    html+=`<div class="detail-row"><span class="label">${t('weight')}</span><span class="val">${r.c_totalWQ||0} Q + ${r.c_totalWKg||0} kg = ${fmtQ(r.c_totalWeightQ||0)} Q</span></div>`;
+    if(r.harvestType!=='box'){
+      html+=`<div class="detail-row"><span class="label">${t('deduction')}</span><span class="val">${fmtQ(r.c_deductionQ||0)} Q</span></div>`;
+      if(r.c_is3Pct)html+=`<div class="detail-row"><span class="label">${t('threePct')}</span><span class="val">-${fmtQ(r.c_threePctDed||0)} Q</span></div>`;
+    }
+    html+=`<div class="detail-row"><span class="label">${t('netWeight')}</span><span class="val" style="color:var(--blue)">${fmtQ(r.c_netWeightQ||0)} Q</span></div>`;
+    html+=`<div class="detail-row"><span class="label">${t('rate')}</span><span class="val">₹${fmt(r.rate)}/Q</span></div>`;
+    html+=`<div class="detail-row"><span class="label">एकत्रित उत्पन्न (Gross)</span><span class="val">₹${fmt(r.c_grossIncome||0)}</span></div>`;
+    html+='</div>';
+
+    const photos=[];
+    if(r.c_photoTollBefore)photos.push({src:r.c_photoTollBefore,lbl:'टोल आधी'});
+    if(r.c_photoTollAfter)photos.push({src:r.c_photoTollAfter,lbl:'टोल नंतर'});
+    (r.c_photoPatti||[]).forEach((s,i)=>{if(s)photos.push({src:s,lbl:`पट्टी ${i+1}`});});
+    if(photos.length){
+      html+=`<div class="photo-slots" style="grid-template-columns:repeat(3,1fr);margin-bottom:10px">`;
+      photos.forEach(ph=>{html+=`<div style="position:relative;aspect-ratio:1;border-radius:8px;overflow:hidden;cursor:pointer" onclick="openLightbox('${ph.src}')"><img src="${ph.src}" style="width:100%;height:100%;object-fit:cover"><div style="position:absolute;bottom:0;left:0;right:0;background:rgba(0,0,0,.5);color:#fff;font-size:9px;padding:2px 4px">${ph.lbl}</div></div>`;});
+      html+='</div>';
+    }
+
+    html+=`<div class="farm-header">👷 मजुरी (शेतनिहाय)</div><div class="card">`;
+    ['M','P'].forEach(fm=>{
+      const label=fm==='M'?t('farmMLong'):t('farmPLong');
+      const p=fm.toLowerCase();
+      html+=`<div class="detail-row"><span class="label">${label}</span><span class="val">${r[`${p}_ghads`]||0} घड × ₹${r[`${p}_labourRate`]||10} = ₹${fmt(r[`${p}_totalLabour`]||0)}</span></div>`;
+    });
+    html+=`<div class="detail-row" style="border-top:2px solid var(--border);margin-top:6px;padding-top:8px"><span class="label" style="font-weight:700">एकूण मजुरी</span><span class="val">₹${fmt(r.combinedLabour||0)}</span></div>`;
+    html+='</div>';
+
+    html+=`<div class="farm-header">📊 अंतिम निव्वळ उत्पन्न</div><div class="card">
+      <div class="detail-row"><span class="label">एकत्रित Gross</span><span class="val">₹${fmt(r.combinedGrossIncome||0)}</span></div>
+      <div class="detail-row"><span class="label">वजा एकूण मजुरी</span><span class="val" style="color:var(--red)">-₹${fmt(r.combinedLabour||0)}</span></div>
+      <div class="detail-row"><span class="label" style="font-weight:700">निव्वळ उत्पन्न</span><span class="val" style="color:var(--green);font-size:16px">₹${fmt(r.combinedNetIncome)}</span></div>
     </div>`;
+  } else {
+    if(r.farmType==='M') html+=farmRows('M','m_');
+    if(r.farmType==='P') html+=farmRows('P','p_');
   }
   html+=`<div class="farm-header">💰 ${t('payment')}</div><div class="card">
     <div class="detail-row"><span class="label">${t('netIncome')}</span><span class="val" style="color:var(--green)">₹${fmt(r.combinedNetIncome)}</span></div>
@@ -2069,7 +2290,7 @@ document.getElementById('addTraderBtn').addEventListener('click',()=>{
 document.getElementById('traderFormBack').addEventListener('click',()=>{ hideOverlay('traderFormOverlay');});
 document.getElementById('saveTraderBtn').addEventListener('click',()=>{
   const name=document.getElementById('tf_name').value.trim();
-  if(!name){showToast('नाव आवश्यक आहे');return;}
+  if(!name){showToast('नाव आवश्यकীয় आहे');return;}
   const traders=getTraders();
   const tr={id:editingTrader||genId(),name,phone:document.getElementById('tf_phone').value,village:document.getElementById('tf_village').value,note:document.getElementById('tf_note').value};
   if(editingTrader){const i=traders.findIndex(t=>t.id===editingTrader);if(i>=0)traders[i]=tr;}
@@ -2112,120 +2333,114 @@ function openLightbox(src){document.getElementById('lightboxImg').src=src;docume
 function closeLightbox(){document.getElementById('lightbox').classList.remove('open');setTimeout(()=>{document.getElementById('lightboxImg').src=''},300)}
 
 function generatePDF(){
-  const recs=getRecords().slice().sort((a,b)=>a.date.localeCompare(b.date));
+  const recs=getRecords().slice().sort((a,b)=>b.date.localeCompare(a.date)); // newest first
   if(!recs.length){showToast('नोंदी नाहीत');return;}
-  const traders=getTraders();
   const stats=computeStats(recs,null);
-  const statsM=computeStats(recs.filter(r=>r.farmType==='M'||r.farmType==='MP'),'M');
-  const statsP=computeStats(recs.filter(r=>r.farmType==='P'||r.farmType==='MP'),'P');
-  const dates=recs.map(r=>r.date);
-  const fromDate=fmtDate(dates[0]),toDate=fmtDate(dates[dates.length-1]);
+  const statsM=computeStats(recs,'M');
+  const statsP=computeStats(recs,'P');
+  const datesSorted=recs.map(r=>r.date).slice().sort();
+  const fromDate=fmtDate(datesSorted[0]), toDate=fmtDate(datesSorted[datesSorted.length-1]);
   const today2=fmtDate(new Date().toISOString().split('T')[0]);
+  const modeL={'cash':'रोख','cheque':'चेक','rtgs':'आरटीजीएस/एनईएफटी','phonepay':'फोनपे','gpay':'गुगल पे','upi':'युपीआय'};
+  const harvestL={'ghad':'केळीचे घड','box':'बॉक्स पॅकिंग','fanaya':'फणाया'};
+  const farmL={'M':'शेत म','P':'शेत प','MP':'शेत म + शेत प (एकत्रित)'};
+
   let html=`<div class="print-page">
     <div class="print-h1">केळी हिशोब साथी — संपूर्ण उत्पन्न अहवाल</div>
-    <div style="font-size:11px;color:#666">Kheti Hisaab Saathi — Complete Revenue Report</div>
-    <div style="margin:8px 0;font-size:12px">From: ${fromDate} &nbsp; To: ${toDate} &nbsp; Generated: ${today2}</div>
+    <div class="print-meta">कालावधी: ${fromDate} ते ${toDate} &nbsp; | &nbsp; तयार केले: ${today2}</div>
+    <div class="print-meta">सर्व नोंदी नवीनतम → जुनी क्रमाने खाली दिल्या आहेत</div>
     <hr class="print-divider">
-    <div class="print-h2">FARM M — मोरगाव काढचं शेत</div>
-    <div class="print-row"><span>Total Harvests</span><span>${recs.filter(r=>r.farmType==='M'||r.farmType==='MP').length}</span></div>
-    <div class="print-row"><span>Total Net Weight</span><span>${fmtQ(statsM.weightQ)} Q</span></div>
-    <div class="print-row"><span>Total Net Income</span><span>₹${fmt(statsM.income)}</span></div>
-    <div class="print-row"><span>Total Labour</span><span>₹${fmt(statsM.labour)}</span></div>
-    <div class="print-row"><span>Total Received</span><span>₹${fmt(statsM.received)}</span></div>
-    <div class="print-row"><span>Total Pending</span><span>₹${fmt(statsM.pending)}</span></div>
-    <div class="print-h2">FARM P — पाटोंदी काढचं शेत</div>
-    <div class="print-row"><span>Total Harvests</span><span>${recs.filter(r=>r.farmType==='P'||r.farmType==='MP').length}</span></div>
-    <div class="print-row"><span>Total Net Weight</span><span>${fmtQ(statsP.weightQ)} Q</span></div>
-    <div class="print-row"><span>Total Net Income</span><span>₹${fmt(statsP.income)}</span></div>
-    <div class="print-row"><span>Total Labour</span><span>₹${fmt(statsP.labour)}</span></div>
-    <div class="print-row"><span>Total Received</span><span>₹${fmt(statsP.received)}</span></div>
-    <div class="print-row"><span>Total Pending</span><span>₹${fmt(statsP.pending)}</span></div>
+    <div class="print-h2">शेत म — मोरगाव काढचं शेत</div>
+    <div class="print-row"><span>एकूण काढणी</span><span>${recs.filter(r=>r.farmType==='M'||r.farmType==='MP').length}</span></div>
+    <div class="print-row"><span>एकूण निव्वळ वजन (फक्त एकल नोंदी)</span><span>${fmtQ(statsM.weightQ)} क्विंटल</span></div>
+    <div class="print-row"><span>एकूण निव्वळ उत्पन्न (फक्त एकल नोंदी)</span><span>₹${fmt(statsM.income)}</span></div>
+    <div class="print-row"><span>एकूण मजुरी</span><span>₹${fmt(statsM.labour)}</span></div>
+    <div class="print-row"><span>एकूण घड (एकटे+एकत्रित मिळून)</span><span>${statsM.ghads}</span></div>
+    <div class="print-row"><span>एकूण मिळालेली रक्कम</span><span>₹${fmt(statsM.received)}</span></div>
+    <div class="print-row"><span>एकूण थकबाकी</span><span>₹${fmt(statsM.pending)}</span></div>
+    <div class="print-h2">शेत प — पाटोंदी काढचं शेत</div>
+    <div class="print-row"><span>एकूण काढणी</span><span>${recs.filter(r=>r.farmType==='P'||r.farmType==='MP').length}</span></div>
+    <div class="print-row"><span>एकूण निव्वळ वजन (फक्त एकल नोंदी)</span><span>${fmtQ(statsP.weightQ)} क्विंटल</span></div>
+    <div class="print-row"><span>एकूण निव्वळ उत्पन्न (फक्त एकल नोंदी)</span><span>₹${fmt(statsP.income)}</span></div>
+    <div class="print-row"><span>एकूण मजुरी</span><span>₹${fmt(statsP.labour)}</span></div>
+    <div class="print-row"><span>एकूण घड (एकटे+एकत्रित मिळून)</span><span>${statsP.ghads}</span></div>
+    <div class="print-row"><span>एकूण मिळालेली रक्कम</span><span>₹${fmt(statsP.received)}</span></div>
+    <div class="print-row"><span>एकूण थकबाकी</span><span>₹${fmt(statsP.pending)}</span></div>
     <hr class="print-divider">
-    <div class="print-h2">COMBINED TOTAL</div>
-    <div class="print-row"><span>Total Records</span><span>${recs.length}</span></div>
-    <div class="print-row"><span>Total Net Weight</span><span>${fmtQ(stats.weightQ)} Q</span></div>
-    <div class="print-row"><span>Total Net Income</span><span>₹${fmt(stats.income)}</span></div>
-    <div class="print-row"><span>Total Received</span><span>₹${fmt(stats.received)}</span></div>
-    <div class="print-row"><span>Total Pending</span><span>₹${fmt(stats.pending)}</span></div>
-    <hr class="print-divider">
-    <div class="print-h2">TRADER-WISE SUMMARY</div>
-    <table class="print-table"><thead><tr><th>Trader</th><th>Records</th><th>Weight Q</th><th>Income</th><th>Received</th><th>Pending</th></tr></thead><tbody>`;
-  traders.forEach(tr=>{
-    const tR=recs.filter(r=>r.traderId===tr.id);
-    html+=`<tr><td>${tr.name}</td><td>${tR.length}</td><td>${fmtQ(tR.reduce((s,r)=>s+(r.combinedNetWeightQ||0),0))}</td><td>₹${fmt(tR.reduce((s,r)=>s+(r.combinedNetIncome||0),0))}</td><td>₹${fmt(tR.reduce((s,r)=>s+(r.received||0),0))}</td><td>₹${fmt(tR.reduce((s,r)=>s+(r.pending||0),0))}</td></tr>`;
-  });
-  html+=`</tbody></table></div>`;
+    <div class="print-h2">सर्व मिळून एकूण</div>
+    <div class="print-row"><span>एकूण नोंदी</span><span>${recs.length}</span></div>
+    <div class="print-row"><span>एकूण निव्वळ वजन</span><span>${fmtQ(stats.weightQ)} क्विंटल</span></div>
+    <div class="print-row"><span>एकूण निव्वळ उत्पन्न</span><span>₹${fmt(stats.income)}</span></div>
+    <div class="print-row"><span>एकूण मिळालेली रक्कम</span><span>₹${fmt(stats.received)}</span></div>
+    <div class="print-row"><span>एकूण थकबाकी</span><span>₹${fmt(stats.pending)}</span></div>
+  </div>`;
+
   recs.forEach((r,idx)=>{
-    const htLabel=r.harvestType==='ghad'?'केळीचे घड':r.harvestType==='box'?'Box Packing':'फणाया';
-    const farmLabel=r.farmType==='MP'?'शेत म + शेत प':'शेत '+r.farmType;
+    const entryNum=recs.length-idx; // chronological numbering: highest number = most recent
     html+=`<div class="print-page">
       <div class="print-record-header">
-        <h3>नोंद #${idx+1} — ${r.traderName}</h3>
-        <p>${fmtDate(r.date)} &nbsp;|&nbsp; ${farmLabel} &nbsp;|&nbsp; ${htLabel}${r.vehicle?' &nbsp;|&nbsp; वाहन: '+r.vehicle:''}</p>
+        <h3>नोंद क्रमांक ${entryNum} — ${r.traderName}</h3>
+        <p>${fmtDate(r.date)}</p>
       </div>`;
-    const pSection=(fm,prefix)=>{
-      const lbl=fm==='M'?'FARM M — मोरगाव':'FARM P — पाटोंदी';
-      let s=`<div class="print-h3">── ${lbl} ─────────</div>`;
-      s+=`<div class="print-row"><span>एकूण वजन</span><span>${r[`${prefix}totalWQ`]||0} Q + ${r[`${prefix}totalWKg`]||0} kg = ${fmtQ(r[`${prefix}totalWeightQ`]||0)} Q</span></div>`;
+    html+=`<div class="print-h3">मूलभूत माहिती</div>`;
+    html+=`<div class="print-row"><span>तारीख</span><span>${fmtDate(r.date)}</span></div>`;
+    html+=`<div class="print-row"><span>व्यापारी</span><span>${r.traderName}</span></div>`;
+    if(r.vehicle)html+=`<div class="print-row"><span>वाहन क्रमांक</span><span>${r.vehicle}</span></div>`;
+    html+=`<div class="print-row"><span>शेत</span><span>${farmL[r.farmType]||r.farmType}</span></div>`;
+    html+=`<div class="print-row"><span>काढणी प्रकार</span><span>${harvestL[r.harvestType]||r.harvestType}</span></div>`;
+    html+=`<div class="print-row"><span>दर</span><span>₹${fmt(r.rate)} प्रति क्विंटल</span></div>`;
+    if(r.farmType==='MP'){
+      html+=`<div class="print-h3">वजन व उत्पन्न (एकत्रित)</div>`;
+      html+=`<div class="print-row"><span>एकूण वजन</span><span>${r.c_totalWQ||0} क्विं + ${r.c_totalWKg||0} किलो</span></div>`;
       if(r.harvestType!=='box'){
-        s+=`<div class="print-row"><span>कपात</span><span>${fmtQ(r[`${prefix}deductionQ`]||0)} Q</span></div>`;
-        if(r[`${prefix}is3Pct`])s+=`<div class="print-row"><span>3% कपात</span><span>${fmtQ(r[`${prefix}threePctDed`]||0)} Q</span></div>`;
+        html+=`<div class="print-row"><span>कपात/तारा</span><span>${r.c_dedQ||0} क्विं + ${r.c_dedKg||0} किलो</span></div>`;
+        if(r.c_is3Pct)html+=`<div class="print-row"><span>3% अतिरिक्त कपात</span><span>${fmtQ(r.c_threePctDed||0)} क्विंटल</span></div>`;
       }
-      s+=`<div class="print-row"><span>निव्वळ वजन</span><span>${fmtQ(r[`${prefix}netWeightQ`]||0)} Q</span></div>`;
-      s+=`<div class="print-row"><span>दर</span><span>₹${fmt(r.rate)}/Q</span></div>`;
-      s+=`<div class="print-row"><span>एकूण उत्पन्न</span><span>₹${fmt(r[`${prefix}grossIncome`]||0)}</span></div>`;
-      s+=`<div class="print-row"><span>मजुरी (${r[`${prefix}ghads`]||0} × ₹${r[`${prefix}labourRate`]||10})</span><span>₹${fmt(r[`${prefix}totalLabour`]||0)}</span></div>`;
-      s+=`<div class="print-row" style="font-weight:700"><span>निव्वळ उत्पन्न</span><span>₹${fmt(r[`${prefix}netIncome`]||0)}</span></div>`;
-      const photos=[];
-      if(r[`${prefix}photoTollBefore`])photos.push({src:r[`${prefix}photoTollBefore`],lbl:`${fm} — टोल आधी`});
-      if(r[`${prefix}photoTollAfter`])photos.push({src:r[`${prefix}photoTollAfter`],lbl:`${fm} — टोल नंतर`});
-      (r[`${prefix}photoPatti`]||[]).forEach((ph,i)=>{if(ph)photos.push({src:ph,lbl:`${fm} — पट्टी ${i+1}`});});
-      if(photos.length){
-        s+=`<div class="print-h3">── पावत्या ─────────</div><div class="print-photos">`;
-        photos.forEach(p=>{s+=`<div class="print-photo-wrap"><div class="print-photo-label">${p.lbl}</div><img src="${p.src}"></div>`;});
-        s+='</div>';
+      html+=`<div class="print-row"><span>निव्वळ वजन</span><span>${fmtQ(r.c_netWeightQ||0)} क्विंटल</span></div>`;
+      html+=`<div class="print-row"><span>एकत्रित Gross उत्पन्न</span><span>₹${fmt(r.c_grossIncome||0)}</span></div>`;
+      html+=`<div class="print-h3">मजुरी (शेतनिहाय)</div>`;
+      html+=`<div class="print-row"><span>शेत म — घड संख्या</span><span>${r.m_ghads||0}</span></div>`;
+      html+=`<div class="print-row"><span>शेत म — मजुरी दर</span><span>₹${fmt(r.m_labourRate||10)} प्रति घड</span></div>`;
+      html+=`<div class="print-row"><span>शेत म — एकूण मजुरी</span><span>₹${fmt(r.m_totalLabour||0)}</span></div>`;
+      html+=`<div class="print-row"><span>शेत प — घड संख्या</span><span>${r.p_ghads||0}</span></div>`;
+      html+=`<div class="print-row"><span>शेत प — मजुरी दर</span><span>₹${fmt(r.p_labourRate||10)} प्रति घड</span></div>`;
+      html+=`<div class="print-row"><span>शेत प — एकूण मजुरी</span><span>₹${fmt(r.p_totalLabour||0)}</span></div>`;
+      html+=`<div class="print-row" style="font-weight:700"><span>एकूण मजुरी (म+प)</span><span>₹${fmt(r.combinedLabour||0)}</span></div>`;
+    } else {
+      const p=r.farmType.toLowerCase();
+      html+=`<div class="print-h3">वजन व उत्पन्न</div>`;
+      html+=`<div class="print-row"><span>एकूण वजन</span><span>${r[`${p}_totalWQ`]||0} क्विं + ${r[`${p}_totalWKg`]||0} किलो</span></div>`;
+      if(r.harvestType!=='box'){
+        html+=`<div class="print-row"><span>कपात/तारा</span><span>${r[`${p}_dedQ`]||0} क्विं + ${r[`${p}_dedKg`]||0} किलो</span></div>`;
+        if(r[`${p}_is3Pct`])html+=`<div class="print-row"><span>3% अतिरिक्त कपात</span><span>${fmtQ(r[`${p}_threePctDed`]||0)} क्विंटल</span></div>`;
       }
-      return s;
-    };
-    if(r.farmType==='M'||r.farmType==='MP')html+=pSection('M','m_');
-    if(r.farmType==='P'||r.farmType==='MP')html+=pSection('P','p_');
-    if(r.farmType==='MP')html+=`<div class="print-h3">── एकत्रित ─────────</div><div class="print-row"><span>एकूण निव्वळ वजन</span><span>${fmtQ(r.combinedNetWeightQ)} Q</span></div><div class="print-row" style="font-weight:700"><span>एकूण निव्वळ उत्पन्न</span><span>₹${fmt(r.combinedNetIncome)}</span></div>`;
-    html+=`<div class="print-h3">── देयक ──────────────────</div>
-    <div class="print-amount-box">
-      <span class="alabel">निव्वळ उत्पन्न</span><span class="aval">₹${fmt(r.combinedNetIncome)}</span>
-    </div>
-    <div class="print-amount-box">
-      <span class="alabel">मिळालेली रक्कम</span><span class="aval">₹${fmt(r.received)}</span>
-    </div>
-    ${(r.pending||0)>0?`<div class="print-amount-box pending"><span class="alabel">थकबाकी</span><span class="aval">₹${fmt(r.pending)}</span></div>`:'<div class="print-amount-box"><span class="alabel">✅ पूर्ण पेमेंट</span><span class="aval" style="color:#1a6b3c">₹0 बाकी</span></div>'}`;
+      html+=`<div class="print-row"><span>निव्वळ वजन</span><span>${fmtQ(r[`${p}_netWeightQ`]||0)} क्विंटल</span></div>`;
+      html+=`<div class="print-row"><span>एकूण उत्पन्न (Gross)</span><span>₹${fmt(r[`${p}_grossIncome`]||0)}</span></div>`;
+      html+=`<div class="print-h3">मजुरी</div>`;
+      html+=`<div class="print-row"><span>घड संख्या</span><span>${r[`${p}_ghads`]||0}</span></div>`;
+      html+=`<div class="print-row"><span>मजुरी दर</span><span>₹${fmt(r[`${p}_labourRate`]||10)} प्रति घड</span></div>`;
+      html+=`<div class="print-row" style="font-weight:700"><span>एकूण मजुरी</span><span>₹${fmt(r[`${p}_totalLabour`]||0)}</span></div>`;
+    }
+    html+=`<div class="print-h3">देयक</div>`;
+    html+=`<div class="print-row" style="font-weight:700"><span>निव्वळ उत्पन्न</span><span>₹${fmt(r.combinedNetIncome)}</span></div>`;
+    html+=`<div class="print-row"><span>मिळालेली रक्कम</span><span>₹${fmt(r.received)}</span></div>`;
+    html+=`<div class="print-row"><span>थकबाकी</span><span>₹${fmt(r.pending)}</span></div>`;
     if(r.payments && r.payments.length){
-      const modeL={'cash':'रोख','cheque':'चेक','rtgs':'RTGS/NEFT','phonepay':'PhonePe','gpay':'Google Pay','upi':'UPI'};
-      html+=`<div class="print-h3">── पेमेंट इतिहास ──────────</div>
+      html+=`<div class="print-h3">पेमेंट इतिहास</div>
       <table class="print-table"><thead><tr><th>तारीख</th><th>प्रकार</th><th>संदर्भ</th><th>रक्कम</th></tr></thead><tbody>`;
       r.payments.forEach(p=>{
         html+=`<tr><td>${fmtDate(p.date)}</td><td>${modeL[p.mode]||p.mode}</td><td>${p.ref||'—'}</td><td>₹${fmt(p.amt)}</td></tr>`;
       });
-      html+=`</tbody></table>`;
+      html+='</tbody></table>';
     }
-    if(r.note)html+=`<div class="print-h3">── टीप ─────────</div><div>${r.note}</div>`;
+    if(r.note)html+=`<div class="print-h3">टीप</div><div>${r.note}</div>`;
     html+='</div>';
   });
+
+  // Photos intentionally skipped — no <img> tags generated, so print immediately
   const printArea = document.getElementById('printArea');
   printArea.innerHTML = html;
-
-  const imgs = printArea.querySelectorAll('img');
-  if (!imgs.length) { window.print(); return; }
-
-  let loaded = 0;
-  const total = imgs.length;
-  const doPrint = () => { loaded++; if (loaded >= total) window.print(); };
-
-  imgs.forEach(img => {
-    if (img.complete) { doPrint(); }
-    else { img.onload = doPrint; img.onerror = doPrint; }
-  });
-
-  setTimeout(() => window.print(), 3000);
+  window.print();
 }
 
 applyLang();
