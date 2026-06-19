@@ -578,7 +578,8 @@ body {
 #formOverlay,
 #detailOverlay,
 #traderFormOverlay,
-#ledgerOverlay {
+#ledgerOverlay,
+#editConfirmOverlay {
   position: fixed;
   top: 0;
   left: 0;
@@ -600,7 +601,8 @@ body {
 #formOverlay.open,
 #detailOverlay.open,
 #traderFormOverlay.open,
-#ledgerOverlay.open {
+#ledgerOverlay.open,
+#editConfirmOverlay.open {
   display: block;
   padding-top: max(0px, env(safe-area-inset-top));
 }
@@ -708,6 +710,69 @@ body {
 
 .empty-state{text-align:center;padding:40px 20px;color:var(--muted)}
 .empty-state .emoji{font-size:48px;display:block;margin-bottom:12px}
+
+/* ===== EDIT / LONG-PRESS / CONFIRM (NEW) ===== */
+.rec-card{
+  -webkit-user-select:none;
+  user-select:none;
+  -webkit-touch-callout:none;
+  transition: transform .15s ease, box-shadow .15s ease;
+}
+.rec-card.pressing{
+  transform: scale(0.97);
+  box-shadow: 0 0 0 3px var(--green-light), 0 1px 3px rgba(0,0,0,.08);
+}
+.confirm-box{
+  background:#fff;
+  border:1.5px solid var(--border);
+  border-radius:10px;
+  padding:10px 12px;
+  margin-bottom:8px;
+}
+.confirm-field-label{
+  font-size:11px;
+  color:var(--muted);
+  text-transform:uppercase;
+  letter-spacing:.3px;
+  margin-bottom:4px;
+}
+.confirm-old{
+  font-size:14px;
+  color:var(--red);
+  text-decoration:line-through;
+  opacity:.7;
+}
+.confirm-new{
+  font-size:15px;
+  color:var(--green);
+  font-weight:700;
+}
+.confirm-arrow{
+  color:var(--muted);
+  margin:0 6px;
+  font-size:13px;
+}
+.confirm-unchanged{
+  font-size:14px;
+  color:var(--text);
+}
+.edit-hint-toast{
+  position:fixed;
+  bottom:100px;
+  left:50%;
+  transform:translateX(-50%);
+  background:#1e293b;
+  color:#fff;
+  padding:8px 16px;
+  border-radius:20px;
+  font-size:12px;
+  z-index:400;
+  opacity:0;
+  transition:opacity .3s;
+  pointer-events:none;
+  white-space:nowrap;
+}
+.edit-hint-toast.show{opacity:1}
 
 .farm-header{background:var(--green-light);border-radius:8px;padding:8px 12px;font-weight:700;color:var(--green);margin:12px 0 8px;font-size:14px}
 
@@ -982,6 +1047,15 @@ body {
 </div>
 </div>
 
+<!-- EDIT CONFIRM OVERLAY - FULL SCREEN -->
+<div id="editConfirmOverlay">
+<div class="detail-header">
+<button class="back-btn" id="editConfirmBack">←</button>
+<h2>बदल तपासा</h2>
+</div>
+<div style="padding:12px 12px 80px" id="editConfirmBody"></div>
+</div>
+
 <div id="ledgerOverlay">
 <div class="detail-header">
 <button class="back-btn" id="ledgerBack">←</button>
@@ -1148,6 +1222,226 @@ function computeStats(records,farmFilter){
   return{income,pending,received,weightQ,ghads,labour};
 }
 
+/* ===== LONG-PRESS TO EDIT (NEW) ===== */
+let pressTimer=null, pressedCard=null;
+
+function attachLongPress(container){
+  container.addEventListener('touchstart', handlePressStart, {passive:true});
+  container.addEventListener('touchend', handlePressEnd);
+  container.addEventListener('touchmove', handlePressCancel);
+  container.addEventListener('mousedown', handlePressStart);
+  container.addEventListener('mouseup', handlePressEnd);
+  container.addEventListener('mouseleave', handlePressCancel);
+}
+
+function handlePressStart(e){
+  const card=e.target.closest('.rec-card');
+  if(!card)return;
+  pressedCard=card;
+  card.classList.add('pressing');
+  pressTimer=setTimeout(()=>{
+    card.classList.remove('pressing');
+    if(navigator.vibrate)navigator.vibrate(40);
+    openEditForm(card.dataset.id);
+  },550);
+}
+function handlePressEnd(e){
+  clearTimeout(pressTimer);
+  if(pressedCard)pressedCard.classList.remove('pressing');
+}
+function handlePressCancel(){
+  clearTimeout(pressTimer);
+  if(pressedCard)pressedCard.classList.remove('pressing');
+}
+
+function showEditHint(){
+  const old=document.getElementById('editHintToast');
+  if(old)return;
+  const div=document.createElement('div');
+  div.id='editHintToast';
+  div.className='edit-hint-toast';
+  div.textContent='✏️ बदल करण्यासाठी नोंदीवर दाबून ठेवा (Long-press to edit)';
+  document.body.appendChild(div);
+  setTimeout(()=>div.classList.add('show'),50);
+  setTimeout(()=>{div.classList.remove('show');setTimeout(()=>div.remove(),300);},3000);
+}
+
+/* Opens the SAME form as "Add Record" but pre-filled, for editing */
+function openEditForm(recordId){
+  const r=getRecords().find(x=>x.id===recordId);
+  if(!r)return;
+  editingRecord=recordId;
+  photoTargets={};
+  curFarm=r.farmType;
+  curHarvest=r.harvestType;
+
+  window._skipResetEdit=true;
+  openAddForm(); // builds the form fresh
+
+  // Wait one tick so form DOM exists, then pre-fill values
+  setTimeout(()=>{
+    document.getElementById('formTitle').textContent='नोंद संपादित करा';
+    document.getElementById('f_date').value=r.date;
+    document.getElementById('f_trader').value=r.traderId;
+    document.getElementById('f_vehicle').value=r.vehicle||'';
+    document.getElementById('f_rate').value=r.rate||'';
+    document.getElementById('f_received').value=r.received||'';
+    document.getElementById('f_note').value=r.note||'';
+
+    document.querySelectorAll('#farmToggle .toggle-btn').forEach(b=>b.classList.toggle('active',b.dataset.farm===r.farmType));
+    document.querySelectorAll('#harvestToggle .toggle-btn').forEach(b=>b.classList.toggle('active',b.dataset.harvest===r.harvestType));
+    buildFarmFields();
+
+    setTimeout(()=>{
+      const farms=curFarm==='MP'?['M','P']:[curFarm];
+      farms.forEach(fm=>{
+        const p=fm.toLowerCase();
+        setVal(`f_${fm}_wQ`, r[`${p}_totalWQ`]);
+        setVal(`f_${fm}_wKg`, r[`${p}_totalWKg`]);
+        setVal(`f_${fm}_dQ`, r[`${p}_dedQ`]);
+        setVal(`f_${fm}_dKg`, r[`${p}_dedKg`]);
+        const chk=document.getElementById(`f_${fm}_3pct`);
+        if(chk)chk.checked=!!r[`${p}_is3Pct`];
+        setVal(`f_${fm}_ghads`, r[`${p}_ghads`]);
+        setVal(`f_${fm}_labRate`, r[`${p}_labourRate`]);
+        // restore photos
+        if(r[`${p}_photoTollBefore`]){photoTargets[(farms.length>1?fm+'_':'')+'tollBefore']=r[`${p}_photoTollBefore`];updatePhotoSlot((farms.length>1?fm+'_':'')+'tollBefore',r[`${p}_photoTollBefore`]);}
+        if(r[`${p}_photoTollAfter`]){photoTargets[(farms.length>1?fm+'_':'')+'tollAfter']=r[`${p}_photoTollAfter`];updatePhotoSlot((farms.length>1?fm+'_':'')+'tollAfter',r[`${p}_photoTollAfter`]);}
+        (r[`${p}_photoPatti`]||[]).forEach((ph,i)=>{
+          const key=(farms.length>1?fm+'_':'')+'patti_'+i;
+          photoTargets[key]=ph; updatePhotoSlot(key,ph);
+        });
+      });
+      recalcAll();
+    },50);
+  },50);
+}
+function setVal(id,val){const el=document.getElementById(id);if(el)el.value=val||'';}
+
+/* Builds an old → new comparison and shows confirm screen */
+function buildRecordSnapshot(){
+  const farms=curFarm==='MP'?['M','P']:[curFarm];
+  const rate=Number(document.getElementById('f_rate')?.value||0);
+  const snap={
+    date:document.getElementById('f_date').value,
+    traderId:document.getElementById('f_trader').value,
+    vehicle:document.getElementById('f_vehicle').value,
+    rate,
+    received:Number(document.getElementById('f_received').value||0),
+    note:document.getElementById('f_note').value,
+    farmType:curFarm,
+    harvestType:curHarvest
+  };
+  farms.forEach(fm=>{
+    const p=fm.toLowerCase();
+    snap[`${p}_wQ`]=Number(document.getElementById(`f_${fm}_wQ`)?.value||0);
+    snap[`${p}_wKg`]=Number(document.getElementById(`f_${fm}_wKg`)?.value||0);
+    snap[`${p}_ghads`]=Number(document.getElementById(`f_${fm}_ghads`)?.value||0);
+  });
+  return snap;
+}
+
+function diffRow(label, oldVal, newVal, unit){
+  unit=unit||'';
+  const changed = String(oldVal)!==String(newVal);
+  if(!changed){
+    return `<div class="confirm-box"><div class="confirm-field-label">${label}</div><div class="confirm-unchanged">${oldVal}${unit}</div></div>`;
+  }
+  return `<div class="confirm-box"><div class="confirm-field-label">${label}</div>
+    <div><span class="confirm-old">${oldVal}${unit}</span><span class="confirm-arrow">→</span><span class="confirm-new">${newVal}${unit}</span></div>
+  </div>`;
+}
+
+function openEditConfirm(){
+  const errEl=document.getElementById('saveError');
+  errEl.style.display='none';
+  const traderId=document.getElementById('f_trader').value;
+  const trader=getTraders().find(x=>x.id===traderId);
+  if(!trader){errEl.textContent=t('valTrader');errEl.style.display='block';return;}
+  const rate=Number(document.getElementById('f_rate').value||0);
+  if(!rate){errEl.textContent=t('valRate');errEl.style.display='block';return;}
+
+  const oldRec=getRecords().find(x=>x.id===editingRecord);
+  const snap=buildRecordSnapshot();
+
+  let html=`<div class="card"><div class="sec-title" style="margin-top:0">तुम्ही खालील माहिती अपडेट करत आहात</div></div>`;
+  html+=diffRow('तारीख', fmtDate(oldRec.date), fmtDate(snap.date));
+  html+=diffRow('व्यापारी', oldRec.traderName, trader.name);
+  html+=diffRow('दर', '₹'+fmt(oldRec.rate), '₹'+fmt(snap.rate), '/Q');
+  html+=diffRow('मिळालेली रक्कम', '₹'+fmt(oldRec.received), '₹'+fmt(snap.received));
+
+  const farms=curFarm==='MP'?['M','P']:[curFarm];
+  farms.forEach(fm=>{
+    const p=fm.toLowerCase();
+    const label=fm==='M'?t('farmMLong'):t('farmPLong');
+    html+=diffRow(`${label} - वजन`, `${oldRec[`${p}_totalWQ`]||0}Q ${oldRec[`${p}_totalWKg`]||0}kg`, `${snap[`${p}_wQ`]}Q ${snap[`${p}_wKg`]}kg`);
+    html+=diffRow(`${label} - घड`, oldRec[`${p}_ghads`]||0, snap[`${p}_ghads`]);
+  });
+
+  html+=`<button class="pay-btn" id="confirmUpdateBtn" style="margin-top:12px">✅ होय, अपडेट करा</button>
+  <button class="sheet-btn" id="cancelUpdateBtn" style="justify-content:center">❌ रद्द करा, परत जा</button>`;
+
+  document.getElementById('editConfirmBody').innerHTML=html;
+  showOverlay('editConfirmOverlay');
+
+  document.getElementById('confirmUpdateBtn').onclick=performUpdate;
+  document.getElementById('cancelUpdateBtn').onclick=()=>hideOverlay('editConfirmOverlay');
+}
+
+function performUpdate(){
+  const traderId=document.getElementById('f_trader').value;
+  const trader=getTraders().find(x=>x.id===traderId);
+  const rate=Number(document.getElementById('f_rate').value||0);
+  const farms=curFarm==='MP'?['M','P']:[curFarm];
+  const date=document.getElementById('f_date').value;
+  const received=Number(document.getElementById('f_received').value||0);
+  const note=document.getElementById('f_note').value;
+  const vehicle=document.getElementById('f_vehicle').value;
+
+  const recs=getRecords();
+  const idx=recs.findIndex(x=>x.id===editingRecord);
+  if(idx<0)return;
+
+  const rec={...recs[idx],date,traderId,traderName:trader.name,vehicle,harvestType:curHarvest,farmType:curFarm,rate,note,received};
+  let totalNet=0,totalWQ=0,totalLabour=0,totalGross=0;
+
+  farms.forEach(fm=>{
+    const Q=Number(document.getElementById(`f_${fm}_wQ`)?.value||0);
+    const kg=Number(document.getElementById(`f_${fm}_wKg`)?.value||0);
+    const dQ=curHarvest!=='box'?Number(document.getElementById(`f_${fm}_dQ`)?.value||0):0;
+    const dKg=curHarvest!=='box'?Number(document.getElementById(`f_${fm}_dKg`)?.value||0):0;
+    const is3=curHarvest!=='box'?(document.getElementById(`f_${fm}_3pct`)?.checked||false):false;
+    const ghads=Number(document.getElementById(`f_${fm}_ghads`)?.value||0);
+    const labRate=Number(document.getElementById(`f_${fm}_labRate`)?.value||10)||10;
+    const c=calcFarm(Q,kg,dQ,dKg,is3,ghads,labRate,rate);
+    const p=fm.toLowerCase();
+    rec[`${p}_totalWQ`]=Q;rec[`${p}_totalWKg`]=kg;rec[`${p}_totalWeightQ`]=c.totalWQ;
+    rec[`${p}_dedQ`]=dQ;rec[`${p}_dedKg`]=dKg;rec[`${p}_deductionQ`]=c.dedQ;
+    rec[`${p}_is3Pct`]=is3;rec[`${p}_threePctDed`]=c.threePct;rec[`${p}_netWeightQ`]=c.netWQ;
+    rec[`${p}_ghads`]=ghads;rec[`${p}_labourRate`]=labRate;rec[`${p}_totalLabour`]=c.labCost;
+    rec[`${p}_grossIncome`]=c.gross;rec[`${p}_netIncome`]=c.net;
+    totalNet+=c.net;totalWQ+=c.netWQ;totalLabour+=c.labCost;totalGross+=c.gross;
+   const prefix=farms.length>1?`${fm}_`:'';
+    rec[`${p}_photoTollBefore`]=photoTargets[prefix+'tollBefore']||rec[`${p}_photoTollBefore`]||null;
+    rec[`${p}_photoTollAfter`]=photoTargets[prefix+'tollAfter']||rec[`${p}_photoTollAfter`]||null;
+    const newPatti=[0,1,2].map(i=>photoTargets[`${prefix}patti_${i}`]||null).filter(Boolean);
+    rec[`${p}_photoPatti`]=newPatti.length?newPatti:(rec[`${p}_photoPatti`]||[]);
+  });
+  if(curFarm==='P'){rec.m_totalWQ=0;rec.m_netWeightQ=0;rec.m_netIncome=0;rec.m_totalLabour=0;rec.m_grossIncome=0;rec.m_ghads=0;}
+  if(curFarm==='M'){rec.p_totalWQ=0;rec.p_netWeightQ=0;rec.p_netIncome=0;rec.p_totalLabour=0;rec.p_grossIncome=0;rec.p_ghads=0;}
+  rec.combinedNetWeightQ=totalWQ;rec.combinedGrossIncome=totalGross;
+  rec.combinedLabour=totalLabour;rec.combinedNetIncome=totalNet;
+  rec.pending=Math.max(0,totalNet-received);
+
+  recs[idx]=rec;
+  saveRecords(recs);
+  hideOverlay('editConfirmOverlay');
+  hideOverlay('formOverlay');
+  editingRecord=null;
+  showToast('नोंद अपडेट झाली ✓');
+  renderAll();
+}
+
 function recCardHTML(r){
   const hasPend=(r.pending||0)>0;
   const farmBadge=r.farmType==='M'?`<span class="badge badge-m">शेत म</span>`:r.farmType==='P'?`<span class="badge badge-p">शेत प</span>`:`<span class="badge badge-mp">म+प</span>`;
@@ -1275,6 +1569,14 @@ function renderAll(){
   renderTraders();
   const hasRecs=getRecords().length>0;
   document.getElementById('pdfBtn').style.display=(curTab==='dash'&&hasRecs)?'block':'none';
+  // Attach long-press to all record-list containers (NEW)
+  ['dash-recent','farmM-records','farmP-records','all-records'].forEach(id=>{
+    const el=document.getElementById(id);
+    if(el && !el.dataset.longPressAttached){
+      attachLongPress(el);
+      el.dataset.longPressAttached='1';
+    }
+  });
 }
 
 function openAddForm(){
@@ -1286,7 +1588,8 @@ function openAddForm(){
     showOverlay('traderFormOverlay');
     return;
   }
-  editingRecord=null;
+  if(!window._skipResetEdit) editingRecord=null;
+  window._skipResetEdit=false;
   photoTargets={};
   curFarm='M';curHarvest='ghad';
   document.getElementById('f_date').value=today();
@@ -1402,6 +1705,15 @@ function recalcAll(){
 }
 
 document.getElementById('saveRecordBtn').addEventListener('click',()=>{
+  if(editingRecord){
+    openEditConfirm();   // EDIT mode → show confirmation first
+  } else {
+    saveRecord();         // ADD mode → save directly (unchanged)
+  }
+});
+
+// Helper function for ADD mode (original saveRecord logic)
+function saveRecord(){
   const errEl=document.getElementById('saveError');
   errEl.style.display='none';
   const traderId=document.getElementById('f_trader').value;
@@ -1458,7 +1770,7 @@ document.getElementById('saveRecordBtn').addEventListener('click',()=>{
   hideOverlay('formOverlay');
   showToast(t('saved'));
   renderAll();
-});
+}
 
 function openPhotoSheet(key){
   document.getElementById('sheetTitle').textContent=t('addPhoto');
@@ -1678,6 +1990,7 @@ function deleteTrader(id){
   showToast(t('traderDeleted'));renderTraders();
 }
 document.getElementById('ledgerBack').addEventListener('click',()=>{ hideOverlay('ledgerOverlay');});
+document.getElementById('editConfirmBack').addEventListener('click',()=>{ hideOverlay('editConfirmOverlay');});
 
 function closeSheet(){document.getElementById('sheetOverlay').classList.remove('open')}
 function openLightbox(src){document.getElementById('lightboxImg').src=src;document.getElementById('lightbox').classList.add('open')}
@@ -1803,6 +2116,10 @@ function generatePDF(){
 applyLang();
 document.getElementById('f_date').value=today();
 renderAll();
+if(!localStorage.getItem('editHintShown')){
+  setTimeout(showEditHint,1200);
+  localStorage.setItem('editHintShown','1');
+}
 </script>
 <script>
 if ('serviceWorker' in navigator) {
