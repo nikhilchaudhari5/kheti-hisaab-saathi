@@ -8,15 +8,13 @@
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 /* ========================================
-   🔴 FIX #2: RESET & BASE STYLES
-   Ensures everything starts fresh on mobile
+   🔴 RESET & BASE STYLES
    ======================================== */
 *{
   box-sizing:border-box;
   margin:0;
   padding:0;
   -webkit-tap-highlight-color:transparent;
-  /* Prevent iOS tap highlight */
 }
 
 :root{
@@ -33,31 +31,23 @@
   --muted:#64748b
 }
 
-/* 🔴 FIX #3: HTML & BODY - Prevent Horizontal Scroll */
 html, body {
   width: 100%;
   height: 100%;
-  overflow-x: hidden; /* CRITICAL: No horizontal scrolling */
+  overflow-x: hidden; 
   margin: 0;
   padding: 0;
 }
 
-/* 🔴 FIX #4: BODY - Responsive Width & Mobile Optimization */
 body {
   font-family:'Noto Sans Devanagari','Inter',sans-serif;
   background:var(--bg);
   color:var(--text);
-  /* max-width: 500px; -- KEEP THIS for desktop, but mobile will be 100% */
   min-height: 100vh;
   position: relative;
   overflow-x: hidden;
-  /* Font size must stay at reasonable level for mobile */
   font-size: 16px;
   line-height: 1.5;
-}
-
-/* 🔴 FIX #5: HANDLE SAFE AREAS (for phones with notches) */
-body {
   padding: 
     max(0px, env(safe-area-inset-top))
     max(0px, env(safe-area-inset-right))
@@ -66,13 +56,13 @@ body {
 }
 
 /* ========================================
-   🔴 FIX #6: HEADER STYLES
+   🔴 HEADER STYLES
    ======================================== */
 .app-header {
   background: var(--green);
   color: #fff;
   padding: 12px 16px;
-  padding-top: max(12px, env(safe-area-inset-top)); /* Respect notch */
+  padding-top: max(12px, env(safe-area-inset-top));
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -80,7 +70,6 @@ body {
   top: 0;
   z-index: 100;
   box-shadow: 0 2px 8px rgba(0,0,0,.2);
-  /* Full width on mobile */
   width: 100%;
 }
 
@@ -96,7 +85,6 @@ body {
 }
 
 .lang-btn, .icon-btn {
-  /* Ensure touch targets are 44px minimum */
   min-height: 44px;
   min-width: 44px;
   display: flex;
@@ -126,8 +114,7 @@ body {
 }
 
 /* ========================================
-   🔴 FIX #7: BOTTOM NAVIGATION
-   Critical for mobile - fixed positioning
+   🔴 BOTTOM NAVIGATION
    ======================================== */
 .bottom-nav {
   position: fixed;
@@ -135,12 +122,12 @@ body {
   left: 0;
   right: 0;
   width: 100%;
-  max-width: none; /* IMPORTANT: Use full width, not max-width */
+  max-width: none; 
   background: #fff;
   border-top: 1px solid var(--border);
   display: flex;
   z-index: 100;
-  padding-bottom: max(0px, env(safe-area-inset-bottom)); /* Respect home button area */
+  padding-bottom: max(0px, env(safe-area-inset-bottom));
 }
 
 .nav-tab {
@@ -158,7 +145,7 @@ body {
   color: var(--muted);
   font-family: inherit;
   transition: color .2s;
-  min-height: 60px; /* Touch target */
+  min-height: 60px;
 }
 
 .nav-tab.active {
@@ -171,12 +158,11 @@ body {
 }
 
 /* ========================================
-   🔴 FIX #8: SCREEN CONTENT
-   Add padding to prevent overlap with nav
+   🔴 SCREEN CONTENT & FAB
    ======================================== */
 .screen {
   display: none;
-  padding: 12px 12px 100px; /* Bottom padding for fixed nav */
+  padding: 12px 12px 100px; 
   width: 100%;
   padding-left: max(12px, env(safe-area-inset-left));
   padding-right: max(12px, env(safe-area-inset-right));
@@ -186,14 +172,11 @@ body {
   display: block;
 }
 
-/* ========================================
-   🔴 FIX #9: FAB (Floating Action Button)
-   ======================================== */
 .fab {
   position: fixed;
   bottom: 70px;
   right: 16px;
-  right: max(16px, env(safe-area-inset-right)); /* Respect safe area */
+  right: max(16px, env(safe-area-inset-right));
   width: 52px;
   height: 52px;
   min-width: 52px;
@@ -218,7 +201,7 @@ body {
 }
 
 /* ========================================
-   CARDS, STATS, RECORDS
+   🔴 CARDS, STATS, RECORDS
    ======================================== */
 .card {
   background: var(--card);
@@ -259,7 +242,6 @@ body {
   cursor:pointer;
   border-left:4px solid var(--green);
   width: 100%;
-  /* Touch target minimum */
   min-height: 60px;
 }
 
@@ -275,7 +257,7 @@ body {
 .badge-mp{background:#fef9c3;color:#854d0e}
 
 /* ========================================
-   🔴 FIX #10: FORMS - CRITICAL FOR MOBILE
+   🔴 FORMS & INPUTS
    ======================================== */
 .form-group {
   margin-bottom: 14px;
@@ -290,22 +272,19 @@ body {
   display: block;
 }
 
-/* 🔴 FIX #11: FORM INPUTS - PREVENT iOS ZOOM */
 .form-input {
   width: 100%;
-  padding: 12px 12px; /* Increased from 10px for better touch */
+  padding: 12px 12px; 
   border: 1.5px solid var(--border);
   border-radius: 8px;
-  font-size: 16px; /* CRITICAL: Must be 16px to prevent iOS zoom */
+  font-size: 16px; 
   font-family: inherit;
   background: #fff;
   color: var(--text);
   outline: none;
   transition: border .2s;
-  /* Prevent iOS styling override */
   -webkit-appearance: none;
   appearance: none;
-  /* Ensure readable */
   min-height: 44px;
 }
 
@@ -341,9 +320,7 @@ body {
 }
 
 @media (max-width: 480px) {
-  .row2 {
-    grid-template-columns: 1fr; /* Stack on very small screens */
-  }
+  .row2 { grid-template-columns: 1fr; }
 }
 
 .toggle-group{
@@ -368,7 +345,7 @@ body {
   font-weight:500;
   color:var(--muted);
   transition:all .2s;
-  min-height: 44px; /* Touch target */
+  min-height: 44px; 
 }
 
 .toggle-btn.active{
@@ -392,7 +369,7 @@ body {
 .auto-box.red{background:var(--red-light);color:var(--red)}
 
 /* ========================================
-   🔴 FIX #12: PHOTO SLOTS - Responsive Grid
+   🔴 PHOTO SLOTS
    ======================================== */
 .photo-slots{
   display:grid;
@@ -403,10 +380,7 @@ body {
 }
 
 @media (max-width: 480px) {
-  .photo-slots {
-    grid-template-columns: 1fr 1fr;
-    gap: 6px;
-  }
+  .photo-slots { grid-template-columns: 1fr 1fr; gap: 6px; }
 }
 
 .photo-slot{
@@ -458,18 +432,13 @@ body {
 .photo-label{font-size:11px;color:var(--muted);margin-bottom:4px}
 
 /* ========================================
-   🔴 FIX #13: OVERLAYS - CRITICAL FOR YOUR ISSUE
-   Position: fixed, proper z-index, full viewport
+   🔴 OVERLAYS & SHEETS
    ======================================== */
 .sheet-overlay{
   display:none;
   position:fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  width: 100%;
-  height: 100%;
+  top: 0; left: 0; right: 0; bottom: 0;
+  width: 100%; height: 100%;
   background:rgba(0,0,0,.5);
   z-index:200;
   align-items:flex-end;
@@ -477,9 +446,7 @@ body {
   overflow-y: auto;
 }
 
-.sheet-overlay.open{
-  display:flex
-}
+.sheet-overlay.open{ display:flex; }
 
 .sheet{
   background:#fff;
@@ -487,7 +454,7 @@ body {
   padding:20px;
   padding-bottom: max(20px, env(safe-area-inset-bottom));
   width:100%;
-  max-width:100%; /* NOT 500px on mobile */
+  max-width:100%; 
   animation:slideUp .3s ease;
 }
 
@@ -521,93 +488,51 @@ body {
   transition: all 0.2s ease;
 }
 
-.sheet-btn:active{
-  background:var(--bg);
-  transform: scale(0.98);
-}
+.sheet-btn:active{ background:var(--bg); transform: scale(0.98); }
 
-/* ========================================
-   🔴 FIX #14: LIGHTBOX & OTHER OVERLAYS
-   ======================================== */
 .lightbox{
   display:none;
   position:fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  width: 100%;
-  height: 100%;
+  top: 0; left: 0; right: 0; bottom: 0;
+  width: 100%; height: 100%;
   background:rgba(0,0,0,.95);
   z-index:300;
   align-items:center;
   justify-content:center;
 }
 
-.lightbox.open{
-  display:flex
-}
+.lightbox.open{ display:flex; }
 
-.lightbox img{
-  max-width:95vw;
-  max-height:90vh;
-  object-fit:contain;
-}
+.lightbox img{ max-width:95vw; max-height:90vh; object-fit:contain; }
 
 .lightbox-close{
   position:absolute;
-  top:16px;
-  right:16px;
+  top:16px; right:16px;
   background:rgba(255,255,255,.2);
-  border:none;
-  color:#fff;
-  width:44px;
-  height:44px;
-  border-radius:50%;
-  font-size:20px;
-  cursor:pointer;
-  min-width: 44px;
+  border:none; color:#fff;
+  width:44px; height:44px;
+  border-radius:50%; font-size:20px;
+  cursor:pointer; min-width: 44px;
 }
 
-/* ========================================
-   🔴 FIX #15: OVERLAY SCREENS
-   This is YOUR overlapping forms issue
-   ======================================== */
-#formOverlay,
-#detailOverlay,
-#traderFormOverlay,
-#ledgerOverlay,
-#editConfirmOverlay {
+/* OVERLAY SCREENS */
+#formOverlay, #detailOverlay, #traderFormOverlay, #ledgerOverlay, #editConfirmOverlay {
   position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  width: 100%;
-  height: 100%;
-  max-width: none; /* CRITICAL: Don't limit width */
-  left: 0;
-  transform: none; /* No transform needed */
+  top: 0; left: 0; right: 0; bottom: 0;
+  width: 100%; height: 100%;
+  max-width: none; left: 0; transform: none;
   background: #fff;
   z-index: 150;
   overflow-y: auto;
-  -webkit-overflow-scrolling: touch; /* Smooth scroll on iOS */
+  -webkit-overflow-scrolling: touch; 
   display: none;
 }
 
-/* When overlay is shown */
-#formOverlay.open,
-#detailOverlay.open,
-#traderFormOverlay.open,
-#ledgerOverlay.open,
-#editConfirmOverlay.open {
+#formOverlay.open, #detailOverlay.open, #traderFormOverlay.open, #ledgerOverlay.open, #editConfirmOverlay.open {
   display: block;
   padding-top: max(0px, env(safe-area-inset-top));
 }
 
-/* ========================================
-   🔴 FIX #16: DETAIL HEADER & BUTTONS
-   ======================================== */
 .detail-header{
   background:var(--green);
   color:#fff;
@@ -617,37 +542,22 @@ body {
   align-items:center;
   gap:10px;
   position: sticky;
-  top: 0;
-  z-index: 101;
+  top: 0; z-index: 101;
 }
 
-.detail-header h2{
-  font-size:16px;
-  font-weight:700;
-}
+.detail-header h2{ font-size:16px; font-weight:700; }
 
 .back-btn{
-  background:none;
-  border:none;
-  color:#fff;
-  font-size:22px;
-  cursor:pointer;
-  padding:8px;
-  min-width: 44px;
-  min-height: 44px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  background:none; border:none; color:#fff;
+  font-size:22px; cursor:pointer; padding:8px;
+  min-width: 44px; min-height: 44px;
+  display: flex; align-items: center; justify-content: center;
 }
 
 .detail-row{
-  display:flex;
-  justify-content:space-between;
-  padding:6px 0;
-  border-bottom:1px solid var(--bg);
-  font-size:14px;
-  flex-wrap: wrap;
-  gap: 8px;
+  display:flex; justify-content:space-between;
+  padding:6px 0; border-bottom:1px solid var(--bg);
+  font-size:14px; flex-wrap: wrap; gap: 8px;
 }
 
 .detail-row:last-child{border-bottom:none}
@@ -655,7 +565,7 @@ body {
 .detail-row .val{font-weight:600}
 
 /* ========================================
-   🔴 FIX #17: BUTTONS - Touch Targets
+   🔴 BUTTONS & MISC
    ======================================== */
 .danger-btn, .pay-btn {
   width: 100%;
@@ -670,31 +580,12 @@ body {
   transition: all 0.2s ease;
 }
 
-.pay-btn{
-  background:var(--green);
-  color:#fff;
-  margin-bottom:8px;
-}
+.pay-btn{ background:var(--green); color:#fff; margin-bottom:8px; }
+.pay-btn:active { background: #158638; transform: scale(0.98); }
 
-.pay-btn:active {
-  background: #158638;
-  transform: scale(0.98);
-}
+.danger-btn{ background:var(--red-light); color:var(--red); border:1.5px solid var(--red); margin-top:8px }
+.danger-btn:active { background: #fecaca; }
 
-.danger-btn{
-  background:var(--red-light);
-  color:var(--red);
-  border:1.5px solid var(--red);
-  margin-top:8px
-}
-
-.danger-btn:active {
-  background: #fecaca;
-}
-
-/* ========================================
-   OTHER STYLES (unchanged)
-   ======================================== */
 .summary-box{background:#f8fafc;border:1px solid var(--border);border-radius:10px;padding:12px;margin:8px 0}
 .summary-row{display:flex;justify-content:space-between;padding:3px 0;font-size:14px}
 .summary-divider{border:none;border-top:1px dashed var(--border);margin:6px 0}
@@ -709,11 +600,9 @@ body {
 .empty-state{text-align:center;padding:40px 20px;color:var(--muted)}
 .empty-state .emoji{font-size:48px;display:block;margin-bottom:12px}
 
-/* ===== EDIT / LONG-PRESS / CONFIRM (NEW) ===== */
+/* ===== EDIT / LONG-PRESS / CONFIRM ===== */
 .rec-card{
-  -webkit-user-select:none;
-  user-select:none;
-  -webkit-touch-callout:none;
+  -webkit-user-select:none; user-select:none; -webkit-touch-callout:none;
   transition: transform .15s ease, box-shadow .15s ease;
 }
 .rec-card.pressing{
@@ -721,104 +610,40 @@ body {
   box-shadow: 0 0 0 3px var(--green-light), 0 1px 3px rgba(0,0,0,.08);
 }
 .confirm-box{
-  background:#fff;
-  border:1.5px solid var(--border);
-  border-radius:10px;
-  padding:10px 12px;
-  margin-bottom:8px;
+  background:#fff; border:1.5px solid var(--border);
+  border-radius:10px; padding:10px 12px; margin-bottom:8px;
 }
-.confirm-field-label{
-  font-size:11px;
-  color:var(--muted);
-  text-transform:uppercase;
-  letter-spacing:.3px;
-  margin-bottom:4px;
-}
-.confirm-old{
-  font-size:14px;
-  color:var(--red);
-  text-decoration:line-through;
-  opacity:.7;
-}
-.confirm-new{
-  font-size:15px;
-  color:var(--green);
-  font-weight:700;
-}
-.confirm-arrow{
-  color:var(--muted);
-  margin:0 6px;
-  font-size:13px;
-}
-.confirm-unchanged{
-  font-size:14px;
-  color:var(--text);
-}
+.confirm-field-label{ font-size:11px; color:var(--muted); text-transform:uppercase; letter-spacing:.3px; margin-bottom:4px; }
+.confirm-old{ font-size:14px; color:var(--red); text-decoration:line-through; opacity:.7; }
+.confirm-new{ font-size:15px; color:var(--green); font-weight:700; }
+.confirm-arrow{ color:var(--muted); margin:0 6px; font-size:13px; }
+.confirm-unchanged{ font-size:14px; color:var(--text); }
 .edit-hint-toast{
-  position:fixed;
-  bottom:100px;
-  left:50%;
-  transform:translateX(-50%);
-  background:#1e293b;
-  color:#fff;
-  padding:8px 16px;
-  border-radius:20px;
-  font-size:12px;
-  z-index:400;
-  opacity:0;
-  transition:opacity .3s;
-  pointer-events:none;
-  white-space:nowrap;
+  position:fixed; bottom:100px; left:50%; transform:translateX(-50%);
+  background:#1e293b; color:#fff; padding:8px 16px; border-radius:20px;
+  font-size:12px; z-index:400; opacity:0; transition:opacity .3s; pointer-events:none; white-space:nowrap;
 }
 .edit-hint-toast.show{opacity:1}
 
-/* ===== LONG-PRESS ACTION MENU (NEW) ===== */
+/* ===== LONG-PRESS ACTION MENU ===== */
 .action-menu-overlay{
-  display:none;
-  position:fixed;
-  top:0;left:0;right:0;bottom:0;
-  width:100vw;height:100vh;
-  background:rgba(0,0,0,.4);
-  z-index:250;
-  align-items:center;
-  justify-content:center;
+  display:none; position:fixed; top:0;left:0;right:0;bottom:0;
+  width:100vw;height:100vh; background:rgba(0,0,0,.4); z-index:250;
+  align-items:center; justify-content:center;
 }
 .action-menu-overlay.open{display:flex}
 .action-menu-box{
-  background:#fff;
-  border-radius:14px;
-  width:85%;
-  max-width:320px;
-  overflow:hidden;
-  box-shadow:0 10px 40px rgba(0,0,0,.3);
-  animation:popIn .18s ease;
+  background:#fff; border-radius:14px; width:85%; max-width:320px;
+  overflow:hidden; box-shadow:0 10px 40px rgba(0,0,0,.3); animation:popIn .18s ease;
 }
-@keyframes popIn{
-  from{transform:scale(.9);opacity:0}
-  to{transform:scale(1);opacity:1}
-}
-.action-menu-header{
-  padding:14px 16px;
-  border-bottom:1px solid var(--border);
-  text-align:center;
-}
+@keyframes popIn{ from{transform:scale(.9);opacity:0} to{transform:scale(1);opacity:1} }
+.action-menu-header{ padding:14px 16px; border-bottom:1px solid var(--border); text-align:center; }
 .action-menu-header .trader{font-weight:700;font-size:15px}
 .action-menu-header .meta{font-size:12px;color:var(--muted);margin-top:2px}
 .action-menu-btn{
-  width:100%;
-  padding:14px 16px;
-  border:none;
-  background:#fff;
-  font-size:15px;
-  font-family:inherit;
-  font-weight:600;
-  text-align:left;
-  display:flex;
-  align-items:center;
-  gap:10px;
-  cursor:pointer;
-  min-height:48px;
-  border-bottom:1px solid var(--bg);
+  width:100%; padding:14px 16px; border:none; background:#fff;
+  font-size:15px; font-family:inherit; font-weight:600; text-align:left;
+  display:flex; align-items:center; gap:10px; cursor:pointer; min-height:48px; border-bottom:1px solid var(--bg);
 }
 .action-menu-btn:active{background:var(--bg)}
 .action-menu-btn:last-child{border-bottom:none}
@@ -826,61 +651,23 @@ body {
 .action-menu-btn.view{color:var(--text)}
 .action-menu-btn.delete{color:var(--red)}
 
-/* ===== GHAD BREAKDOWN CARD (NEW) ===== */
-.ghad-breakdown-card{
-  background:var(--card);
-  border-radius:12px;
-  padding:12px;
-  box-shadow:0 1px 3px rgba(0,0,0,.08);
-}
+/* ===== GHAD BREAKDOWN CARD ===== */
+.ghad-breakdown-card{ background:var(--card); border-radius:12px; padding:12px; box-shadow:0 1px 3px rgba(0,0,0,.08); }
 .ghad-breakdown-card .stat-label{font-size:11px;color:var(--muted);margin-bottom:6px}
-.ghad-line{
-  display:flex;
-  justify-content:space-between;
-  align-items:baseline;
-  padding:3px 0;
-  font-size:13px;
-}
+.ghad-line{ display:flex; justify-content:space-between; align-items:baseline; padding:3px 0; font-size:13px; }
 .ghad-line .ghad-tag{color:var(--muted)}
 .ghad-line .ghad-num{font-weight:700}
-.ghad-line.total{
-  border-top:1px solid var(--border);
-  margin-top:4px;
-  padding-top:6px;
-}
+.ghad-line.total{ border-top:1px solid var(--border); margin-top:4px; padding-top:6px; }
 .ghad-line.total .ghad-num{color:var(--green);font-size:18px}
 .ghad-line.solo .ghad-num{color:var(--blue)}
 .ghad-line.combined .ghad-num{color:#854d0e}
 
-/* ===== DASHBOARD COMBINED SECTION (NEW) ===== */
-.combined-section-header{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  margin:18px 0 8px;
-}
+/* ===== DASHBOARD COMBINED SECTION ===== */
+.combined-section-header{ display:flex; align-items:center; justify-content:space-between; margin:18px 0 8px; }
 .combined-section-header .sec-title{margin:0}
-.combined-count-badge{
-  background:#fef9c3;
-  color:#854d0e;
-  font-size:11px;
-  font-weight:700;
-  padding:2px 10px;
-  border-radius:10px;
-}
+.combined-count-badge{ background:#fef9c3; color:#854d0e; font-size:11px; font-weight:700; padding:2px 10px; border-radius:10px; }
 
-.action-menu-cancel{
-  width:100%;
-  padding:14px;
-  border:none;
-  background:var(--bg);
-  font-size:15px;
-  font-family:inherit;
-  font-weight:600;
-  color:var(--muted);
-  cursor:pointer;
-  min-height:48px;
-}
+.action-menu-cancel{ width:100%; padding:14px; border:none; background:var(--bg); font-size:15px; font-family:inherit; font-weight:600; color:var(--muted); cursor:pointer; min-height:48px; }
 
 .farm-header{background:var(--green-light);border-radius:8px;padding:8px 12px;font-weight:700;color:var(--green);margin:12px 0 8px;font-size:14px}
 
@@ -895,136 +682,104 @@ body {
 .pay-mode-badge.phonepay,.pay-mode-badge.gpay,.pay-mode-badge.upi{background:#f3e8ff;color:#7e22ce}
 
 .toast{
-  position:fixed;
-  bottom: 100px;
-  left:50%;
-  transform:translateX(-50%);
-  background:#1e293b;
-  color:#fff;
-  padding:10px 20px;
-  border-radius:24px;
-  font-size:14px;
-  z-index:400;
-  opacity:0;
-  transition:opacity .3s;
-  pointer-events:none;
-  white-space:nowrap;
+  position:fixed; bottom: 100px; left:50%; transform:translateX(-50%);
+  background:#1e293b; color:#fff; padding:10px 20px; border-radius:24px;
+  font-size:14px; z-index:400; opacity:0; transition:opacity .3s; pointer-events:none; white-space:nowrap;
 }
-
 .toast.show{opacity:1}
 
 #printArea{display:none}
 
+/* ========================================
+   🔴 PRINT STYLES 
+   ======================================== */
 @media print {
+  html, body {
+    height: auto !important;
+    min-height: auto !important;
+    overflow: visible !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
   body>*:not(#printArea){display:none!important}
-  #printArea{display:block!important}
-  .print-page{page-break-after:always;padding:24px;font-family:'Noto Sans Devanagari','Inter',sans-serif;font-size:12px;color:#000}
-  .print-page:last-child{page-break-after:auto}
-  .print-h1{font-size:22px;font-weight:700;margin-bottom:4px;color:#1a6b3c}
-  .print-subtitle{font-size:12px;color:#666;margin-bottom:2px}
-  .print-meta{font-size:11px;color:#555;margin:6px 0 12px}
-  .print-h2{font-size:15px;font-weight:700;margin:14px 0 6px;border-bottom:2px solid #1a6b3c;padding-bottom:4px;color:#1a6b3c}
-  .print-h3{font-size:13px;font-weight:700;margin:10px 0 4px;background:#f0faf4;padding:4px 8px;border-left:3px solid #1a6b3c}
-  .print-row{display:flex;justify-content:space-between;padding:3px 0;border-bottom:1px solid #eee;font-size:12px}
-  .print-row:last-child{border-bottom:none}
-  .print-row span:last-child{font-weight:600}
-  .print-divider{border:none;border-top:2px solid #1a6b3c;margin:10px 0}
-  .print-table{width:100%;border-collapse:collapse;margin-top:8px;font-size:11px}
-  .print-table th,.print-table td{border:1px solid #ccc;padding:6px 8px;text-align:left}
-  .print-table th{background:#e8f5ee;font-weight:700;color:#1a6b3c}
-  .print-table tr:nth-child(even){background:#f9f9f9}
-  .print-photos{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:10px}
-  .print-photo-wrap{break-inside:avoid}
-  .print-photo-label{font-size:10px;font-weight:700;margin-bottom:4px;color:#1a6b3c;background:#e8f5ee;padding:2px 6px;border-radius:3px}
-  .print-photo-wrap img{width:100%;height:auto;border:1px solid #ddd;border-radius:4px;display:block}
-  .print-record-header{background:#1a6b3c;color:#fff;padding:8px 12px;margin-bottom:8px;border-radius:4px}
-  .print-record-header h3{font-size:14px;font-weight:700;margin:0}
-  .print-record-header p{font-size:11px;opacity:.85;margin:2px 0 0}
-  .print-amount-box{background:#e8f5ee;border:1px solid #a8dbbf;border-radius:4px;padding:8px 12px;margin:6px 0;display:flex;justify-content:space-between;align-items:center}
-  .print-amount-box.pending{background:#fee2e2;border-color:#fca5a5}
-  .print-amount-box .alabel{font-size:11px;color:#555}
-  .print-amount-box .aval{font-size:16px;font-weight:700;color:#1a6b3c}
-  .print-amount-box.pending .aval{color:#dc2626}
+  #printArea{display:block!important; width: 100% !important;}
+  
+  .print-page {
+    page-break-after: auto;
+    break-after: auto;
+    page-break-inside: avoid;
+    break-inside: avoid;
+    padding: 16px 24px;
+    margin-bottom: 16px;
+    border-bottom: 2px dashed #ccc;
+    font-family: 'Noto Sans Devanagari','Inter',sans-serif;
+    font-size: 12px;
+    color: #000;
+  }
+  .print-page:last-child {
+    border-bottom: none;
+  }
+  
+  .print-cover { 
+    page-break-after: always; 
+    break-after: page; 
+    display:flex; flex-direction:column; align-items:center; justify-content:center; height:90vh; text-align:center; 
+  }
+  .print-cover .cover-title { font-size:32px; font-weight:700; color:#1a6b3c; margin-bottom:12px; }
+  .print-cover .cover-sub { font-size:14px; color:#666; margin-bottom:24px; }
+  .print-cover .cover-dates { font-size:16px; color:#1e293b; background:#e8f5ee; padding:10px 24px; border-radius:8px; border:1px solid #a8dbbf; }
+  
+  .entry-card, .entry-hero-box, .entry-trader-banner {
+    page-break-inside: avoid;
+    break-inside: avoid;
+  }
+  
+  .entry-number-badge { display:inline-block; background:#1a6b3c; color:#fff; font-size:20px; font-weight:700; padding:6px 18px; border-radius:8px; margin-bottom:4px; }
+  .entry-card { border:1.5px solid #ccc; border-radius:10px; padding:14px 16px; margin:10px 0; background:#fafafa; }
+  .entry-card-title { font-size:13px; font-weight:700; color:#1a6b3c; text-transform:uppercase; letter-spacing:.5px; margin-bottom:8px; border-bottom:1px solid #ddd; padding-bottom:4px; }
+  .entry-field-row { display:flex; justify-content:space-between; padding:5px 0; font-size:13px; border-bottom:1px dotted #e0e0e0; }
+  .entry-field-row:last-child { border-bottom:none }
+  .entry-field-row .efl { color:#555 }
+  .entry-field-row .efv { font-weight:700; color:#1e293b }
+  
+  .entry-hero-box { background:#1a6b3c; color:#fff; border-radius:10px; padding:12px 16px; margin:10px 0; display:flex; justify-content:space-between; align-items:center; }
+  .entry-hero-box .ehl { font-size:13px; opacity:.9 }
+  .entry-hero-box .ehv { font-size:16px; font-weight:700; }
+  .entry-hero-box.pending-box { background:#dc2626 }
+  
+  .entry-trader-banner { background:#fff; border:2px solid #1a6b3c; border-radius:10px; padding:12px 16px; margin-bottom:12px; text-align:center; }
+  .entry-trader-banner .etb-name { font-size:20px; font-weight:700; color:#1a6b3c }
+  .entry-trader-banner .etb-date { font-size:13px; color:#666; margin-top:2px }
+  .entry-trader-banner .etb-farm { display:inline-block; margin-top:6px; background:#fef9c3; color:#854d0e; font-size:12px; font-weight:700; padding:3px 12px; border-radius:12px; }
+  
+  .summary-final-page .sfp-title { font-size:20px; font-weight:700; color:#1a6b3c; margin-bottom:14px; border-bottom:3px solid #1a6b3c; padding-bottom:8px; }
+  .summary-final-row { display:flex; justify-content:space-between; padding:8px 0; font-size:14px; border-bottom:1px solid #eee; }
+  .summary-final-row.grand { font-size:18px; font-weight:700; color:#1a6b3c; border-top:2px solid #1a6b3c; border-bottom:none; margin-top:8px; padding-top:10px; }
 }
 
 /* ========================================
-   🔴 FIX #18: MOBILE MEDIA QUERY
-   Improved from max-width: 600px
+   🔴 RESPONSIVE DESIGN
    ======================================== */
 @media (max-width: 600px) {
-  body {
-    max-width: 100%;
-    margin: 0;
-  }
-
-  .app-header {
-    padding: 10px 12px;
-    padding-top: max(10px, env(safe-area-inset-top));
-  }
-
-  .app-header h1 {
-    font-size: 16px;
-  }
-
-  .screen {
-    padding: 10px 10px 100px;
-    padding-left: max(10px, env(safe-area-inset-left));
-    padding-right: max(10px, env(safe-area-inset-right));
-  }
-
-  .card, .stat-card, .rec-card {
-    padding: 12px;
-  }
-
-  .stat-grid {
-    gap: 8px;
-  }
-
-  .form-input {
-    font-size: 16px;
-    padding: 12px;
-    min-height: 44px;
-  }
-
-  .toggle-btn {
-    font-size: 12px;
-    padding: 9px 8px;
-  }
-
-  .fab {
-    bottom: 78px;
-    right: max(12px, env(safe-area-inset-right));
-  }
-
-  .photo-slots {
-    grid-template-columns: 1fr 1fr;
-  }
-
-  .detail-header {
-    padding: 10px 12px;
-    padding-top: max(10px, env(safe-area-inset-top));
-  }
-
-  .detail-header h2 {
-    font-size: 15px;
-  }
+  body { max-width: 100%; margin: 0; }
+  .app-header { padding: 10px 12px; padding-top: max(10px, env(safe-area-inset-top)); }
+  .app-header h1 { font-size: 16px; }
+  .screen { padding: 10px 10px 100px; padding-left: max(10px, env(safe-area-inset-left)); padding-right: max(10px, env(safe-area-inset-right)); }
+  .card, .stat-card, .rec-card { padding: 12px; }
+  .stat-grid { gap: 8px; }
+  .form-input { font-size: 16px; padding: 12px; min-height: 44px; }
+  .toggle-btn { font-size: 12px; padding: 9px 8px; }
+  .fab { bottom: 78px; right: max(12px, env(safe-area-inset-right)); }
+  .photo-slots { grid-template-columns: 1fr 1fr; }
+  .detail-header { padding: 10px 12px; padding-top: max(10px, env(safe-area-inset-top)); }
+  .detail-header h2 { font-size: 15px; }
 }
 
-/* Extra small phones */
 @media (max-width: 380px) {
-  .app-header h1 {
-    font-size: 14px;
-  }
-
-  .stat-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .photo-slots {
-    grid-template-columns: 1fr;
-  }
+  .app-header h1 { font-size: 14px; }
+  .stat-grid { grid-template-columns: 1fr; }
+  .photo-slots { grid-template-columns: 1fr; }
 }
-
 </style>
 </head>
 <body>
@@ -1207,12 +962,8 @@ body {
 
 <script>
 /* ========================================
-   🔴 IMPORTANT FIX #21: OVERLAY VISIBILITY
-   Change how overlays are shown/hidden
-   Use .open class instead of style="display:block"
+   OVERLAYS HELPER
    ======================================== */
-
-// Update these functions to use .open class:
 function showOverlay(id) {
   document.getElementById(id).classList.add('open');
 }
@@ -1277,6 +1028,7 @@ optional:'optional',modeCash:'Cash',modeCheque:'Cheque',modeRTGS:'RTGS / NEFT',
 modePhonePe:'PhonePe',modeGPay:'Google Pay',modeUPI:'UPI',
 payHistory:'Payment History',noPayments:'No payments yet'}
 };
+
 let curLang=localStorage.getItem('lang')||'mr';
 function t(k){return LANG[curLang][k]||k;}
 
@@ -1332,14 +1084,14 @@ function statCardsHTML(stats){
 <div class="stat-card"><div class="stat-label">${t('labour')}</div><div class="stat-val">₹${fmt(stats.labour)}</div></div>`;
 }
 
-/* ===== GHAD BREAKDOWN: Solo vs Combined-share (NEW) ===== */
 function computeGhadBreakdown(records, farm){
   let solo=0, fromCombined=0;
   const p=farm.toLowerCase();
   records.forEach(r=>{
-    if(r.farmType===farm){
+    const farmType = r.farmType || 'M';
+    if(farmType===farm){
       solo += r[`${p}_ghads`]||0;
-    } else if(r.farmType==='MP'){
+    } else if(farmType==='MP'){
       fromCombined += r[`${p}_ghads`]||0;
     }
   });
@@ -1359,8 +1111,9 @@ function ghadBreakdownHTML(farm){
 function computeStats(records,farmFilter){
   let income=0,pending=0,received=0,weightQ=0,ghads=0,labour=0;
   records.forEach(r=>{
-    const hasM=['M','MP'].includes(r.farmType);
-    const hasP=['P','MP'].includes(r.farmType);
+    const farmType = r.farmType || 'M';
+    const hasM=['M','MP'].includes(farmType);
+    const hasP=['P','MP'].includes(farmType);
     if(farmFilter==='M'&&!hasM)return;
     if(farmFilter==='P'&&!hasP)return;
     if(farmFilter==='M'){income+=r.m_netIncome||0;labour+=r.m_totalLabour||0;weightQ+=r.m_netWeightQ||0;ghads+=r.m_ghads||0;}
@@ -1371,7 +1124,6 @@ function computeStats(records,farmFilter){
   return{income,pending,received,weightQ,ghads,labour};
 }
 
-/* ===== LONG-PRESS TO EDIT (NEW) ===== */
 let pressTimer=null, pressedCard=null;
 
 function attachLongPress(container){
@@ -1391,7 +1143,7 @@ function handlePressStart(e){
   pressTimer=setTimeout(()=>{
     card.classList.remove('pressing');
     if(navigator.vibrate)navigator.vibrate(40);
-    openActionMenu(card.dataset.id);   // CHANGED: open menu, not the form
+    openActionMenu(card.dataset.id); 
   },550);
 }
 
@@ -1416,19 +1168,17 @@ function showEditHint(){
   setTimeout(()=>{div.classList.remove('show');setTimeout(()=>div.remove(),300);},3000);
 }
 
-/* Opens the SAME form as "Add Record" but pre-filled, for editing */
 function openEditForm(recordId){
   const r=getRecords().find(x=>x.id===recordId);
   if(!r)return;
   editingRecord=recordId;
   photoTargets={};
-  curFarm=r.farmType;
-  curHarvest=r.harvestType;
+  curFarm=r.farmType||'M';
+  curHarvest=r.harvestType||'ghad';
 
   window._skipResetEdit=true;
-  openAddForm(); // builds the form fresh
+  openAddForm(); 
 
-  // Wait one tick so form DOM exists, then pre-fill values
   setTimeout(()=>{
     document.getElementById('formTitle').textContent='नोंद संपादित करा';
     document.getElementById('f_date').value=r.date;
@@ -1438,8 +1188,8 @@ function openEditForm(recordId){
     document.getElementById('f_received').value=r.received||'';
     document.getElementById('f_note').value=r.note||'';
 
-    document.querySelectorAll('#farmToggle .toggle-btn').forEach(b=>b.classList.toggle('active',b.dataset.farm===r.farmType));
-    document.querySelectorAll('#harvestToggle .toggle-btn').forEach(b=>b.classList.toggle('active',b.dataset.harvest===r.harvestType));
+    document.querySelectorAll('#farmToggle .toggle-btn').forEach(b=>b.classList.toggle('active',b.dataset.farm===curFarm));
+    document.querySelectorAll('#harvestToggle .toggle-btn').forEach(b=>b.classList.toggle('active',b.dataset.harvest===curHarvest));
     buildFarmFields();
 
     setTimeout(()=>{
@@ -1454,12 +1204,14 @@ function openEditForm(recordId){
         if(chk)chk.checked=!!r[`${p}_is3Pct`];
         setVal(`f_${fm}_ghads`, r[`${p}_ghads`]);
         setVal(`f_${fm}_labRate`, r[`${p}_labourRate`]);
-        // restore photos
+        
         if(r[`${p}_photoTollBefore`]){photoTargets[(farms.length>1?fm+'_':'')+'tollBefore']=r[`${p}_photoTollBefore`];updatePhotoSlot((farms.length>1?fm+'_':'')+'tollBefore',r[`${p}_photoTollBefore`]);}
         if(r[`${p}_photoTollAfter`]){photoTargets[(farms.length>1?fm+'_':'')+'tollAfter']=r[`${p}_photoTollAfter`];updatePhotoSlot((farms.length>1?fm+'_':'')+'tollAfter',r[`${p}_photoTollAfter`]);}
         (r[`${p}_photoPatti`]||[]).forEach((ph,i)=>{
-          const key=(farms.length>1?fm+'_':'')+'patti_'+i;
-          photoTargets[key]=ph; updatePhotoSlot(key,ph);
+          if(ph){
+            const key=(farms.length>1?fm+'_':'')+'patti_'+i;
+            photoTargets[key]=ph; updatePhotoSlot(key,ph);
+          }
         });
       });
       recalcAll();
@@ -1468,15 +1220,15 @@ function openEditForm(recordId){
 }
 function setVal(id,val){const el=document.getElementById(id);if(el)el.value=val||'';}
 
-/* ===== ACTION MENU LOGIC (NEW) ===== */
 let actionMenuRecordId=null;
 
 function openActionMenu(recordId){
   const r=getRecords().find(x=>x.id===recordId);
   if(!r)return;
   actionMenuRecordId=recordId;
+  const farmType = r.farmType || 'M';
   document.getElementById('actionMenuTrader').textContent=r.traderName||'?';
-  const farmLabel=r.farmType==='M'?'शेत म':r.farmType==='P'?'शेत प':'म+प';
+  const farmLabel=farmType==='M'?'शेत म':farmType==='P'?'शेत प':'म+प';
   document.getElementById('actionMenuMeta').textContent=`${fmtDate(r.date)} · ${farmLabel} · ₹${fmt(r.combinedNetIncome||0)}`;
   showOverlay('actionMenuOverlay');
 }
@@ -1508,7 +1260,6 @@ document.getElementById('actionMenuDelete').addEventListener('click',()=>{
   renderAll();
 });
 
-/* Builds an old → new comparison and shows confirm screen */
 function buildRecordSnapshot(){
   const farms=curFarm==='MP'?['M','P']:[curFarm];
   const rate=Number(document.getElementById('f_rate')?.value||0);
@@ -1581,6 +1332,7 @@ function openEditConfirm(){
 function performUpdate(){
   const traderId=document.getElementById('f_trader').value;
   const trader=getTraders().find(x=>x.id===traderId);
+  const traderName = trader ? trader.name : '?';
   const rate=Number(document.getElementById('f_rate').value||0);
   const farms=curFarm==='MP'?['M','P']:[curFarm];
   const date=document.getElementById('f_date').value;
@@ -1592,7 +1344,7 @@ function performUpdate(){
   const idx=recs.findIndex(x=>x.id===editingRecord);
   if(idx<0)return;
 
-  const rec={...recs[idx],date,traderId,traderName:trader.name,vehicle,harvestType:curHarvest,farmType:curFarm,rate,note,received};
+  const rec={...recs[idx],date,traderId,traderName,vehicle,harvestType:curHarvest,farmType:curFarm,rate,note,received};
   let totalNet=0,totalWQ=0,totalLabour=0,totalGross=0;
 
   farms.forEach(fm=>{
@@ -1634,7 +1386,8 @@ function performUpdate(){
 
 function recCardHTML(r){
   const hasPend=(r.pending||0)>0;
-  const farmBadge=r.farmType==='M'?`<span class="badge badge-m">शेत म</span>`:r.farmType==='P'?`<span class="badge badge-p">शेत प</span>`:`<span class="badge badge-mp">म+प</span>`;
+  const farmType = r.farmType || 'M';
+  const farmBadge=farmType==='M'?`<span class="badge badge-m">शेत म</span>`:farmType==='P'?`<span class="badge badge-p">शेत प</span>`:`<span class="badge badge-mp">म+प</span>`;
   const inc=r.combinedNetIncome||0;
   return`<div class="rec-card ${hasPend?'pending':''}" data-id="${r.id}" onclick="openDetail('${r.id}')">
     <div class="rec-top"><span class="rec-trader">${r.traderName||'?'}</span><span class="rec-income ${hasPend?'pending':''}">₹${fmt(inc)}</span></div>
@@ -1645,12 +1398,11 @@ function recCardHTML(r){
 function renderDash(){
   const recs=getRecords();
   document.getElementById('dash-stats').innerHTML=statCardsHTML(computeStats(recs,null));
-  const recent=[...recs].sort((a,b)=>b.date.localeCompare(a.date)).slice(0,5);
+  const recent=[...recs].sort((a,b)=>(b.date||'').localeCompare(a.date||'')).slice(0,5);
   const el=document.getElementById('dash-recent');
   el.innerHTML=recent.length?recent.map(r=>recCardHTML(r)).join(''):`<div class="empty-state"><span class="emoji">🌱</span>${t('noRecords')}</div>`;
 
-  // NEW: Combined (Both farm) records section
-  const combinedRecs=[...recs].filter(r=>r.farmType==='MP').sort((a,b)=>b.date.localeCompare(a.date));
+  const combinedRecs=[...recs].filter(r=>(r.farmType||'M')==='MP').sort((a,b)=>(b.date||'').localeCompare(a.date||''));
   document.getElementById('combinedCountBadge').textContent=combinedRecs.length;
   document.getElementById('combinedHeader').style.display=combinedRecs.length?'flex':'none';
   const combinedEl=document.getElementById('dash-combined');
@@ -1660,16 +1412,16 @@ function renderDash(){
 }
 
 function renderFarmScreen(farm){
-  const recs=getRecords().filter(r=>r.farmType===farm||r.farmType==='MP');
+  const recs=getRecords().filter(r=>(r.farmType||'M')===farm||(r.farmType||'M')==='MP');
   document.getElementById('farm'+farm+'-stats').innerHTML=statCardsHTML(computeStats(recs,farm));
   document.getElementById('farm'+farm+'-ghadBreakdown').innerHTML=ghadBreakdownHTML(farm);
   const el=document.getElementById('farm'+farm+'-records');
-  const sorted=[...recs].sort((a,b)=>b.date.localeCompare(a.date));
+  const sorted=[...recs].sort((a,b)=>(b.date||'').localeCompare(a.date||''));
   el.innerHTML=sorted.length?sorted.map(r=>recCardHTML(r)).join(''):`<div class="empty-state"><span class="emoji">🌿</span>${t('noRecords')}</div>`;
 }
 
 function renderAllRecords(){
-  const recs=[...getRecords()].sort((a,b)=>b.date.localeCompare(a.date));
+  const recs=[...getRecords()].sort((a,b)=>(b.date||'').localeCompare(a.date||''));
   const el=document.getElementById('all-records');
   el.innerHTML=recs.length?recs.map(r=>recCardHTML(r)).join(''):`<div class="empty-state"><span class="emoji">📋</span>${t('noRecords')}</div>`;
 }
@@ -1682,7 +1434,7 @@ function renderTraders(){
     const trRecs=recs.filter(r=>r.traderId===tr.id);
     const totInc=trRecs.reduce((s,r)=>s+(r.combinedNetIncome||0),0);
     const totPend=trRecs.reduce((s,r)=>s+(r.pending||0),0);
-    const initials=tr.name.split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase();
+    const initials=(tr.name||'?').split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase();
     return`<div class="card trader-card" onclick="openLedger('${tr.id}')">
       <div class="trader-avatar">${initials}</div>
       <div class="trader-info">
@@ -1714,8 +1466,8 @@ document.getElementById('pdfBtn').addEventListener('click', async () => {
   if (navigator.share && /Android|iPhone/i.test(navigator.userAgent)) {
     const recs = getRecords();
     const stats = computeStats(recs, null);
-    const statsM = computeStats(recs.filter(r=>r.farmType==='M'||r.farmType==='MP'), 'M');
-    const statsP = computeStats(recs.filter(r=>r.farmType==='P'||r.farmType==='MP'), 'P');
+    const statsM = computeStats(recs.filter(r=>(r.farmType||'M')==='M'||(r.farmType||'M')==='MP'), 'M');
+    const statsP = computeStats(recs.filter(r=>(r.farmType||'M')==='P'||(r.farmType||'M')==='MP'), 'P');
     const dates = recs.map(r=>r.date).sort();
     const from = dates.length ? fmtDate(dates[0]) : '—';
     const to = dates.length ? fmtDate(dates[dates.length-1]) : '—';
@@ -1746,7 +1498,7 @@ document.getElementById('pdfBtn').addEventListener('click', async () => {
     document.getElementById('sheetTitle').textContent = '📤 Share करा';
     document.getElementById('sheetContent').innerHTML = `
       <button class="sheet-btn" onclick="closeSheet();generatePDF()">📄 PDF / Print (सगळे photos सहित)</button>
-      <button class="sheet-btn" onclick="closeSheet();shareText()">📱 WhatsApp / Share (summary)</button>`;
+      <button class="sheet-btn" onclick="closeSheet();shareTextFn()">📱 WhatsApp / Share (summary)</button>`;
     window._shareText = shareText;
     document.getElementById('sheetOverlay').classList.add('open');
   } else {
@@ -1754,7 +1506,7 @@ document.getElementById('pdfBtn').addEventListener('click', async () => {
   }
 });
 
-function shareText() {
+function shareTextFn() {
   if (navigator.share) {
     navigator.share({ title: 'केळी हिशोब साथी', text: window._shareText })
       .catch(() => {});
@@ -1769,7 +1521,6 @@ function renderAll(){
   renderTraders();
   const hasRecs=getRecords().length>0;
   document.getElementById('pdfBtn').style.display=(curTab==='dash'&&hasRecs)?'block':'none';
-  // Attach long-press to all record-list containers (NEW)
   ['dash-recent','farmM-records','farmP-records','all-records','dash-combined'].forEach(id=>{
     const el=document.getElementById(id);
     if(el && !el.dataset.longPressAttached){
@@ -1980,13 +1731,12 @@ function recalcAll(){
 
 document.getElementById('saveRecordBtn').addEventListener('click',()=>{
   if(editingRecord){
-    openEditConfirm();   // EDIT mode → show confirmation first
+    openEditConfirm();
   } else {
-    saveRecord();        // ADD mode → save directly (unchanged)
+    saveRecord();
   }
 });
 
-// Helper function for ADD mode (original saveRecord logic)
 function saveRecord(){
   const errEl=document.getElementById('saveError');
   errEl.style.display='none';
@@ -2121,7 +1871,8 @@ function openDetail(id){
   showOverlay('detailOverlay');
   document.getElementById('detailTitle').textContent=t('recordDetail');
   const htLabel=r.harvestType==='ghad'?'केळीचे घड':r.harvestType==='box'?'Box Packing':'फणाया';
-  const farmBadge=r.farmType==='M'?`<span class="badge badge-m">शेत म</span>`:r.farmType==='P'?`<span class="badge badge-p">शेत प</span>`:`<span class="badge badge-mp">म+प</span>`;
+  const farmType = r.farmType || 'M';
+  const farmBadge=farmType==='M'?`<span class="badge badge-m">शेत म</span>`:farmType==='P'?`<span class="badge badge-p">शेत प</span>`:`<span class="badge badge-mp">म+प</span>`;
   let html=`<div class="card">
     <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px">${farmBadge}<span class="badge" style="background:#f1f5f9;color:var(--muted)">${htLabel}</span></div>
     <div class="detail-row"><span class="label">${t('trader')}</span><span class="val">${r.traderName}</span></div>
@@ -2132,7 +1883,7 @@ function openDetail(id){
     const label=fm==='M'?t('farmMFull'):t('farmPFull');
     let h=`<div class="farm-header">🌿 ${label}</div><div class="card">`;
     h+=`<div class="detail-row"><span class="label">${t('weight')}</span><span class="val">${r[`${prefix}totalWQ`]||0} Q + ${r[`${prefix}totalWKg`]||0} kg = ${fmtQ(r[`${prefix}totalWeightQ`]||0)} Q</span></div>`;
-    if(r.harvestType!=='box'){
+    if((r.harvestType||'ghad')!=='box'){
       h+=`<div class="detail-row"><span class="label">${t('deduction')}</span><span class="val">${fmtQ(r[`${prefix}deductionQ`]||0)} Q</span></div>`;
       if(r[`${prefix}is3Pct`])h+=`<div class="detail-row"><span class="label">${t('threePct')}</span><span class="val">-${fmtQ(r[`${prefix}threePctDed`]||0)} Q</span></div>`;
     }
@@ -2153,10 +1904,10 @@ function openDetail(id){
     }
     return h;
   };
-  if(r.farmType==='MP'){
+  if(farmType==='MP'){
     html+=`<div class="farm-header">🌿🌿 एकत्रित मोजणी</div><div class="card">`;
     html+=`<div class="detail-row"><span class="label">${t('weight')}</span><span class="val">${r.c_totalWQ||0} Q + ${r.c_totalWKg||0} kg = ${fmtQ(r.c_totalWeightQ||0)} Q</span></div>`;
-    if(r.harvestType!=='box'){
+    if((r.harvestType||'ghad')!=='box'){
       html+=`<div class="detail-row"><span class="label">${t('deduction')}</span><span class="val">${fmtQ(r.c_deductionQ||0)} Q</span></div>`;
       if(r.c_is3Pct)html+=`<div class="detail-row"><span class="label">${t('threePct')}</span><span class="val">-${fmtQ(r.c_threePctDed||0)} Q</span></div>`;
     }
@@ -2190,8 +1941,8 @@ function openDetail(id){
       <div class="detail-row"><span class="label" style="font-weight:700">निव्वळ उत्पन्न</span><span class="val" style="color:var(--green);font-size:16px">₹${fmt(r.combinedNetIncome)}</span></div>
     </div>`;
   } else {
-    if(r.farmType==='M') html+=farmRows('M','m_');
-    if(r.farmType==='P') html+=farmRows('P','p_');
+    if(farmType==='M') html+=farmRows('M','m_');
+    if(farmType==='P') html+=farmRows('P','p_');
   }
   html+=`<div class="farm-header">💰 ${t('payment')}</div><div class="card">
     <div class="detail-row"><span class="label">${t('netIncome')}</span><span class="val" style="color:var(--green)">₹${fmt(r.combinedNetIncome)}</span></div>
@@ -2290,7 +2041,7 @@ document.getElementById('addTraderBtn').addEventListener('click',()=>{
 document.getElementById('traderFormBack').addEventListener('click',()=>{ hideOverlay('traderFormOverlay');});
 document.getElementById('saveTraderBtn').addEventListener('click',()=>{
   const name=document.getElementById('tf_name').value.trim();
-  if(!name){showToast('नाव आवश्यकীয় आहे');return;}
+  if(!name){showToast('नाव आवश्यक आहे');return;}
   const traders=getTraders();
   const tr={id:editingTrader||genId(),name,phone:document.getElementById('tf_phone').value,village:document.getElementById('tf_village').value,note:document.getElementById('tf_note').value};
   if(editingTrader){const i=traders.findIndex(t=>t.id===editingTrader);if(i>=0)traders[i]=tr;}
@@ -2302,7 +2053,7 @@ document.getElementById('saveTraderBtn').addEventListener('click',()=>{
 
 function openLedger(traderId){
   const trader=getTraders().find(x=>x.id===traderId);if(!trader)return;
-  const recs=getRecords().filter(r=>r.traderId===traderId).sort((a,b)=>b.date.localeCompare(a.date));
+  const recs=getRecords().filter(r=>r.traderId===traderId).sort((a,b)=>(b.date||'').localeCompare(a.date||''));
   const totInc=recs.reduce((s,r)=>s+(r.combinedNetIncome||0),0);
   const totRec=recs.reduce((s,r)=>s+(r.received||0),0);
   const totPend=recs.reduce((s,r)=>s+(r.pending||0),0);
@@ -2332,112 +2083,161 @@ function closeSheet(){document.getElementById('sheetOverlay').classList.remove('
 function openLightbox(src){document.getElementById('lightboxImg').src=src;document.getElementById('lightbox').classList.add('open')}
 function closeLightbox(){document.getElementById('lightbox').classList.remove('open');setTimeout(()=>{document.getElementById('lightboxImg').src=''},300)}
 
-function generatePDF(){
-  const recs=getRecords().slice().sort((a,b)=>b.date.localeCompare(a.date)); // newest first
-  if(!recs.length){showToast('नोंदी नाहीत');return;}
-  const stats=computeStats(recs,null);
-  const statsM=computeStats(recs,'M');
-  const statsP=computeStats(recs,'P');
-  const datesSorted=recs.map(r=>r.date).slice().sort();
-  const fromDate=fmtDate(datesSorted[0]), toDate=fmtDate(datesSorted[datesSorted.length-1]);
-  const today2=fmtDate(new Date().toISOString().split('T')[0]);
-  const modeL={'cash':'रोख','cheque':'चेक','rtgs':'आरटीजीएस/एनईएफटी','phonepay':'फोनपे','gpay':'गुगल पे','upi':'युपीआय'};
-  const harvestL={'ghad':'केळीचे घड','box':'बॉक्स पॅकिंग','fanaya':'फणाया'};
-  const farmL={'M':'शेत म','P':'शेत प','MP':'शेत म + शेत प (एकत्रित)'};
-
-  let html=`<div class="print-page">
-    <div class="print-h1">केळी हिशोब साथी — संपूर्ण उत्पन्न अहवाल</div>
-    <div class="print-meta">कालावधी: ${fromDate} ते ${toDate} &nbsp; | &nbsp; तयार केले: ${today2}</div>
-    <div class="print-meta">सर्व नोंदी नवीनतम → जुनी क्रमाने खाली दिल्या आहेत</div>
-    <hr class="print-divider">
-    <div class="print-h2">शेत म — मोरगाव काढचं शेत</div>
-    <div class="print-row"><span>एकूण काढणी</span><span>${recs.filter(r=>r.farmType==='M'||r.farmType==='MP').length}</span></div>
-    <div class="print-row"><span>एकूण निव्वळ वजन (फक्त एकल नोंदी)</span><span>${fmtQ(statsM.weightQ)} क्विंटल</span></div>
-    <div class="print-row"><span>एकूण निव्वळ उत्पन्न (फक्त एकल नोंदी)</span><span>₹${fmt(statsM.income)}</span></div>
-    <div class="print-row"><span>एकूण मजुरी</span><span>₹${fmt(statsM.labour)}</span></div>
-    <div class="print-row"><span>एकूण घड (एकटे+एकत्रित मिळून)</span><span>${statsM.ghads}</span></div>
-    <div class="print-row"><span>एकूण मिळालेली रक्कम</span><span>₹${fmt(statsM.received)}</span></div>
-    <div class="print-row"><span>एकूण थकबाकी</span><span>₹${fmt(statsM.pending)}</span></div>
-    <div class="print-h2">शेत प — पाटोंदी काढचं शेत</div>
-    <div class="print-row"><span>एकूण काढणी</span><span>${recs.filter(r=>r.farmType==='P'||r.farmType==='MP').length}</span></div>
-    <div class="print-row"><span>एकूण निव्वळ वजन (फक्त एकल नोंदी)</span><span>${fmtQ(statsP.weightQ)} क्विंटल</span></div>
-    <div class="print-row"><span>एकूण निव्वळ उत्पन्न (फक्त एकल नोंदी)</span><span>₹${fmt(statsP.income)}</span></div>
-    <div class="print-row"><span>एकूण मजुरी</span><span>₹${fmt(statsP.labour)}</span></div>
-    <div class="print-row"><span>एकूण घड (एकटे+एकत्रित मिळून)</span><span>${statsP.ghads}</span></div>
-    <div class="print-row"><span>एकूण मिळालेली रक्कम</span><span>₹${fmt(statsP.received)}</span></div>
-    <div class="print-row"><span>एकूण थकबाकी</span><span>₹${fmt(statsP.pending)}</span></div>
-    <hr class="print-divider">
-    <div class="print-h2">सर्व मिळून एकूण</div>
-    <div class="print-row"><span>एकूण नोंदी</span><span>${recs.length}</span></div>
-    <div class="print-row"><span>एकूण निव्वळ वजन</span><span>${fmtQ(stats.weightQ)} क्विंटल</span></div>
-    <div class="print-row"><span>एकूण निव्वळ उत्पन्न</span><span>₹${fmt(stats.income)}</span></div>
-    <div class="print-row"><span>एकूण मिळालेली रक्कम</span><span>₹${fmt(stats.received)}</span></div>
-    <div class="print-row"><span>एकूण थकबाकी</span><span>₹${fmt(stats.pending)}</span></div>
+// ========================================
+// 🔴 PDF GENERATION
+// ========================================
+function generatePDF() {
+  const allRecs = getRecords();
+  if (!allRecs.length) {
+    showToast('नोंदी नाहीत');
+    return;
+  }
+  
+  const recs = allRecs.slice().sort((a, b) => (b.date||'').localeCompare(a.date||''));
+  
+  const stats = computeStats(recs, null);
+  const statsM = computeStats(recs.filter(r => (r.farmType||'M') === 'M' || (r.farmType||'M') === 'MP'), 'M');
+  const statsP = computeStats(recs.filter(r => (r.farmType||'M') === 'P' || (r.farmType||'M') === 'MP'), 'P');
+  
+  const datesSorted = recs.map(r => r.date||'').filter(d=>d).sort();
+  const fromDate = datesSorted.length ? fmtDate(datesSorted[0]) : '—';
+  const toDate = datesSorted.length ? fmtDate(datesSorted[datesSorted.length - 1]) : '—';
+  const today2 = fmtDate(new Date().toISOString().split('T')[0]);
+  
+  const modeL = { 'cash': 'रोख', 'cheque': 'चेक', 'rtgs': 'आरटीजीएस/एनईएफटी', 'phonepay': 'फोनपे', 'gpay': 'गुगल पे', 'upi': 'युपीआय' };
+  const harvestL = { 'ghad': 'केळीचे घड', 'box': 'बॉक्स पॅकिंग', 'fanaya': 'फणाया' };
+  const farmL = { 'M': 'शेत म', 'P': 'शेत प', 'MP': 'शेत म + शेत प (एकत्रित)' };
+  
+  let html = `<div class="print-cover">
+      <div class="cover-title">केळी हिशोब साथी</div>
+      <div class="cover-sub">संपूर्ण उत्पन्न अहवाल</div>
+      <div class="cover-dates">कालावधी: ${fromDate} ते ${toDate}<br><span style="font-size:12px;opacity:.7">तयार केले: ${today2}</span></div>
   </div>`;
-
-  recs.forEach((r,idx)=>{
-    const entryNum=recs.length-idx; // chronological numbering: highest number = most recent
-    html+=`<div class="print-page">
-      <div class="print-record-header">
-        <h3>नोंद क्रमांक ${entryNum} — ${r.traderName}</h3>
-        <p>${fmtDate(r.date)}</p>
+  
+  recs.forEach((r, idx) => {
+    const entryNum = recs.length - idx; 
+    const farmType = r.farmType || 'M';
+    const harvestType = r.harvestType || 'ghad';
+    const farmLabel = farmL[farmType] || farmType;
+    
+    html += `<div class="print-page">
+      <div style="text-align:center;margin-bottom:10px">
+        <span class="entry-number-badge">हार्वेस्ट नोंद क्रमांक ${entryNum}</span>
+      </div>
+      <div class="entry-trader-banner">
+        <div class="etb-name">${r.traderName || '?'}</div>
+        <div class="etb-date">📅 ${fmtDate(r.date)}</div>
+        <div class="etb-farm">🌿 ${farmLabel}</div>
       </div>`;
-    html+=`<div class="print-h3">मूलभूत माहिती</div>`;
-    html+=`<div class="print-row"><span>तारीख</span><span>${fmtDate(r.date)}</span></div>`;
-    html+=`<div class="print-row"><span>व्यापारी</span><span>${r.traderName}</span></div>`;
-    if(r.vehicle)html+=`<div class="print-row"><span>वाहन क्रमांक</span><span>${r.vehicle}</span></div>`;
-    html+=`<div class="print-row"><span>शेत</span><span>${farmL[r.farmType]||r.farmType}</span></div>`;
-    html+=`<div class="print-row"><span>काढणी प्रकार</span><span>${harvestL[r.harvestType]||r.harvestType}</span></div>`;
-    html+=`<div class="print-row"><span>दर</span><span>₹${fmt(r.rate)} प्रति क्विंटल</span></div>`;
-    if(r.farmType==='MP'){
-      html+=`<div class="print-h3">वजन व उत्पन्न (एकत्रित)</div>`;
-      html+=`<div class="print-row"><span>एकूण वजन</span><span>${r.c_totalWQ||0} क्विं + ${r.c_totalWKg||0} किलो</span></div>`;
-      if(r.harvestType!=='box'){
-        html+=`<div class="print-row"><span>कपात/तारा</span><span>${r.c_dedQ||0} क्विं + ${r.c_dedKg||0} किलो</span></div>`;
-        if(r.c_is3Pct)html+=`<div class="print-row"><span>3% अतिरिक्त कपात</span><span>${fmtQ(r.c_threePctDed||0)} क्विंटल</span></div>`;
-      }
-      html+=`<div class="print-row"><span>निव्वळ वजन</span><span>${fmtQ(r.c_netWeightQ||0)} क्विंटल</span></div>`;
-      html+=`<div class="print-row"><span>एकत्रित Gross उत्पन्न</span><span>₹${fmt(r.c_grossIncome||0)}</span></div>`;
-      html+=`<div class="print-h3">मजुरी (शेतनिहाय)</div>`;
-      html+=`<div class="print-row"><span>शेत म — घड संख्या</span><span>${r.m_ghads||0}</span></div>`;
-      html+=`<div class="print-row"><span>शेत म — मजुरी दर</span><span>₹${fmt(r.m_labourRate||10)} प्रति घड</span></div>`;
-      html+=`<div class="print-row"><span>शेत म — एकूण मजुरी</span><span>₹${fmt(r.m_totalLabour||0)}</span></div>`;
-      html+=`<div class="print-row"><span>शेत प — घड संख्या</span><span>${r.p_ghads||0}</span></div>`;
-      html+=`<div class="print-row"><span>शेत प — मजुरी दर</span><span>₹${fmt(r.p_labourRate||10)} प्रति घड</span></div>`;
-      html+=`<div class="print-row"><span>शेत प — एकूण मजुरी</span><span>₹${fmt(r.p_totalLabour||0)}</span></div>`;
-      html+=`<div class="print-row" style="font-weight:700"><span>एकूण मजुरी (म+प)</span><span>₹${fmt(r.combinedLabour||0)}</span></div>`;
+      
+    html += `<div class="entry-card">
+      <div class="entry-card-title">मूलभूत माहिती</div>
+      <div class="entry-field-row"><span class="efl">काढणी प्रकार</span><span class="efv">${harvestL[harvestType] || harvestType}</span></div>
+      <div class="entry-field-row"><span class="efl">दर</span><span class="efv">₹${fmt(r.rate)} / क्विंटल</span></div>
+      ${r.vehicle ? `<div class="entry-field-row"><span class="efl">वाहन क्रमांक</span><span class="efv">${r.vehicle}</span></div>` : ''}
+    </div>`;
+    
+    if (farmType === 'MP') {
+      html += `<div class="entry-card">
+        <div class="entry-card-title">वजन (एकत्रित — गाडी एकदाच वजन झाली)</div>
+        <div class="entry-field-row"><span class="efl">एकूण वजन</span><span class="efv">${r.c_totalWQ || 0} क्विं + ${r.c_totalWKg || 0} किलो</span></div>
+        ${harvestType !== 'box' ? `<div class="entry-field-row"><span class="efl">कपात/तारा</span><span class="efv">${r.c_dedQ || 0} क्विं + ${r.c_dedKg || 0} किलो</span></div>` : ''}
+        ${r.c_is3Pct ? `<div class="entry-field-row"><span class="efl">3% अतिरिक्त कपात</span><span class="efv">${fmtQ(r.c_threePctDed || 0)} क्विं</span></div>` : ''}
+        <div class="entry-field-row"><span class="efl">निव्वळ वजन</span><span class="efv">${fmtQ(r.c_netWeightQ || 0)} क्विंटल</span></div>
+      </div>`;
+      
+      html += `<div class="entry-hero-box">
+        <span class="ehl">एकत्रित Gross उत्पन्न</span>
+        <span class="ehv">₹${fmt(r.c_grossIncome || 0)}</span>
+      </div>`;
+      
+      html += `<div class="entry-card">
+        <div class="entry-card-title">मजुरी खर्च (शेतनिहाय)</div>
+        <div class="entry-field-row"><span class="efl">शेत म — घड संख्या × दर</span><span class="efv">${r.m_ghads || 0} × ₹${fmt(r.m_labourRate || 10)} = ₹${fmt(r.m_totalLabour || 0)}</span></div>
+        <div class="entry-field-row"><span class="efl">शेत प — घड संख्या × दर</span><span class="efv">${r.p_ghads || 0} × ₹${fmt(r.p_labourRate || 10)} = ₹${fmt(r.p_totalLabour || 0)}</span></div>
+        <div class="entry-field-row"><span class="efl" style="font-weight:700">एकूण मजुरी</span><span class="efv">₹${fmt(r.combinedLabour || 0)}</span></div>
+      </div>`;
     } else {
-      const p=r.farmType.toLowerCase();
-      html+=`<div class="print-h3">वजन व उत्पन्न</div>`;
-      html+=`<div class="print-row"><span>एकूण वजन</span><span>${r[`${p}_totalWQ`]||0} क्विं + ${r[`${p}_totalWKg`]||0} किलो</span></div>`;
-      if(r.harvestType!=='box'){
-        html+=`<div class="print-row"><span>कपात/तारा</span><span>${r[`${p}_dedQ`]||0} क्विं + ${r[`${p}_dedKg`]||0} किलो</span></div>`;
-        if(r[`${p}_is3Pct`])html+=`<div class="print-row"><span>3% अतिरिक्त कपात</span><span>${fmtQ(r[`${p}_threePctDed`]||0)} क्विंटल</span></div>`;
-      }
-      html+=`<div class="print-row"><span>निव्वळ वजन</span><span>${fmtQ(r[`${p}_netWeightQ`]||0)} क्विंटल</span></div>`;
-      html+=`<div class="print-row"><span>एकूण उत्पन्न (Gross)</span><span>₹${fmt(r[`${p}_grossIncome`]||0)}</span></div>`;
-      html+=`<div class="print-h3">मजुरी</div>`;
-      html+=`<div class="print-row"><span>घड संख्या</span><span>${r[`${p}_ghads`]||0}</span></div>`;
-      html+=`<div class="print-row"><span>मजुरी दर</span><span>₹${fmt(r[`${p}_labourRate`]||10)} प्रति घड</span></div>`;
-      html+=`<div class="print-row" style="font-weight:700"><span>एकूण मजुरी</span><span>₹${fmt(r[`${p}_totalLabour`]||0)}</span></div>`;
+      const p = farmType.toLowerCase();
+      html += `<div class="entry-card">
+        <div class="entry-card-title">वजन</div>
+        <div class="entry-field-row"><span class="efl">एकूण वजन</span><span class="efv">${r[`${p}_totalWQ`] || 0} क्विं + ${r[`${p}_totalWKg`] || 0} किलो</span></div>
+        ${harvestType !== 'box' ? `<div class="entry-field-row"><span class="efl">कपात/तारा</span><span class="efv">${r[`${p}_dedQ`] || 0} क्विं + ${r[`${p}_dedKg`] || 0} किलो</span></div>` : ''}
+        ${r[`${p}_is3Pct`] ? `<div class="entry-field-row"><span class="efl">3% अतिरिक्त कपात</span><span class="efv">${fmtQ(r[`${p}_threePctDed`] || 0)} क्विं</span></div>` : ''}
+        <div class="entry-field-row"><span class="efl">निव्वळ वजन</span><span class="efv">${fmtQ(r[`${p}_netWeightQ`] || 0)} क्विंटल</span></div>
+      </div>`;
+      
+      html += `<div class="entry-hero-box">
+        <span class="ehl">Gross उत्पन्न</span>
+        <span class="ehv">₹${fmt(r[`${p}_grossIncome`] || 0)}</span>
+      </div>`;
+      
+      html += `<div class="entry-card">
+        <div class="entry-card-title">मजुरी खर्च</div>
+        <div class="entry-field-row"><span class="efl">घड संख्या × दर</span><span class="efv">${r[`${p}_ghads`] || 0} × ₹${fmt(r[`${p}_labourRate`] || 10)} = ₹${fmt(r[`${p}_totalLabour`] || 0)}</span></div>
+      </div>`;
     }
-    html+=`<div class="print-h3">देयक</div>`;
-    html+=`<div class="print-row" style="font-weight:700"><span>निव्वळ उत्पन्न</span><span>₹${fmt(r.combinedNetIncome)}</span></div>`;
-    html+=`<div class="print-row"><span>मिळालेली रक्कम</span><span>₹${fmt(r.received)}</span></div>`;
-    html+=`<div class="print-row"><span>थकबाकी</span><span>₹${fmt(r.pending)}</span></div>`;
-    if(r.payments && r.payments.length){
-      html+=`<div class="print-h3">पेमेंट इतिहास</div>
-      <table class="print-table"><thead><tr><th>तारीख</th><th>प्रकार</th><th>संदर्भ</th><th>रक्कम</th></tr></thead><tbody>`;
-      r.payments.forEach(p=>{
-        html+=`<tr><td>${fmtDate(p.date)}</td><td>${modeL[p.mode]||p.mode}</td><td>${p.ref||'—'}</td><td>₹${fmt(p.amt)}</td></tr>`;
+    
+    html += `<div class="entry-hero-box">
+      <span class="ehl">या नोंदीचे निव्वळ उत्पन्न</span>
+      <span class="ehv">₹${fmt(r.combinedNetIncome || 0)}</span>
+    </div>`;
+    
+    html += `<div class="entry-card">
+      <div class="entry-card-title">देयक स्थिती</div>
+      <div class="entry-field-row"><span class="efl">मिळालेली रक्कम</span><span class="efv">₹${fmt(r.received || 0)}</span></div>
+      <div class="entry-field-row"><span class="efl">थकबाकी</span><span class="efv" style="color:${(r.pending || 0) > 0 ? '#dc2626' : '#1a6b3c'}">₹${fmt(r.pending || 0)}</span></div>
+    </div>`;
+    
+    if (r.payments && r.payments.length) {
+      html += `<div class="entry-card">
+        <div class="entry-card-title">पेमेंट इतिहास</div>`;
+      r.payments.forEach(p => {
+        html += `<div class="entry-field-row"><span class="efl">${fmtDate(p.date)} · ${modeL[p.mode] || p.mode}${p.ref ? ' · ' + p.ref : ''}</span><span class="efv">₹${fmt(p.amt)}</span></div>`;
       });
-      html+='</tbody></table>';
+      html += '</div>';
     }
-    if(r.note)html+=`<div class="print-h3">टीप</div><div>${r.note}</div>`;
-    html+='</div>';
+    
+    if (r.note) {
+      html += `<div class="entry-card">
+        <div class="entry-card-title">टीप</div>
+        <div style="font-size:13px">${r.note}</div>
+      </div>`;
+    }
+    html += '</div>';
   });
-
-  // Photos intentionally skipped — no <img> tags generated, so print immediately
+  
+  html += `<div class="print-page summary-final-page">
+    <div class="sfp-title">🌿 शेत म — मोरगाव काढचं शेत — एकूण</div>
+    <div class="summary-final-row"><span>एकूण काढणी</span><span>${recs.filter(r => (r.farmType||'M') === 'M' || (r.farmType||'M') === 'MP').length}</span></div>
+    <div class="summary-final-row"><span>एकूण निव्वळ वजन (फक्त एकल नोंदी)</span><span>${fmtQ(statsM.weightQ)} क्विंटल</span></div>
+    <div class="summary-final-row"><span>एकूण निव्वळ उत्पन्न (फक्त एकल नोंदी)</span><span>₹${fmt(statsM.income)}</span></div>
+    <div class="summary-final-row"><span>एकूण मजुरी</span><span>₹${fmt(statsM.labour)}</span></div>
+    <div class="summary-final-row"><span>एकूण घड (एकटे + एकत्रित मिळून)</span><span>${statsM.ghads}</span></div>
+    <div class="summary-final-row"><span>एकूण मिळालेली रक्कम</span><span>₹${fmt(statsM.received)}</span></div>
+    <div class="summary-final-row grand"><span>एकूण थकबाकी</span><span>₹${fmt(statsM.pending)}</span></div>
+  </div>`;
+  
+  html += `<div class="print-page summary-final-page">
+    <div class="sfp-title">🌿 शेत प — पाटोंदी काढचं शेत — एकूण</div>
+    <div class="summary-final-row"><span>एकूण काढणी</span><span>${recs.filter(r => (r.farmType||'M') === 'P' || (r.farmType||'M') === 'MP').length}</span></div>
+    <div class="summary-final-row"><span>एकूण निव्वळ वजन (फक्त एकल नोंदी)</span><span>${fmtQ(statsP.weightQ)} क्विंटल</span></div>
+    <div class="summary-final-row"><span>एकूण निव्वळ उत्पन्न (फक्त एकल नोंदी)</span><span>₹${fmt(statsP.income)}</span></div>
+    <div class="summary-final-row"><span>एकूण मजुरी</span><span>₹${fmt(statsP.labour)}</span></div>
+    <div class="summary-final-row"><span>एकूण घड (एकटे + एकत्रित मिळून)</span><span>${statsP.ghads}</span></div>
+    <div class="summary-final-row"><span>एकूण मिळालेली रक्कम</span><span>₹${fmt(statsP.received)}</span></div>
+    <div class="summary-final-row grand"><span>एकूण थकबाकी</span><span>₹${fmt(statsP.pending)}</span></div>
+  </div>`;
+  
+  html += `<div class="print-page summary-final-page">
+    <div class="sfp-title">📊 सर्व मिळून एकूण (शेत म + शेत प)</div>
+    <div class="summary-final-row"><span>एकूण नोंदी</span><span>${recs.length}</span></div>
+    <div class="summary-final-row"><span>एकूण निव्वळ वजन</span><span>${fmtQ(stats.weightQ)} क्विंटल</span></div>
+    <div class="summary-final-row"><span>एकूण मिळालेली रक्कम</span><span>₹${fmt(stats.received)}</span></div>
+    <div class="summary-final-row"><span>एकूण थकबाकी</span><span>₹${fmt(stats.pending)}</span></div>
+    <div class="summary-final-row grand"><span>एकूण निव्वळ उत्पन्न</span><span>₹${fmt(stats.income)}</span></div>
+  </div>`;
+  
   const printArea = document.getElementById('printArea');
   printArea.innerHTML = html;
   window.print();
