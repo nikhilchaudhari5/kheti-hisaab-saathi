@@ -6,6 +6,8 @@
 <title>केळी हिशोब</title>
 <link rel="manifest" href="manifest.json">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<!-- Google Identity Services for Drive Sync -->
+<script src="https://accounts.google.com/gsi/client" async defer></script>
 <style>
 /* ========================================
    🔴 RESET & BASE STYLES
@@ -515,7 +517,6 @@ body {
   cursor:pointer; min-width: 44px;
 }
 
-/* OVERLAY SCREENS */
 #formOverlay, #detailOverlay, #traderFormOverlay, #ledgerOverlay, #editConfirmOverlay {
   position: fixed;
   top: 0; left: 0; right: 0; bottom: 0;
@@ -694,45 +695,15 @@ body {
    🔴 PRINT STYLES 
    ======================================== */
 @media print {
-  html, body {
-    height: auto !important;
-    min-height: auto !important;
-    overflow: visible !important;
-    margin: 0 !important;
-    padding: 0 !important;
-  }
   body>*:not(#printArea){display:none!important}
-  #printArea{display:block!important; width: 100% !important;}
+  #printArea{display:block!important}
+  .print-page{page-break-after:always;padding:24px;font-family:'Noto Sans Devanagari','Inter',sans-serif;font-size:12px;color:#000}
+  .print-page:last-child{page-break-after:auto}
   
-  .print-page {
-    page-break-after: auto;
-    break-after: auto;
-    page-break-inside: avoid;
-    break-inside: avoid;
-    padding: 16px 24px;
-    margin-bottom: 16px;
-    border-bottom: 2px dashed #ccc;
-    font-family: 'Noto Sans Devanagari','Inter',sans-serif;
-    font-size: 12px;
-    color: #000;
-  }
-  .print-page:last-child {
-    border-bottom: none;
-  }
-  
-  .print-cover { 
-    page-break-after: always; 
-    break-after: page; 
-    display:flex; flex-direction:column; align-items:center; justify-content:center; height:90vh; text-align:center; 
-  }
+  .print-cover { display:flex; flex-direction:column; align-items:center; justify-content:center; height:90vh; text-align:center; }
   .print-cover .cover-title { font-size:32px; font-weight:700; color:#1a6b3c; margin-bottom:12px; }
   .print-cover .cover-sub { font-size:14px; color:#666; margin-bottom:24px; }
   .print-cover .cover-dates { font-size:16px; color:#1e293b; background:#e8f5ee; padding:10px 24px; border-radius:8px; border:1px solid #a8dbbf; }
-  
-  .entry-card, .entry-hero-box, .entry-trader-banner {
-    page-break-inside: avoid;
-    break-inside: avoid;
-  }
   
   .entry-number-badge { display:inline-block; background:#1a6b3c; color:#fff; font-size:20px; font-weight:700; padding:6px 18px; border-radius:8px; margin-bottom:4px; }
   .entry-card { border:1.5px solid #ccc; border-radius:10px; padding:14px 16px; margin:10px 0; background:#fafafa; }
@@ -742,9 +713,9 @@ body {
   .entry-field-row .efl { color:#555 }
   .entry-field-row .efv { font-weight:700; color:#1e293b }
   
-  .entry-hero-box { background:#1a6b3c; color:#fff; border-radius:10px; padding:12px 16px; margin:10px 0; display:flex; justify-content:space-between; align-items:center; }
+  .entry-hero-box { background:#1a6b3c; color:#fff; border-radius:10px; padding:14px 18px; margin:10px 0; display:flex; justify-content:space-between; align-items:center; }
   .entry-hero-box .ehl { font-size:13px; opacity:.9 }
-  .entry-hero-box .ehv { font-size:16px; font-weight:700; }
+  .entry-hero-box .ehv { font-size:24px; font-weight:700 }
   .entry-hero-box.pending-box { background:#dc2626 }
   
   .entry-trader-banner { background:#fff; border:2px solid #1a6b3c; border-radius:10px; padding:12px 16px; margin-bottom:12px; text-align:center; }
@@ -793,6 +764,17 @@ body {
 </header>
 
 <div class="screen active" id="screen-dash">
+  
+<!-- ====== NEW GOOGLE DRIVE BACKUP WIDGET ====== -->
+<div class="card" style="display:flex; justify-content:space-between; align-items:center; background:#e8f5ee; border:1.5px solid #a8dbbf; margin-bottom: 12px;">
+  <div>
+    <div style="font-weight:700; color:var(--green); font-size: 15px;">☁️ Cloud Backup</div>
+    <div style="font-size:11px; color:var(--green); opacity: 0.8;" id="driveStatus">Not connected</div>
+  </div>
+  <button class="pay-btn" style="width: auto; min-width: 80px; min-height: 36px; padding: 6px 12px; margin: 0; font-size: 13px;" id="driveBtn" onclick="handleAuthClick()">Connect</button>
+</div>
+<!-- ============================================= -->
+
 <div class="stat-grid" id="dash-stats"></div>
 <div class="sec-title" id="lbl-recent">अलीकडील नोंदी</div>
 <div id="dash-recent"></div>
@@ -961,16 +943,158 @@ body {
 <div id="printArea"></div>
 
 <script>
-/* ========================================
-   OVERLAYS HELPER
-   ======================================== */
-function showOverlay(id) {
-  document.getElementById(id).classList.add('open');
+/* =========================================================================
+   🔴 GOOGLE DRIVE INTEGRATION 
+   ========================================================================= */
+
+// PASTE YOUR CLIENT ID EXACTLY BETWEEN THE QUOTES BELOW:
+const GOOGLE_CLIENT_ID = "45696939970-8v89erp2ue480n1r022sed7ti972kc42.apps.googleusercontent.com";
+
+let accessToken = null;
+let tokenClient = null;
+let fileId = null;
+
+// Wait for Google Script to load
+window.addEventListener('load', () => {
+  if (typeof google !== 'undefined' && GOOGLE_CLIENT_ID !== "YOUR_CLIENT_ID_HERE") {
+    tokenClient = google.accounts.oauth2.initTokenClient({
+      client_id: GOOGLE_CLIENT_ID,
+      scope: 'https://www.googleapis.com/auth/drive.file',
+      callback: (tokenResponse) => {
+        if (tokenResponse && tokenResponse.access_token) {
+          accessToken = tokenResponse.access_token;
+          
+          // Update UI
+          document.getElementById('driveBtn').textContent = 'Sync Now';
+          document.getElementById('driveBtn').onclick = handleDriveSync;
+          document.getElementById('driveStatus').textContent = 'Connected';
+          showToast('Google Drive Connected!');
+          
+          // Run initial sync right away
+          handleDriveSync(); 
+        }
+      }
+    });
+  }
+});
+
+function handleAuthClick() {
+  if (GOOGLE_CLIENT_ID === 'YOUR_CLIENT_ID_HERE') {
+    alert("Please paste your Client ID in the code first (Line 664)!");
+    return;
+  }
+  if (tokenClient) {
+    tokenClient.requestAccessToken({prompt: ''});
+  }
 }
 
-function hideOverlay(id) {
-  document.getElementById(id).classList.remove('open');
+// Full Sync (Downloads, Merges, then Uploads)
+async function handleDriveSync() {
+  if (!accessToken) return;
+  document.getElementById('driveBtn').textContent = 'Syncing...';
+  
+  try {
+    // 1. Find the Backup file in Drive
+    if (!fileId) {
+      const searchRes = await fetch('https://www.googleapis.com/drive/v3/files?q=name="kheti-hisaab-data.json" and trashed=false', {
+        headers: { Authorization: `Bearer ${accessToken}` }
+      });
+      const searchData = await searchRes.json();
+      if (searchData.files && searchData.files.length > 0) {
+        fileId = searchData.files[0].id;
+      }
+    }
+
+    // 2. Download and Merge Cloud Data with Local Data
+    if (fileId) {
+      const dlRes = await fetch(`https://www.googleapis.com/drive/v3/files/${fileId}?alt=media`, {
+        headers: { Authorization: `Bearer ${accessToken}` }
+      });
+      if (dlRes.ok) {
+        const cloudData = await dlRes.json();
+        mergeData(cloudData);
+      }
+    }
+    
+    // 3. Push the new merged state back up to Cloud
+    await quietPushToDrive();
+    
+    document.getElementById('driveBtn').textContent = 'Sync Now';
+    showToast('Drive Sync Complete ✓');
+  } catch (e) {
+    console.error("Sync Error", e);
+    document.getElementById('driveBtn').textContent = 'Sync Now';
+    showToast('Sync Failed. Check internet.');
+  }
 }
+
+// Silent push that happens in background when you save a new record
+async function quietPushToDrive() {
+  if (!accessToken) return;
+  try {
+    const dataToSync = { records: getRecordsRaw(), traders: getTradersRaw(), timestamp: Date.now() };
+    const rawContent = JSON.stringify(dataToSync);
+
+    // If file doesn't exist yet, create it
+    if (!fileId) {
+      const metaRes = await fetch('https://www.googleapis.com/drive/v3/files', {
+        method: 'POST',
+        headers: { 'Authorization': `Bearer ${accessToken}`, 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name: 'kheti-hisaab-data.json', mimeType: 'application/json' })
+      });
+      const metaData = await metaRes.json();
+      if (metaData.id) fileId = metaData.id;
+    }
+
+    // Upload the raw data to the file
+    if (fileId) {
+      await fetch(`https://www.googleapis.com/upload/drive/v3/files/${fileId}?uploadType=media`, {
+        method: 'PATCH',
+        headers: { 'Authorization': `Bearer ${accessToken}`, 'Content-Type': 'application/json' },
+        body: rawContent
+      });
+      const time = new Date().toLocaleTimeString('en-IN', {hour: '2-digit', minute:'2-digit'});
+      document.getElementById('driveStatus').textContent = `Auto-synced at ${time}`;
+    }
+  } catch(e) { 
+    console.error('Auto-Push failed', e); 
+  }
+}
+
+function mergeData(cloudData) {
+  const localRecs = getRecordsRaw();
+  const localTraders = getTradersRaw();
+  
+  // Merge Records (Adds missing, updates existing if cloud has more payments)
+  const recMap = new Map(localRecs.map(r => [r.id, r]));
+  (cloudData.records || []).forEach(r => {
+    if (!recMap.has(r.id)) {
+      recMap.set(r.id, r);
+    } else {
+      const cL = r.payments ? r.payments.length : 0;
+      const lL = recMap.get(r.id).payments ? recMap.get(r.id).payments.length : 0;
+      if (cL > lL) recMap.set(r.id, r);
+    }
+  });
+  
+  // Merge Traders
+  const traderMap = new Map(localTraders.map(t => [t.id, t]));
+  (cloudData.traders || []).forEach(t => {
+    if (!traderMap.has(t.id)) traderMap.set(t.id, t);
+  });
+
+  // Save silently (bypasses auto-push to prevent infinite loop)
+  localStorage.setItem('records', JSON.stringify(Array.from(recMap.values())));
+  localStorage.setItem('traders', JSON.stringify(Array.from(traderMap.values())));
+  renderAll();
+}
+
+/* =========================================================================
+   APP LOGIC & UTILS
+   ========================================================================= */
+
+function showOverlay(id) { document.getElementById(id).classList.add('open'); }
+function hideOverlay(id) { document.getElementById(id).classList.remove('open'); }
 
 const LANG={
 mr:{appName:'केळी हिशोब साथी',dashboard:'डॅशबोर्ड',farmM:'शेत म',farmP:'शेत प',
@@ -1032,10 +1156,14 @@ payHistory:'Payment History',noPayments:'No payments yet'}
 let curLang=localStorage.getItem('lang')||'mr';
 function t(k){return LANG[curLang][k]||k;}
 
-function getRecords(){try{return JSON.parse(localStorage.getItem('records')||'[]')}catch(e){return[]}}
-function saveRecords(r){localStorage.setItem('records',JSON.stringify(r))}
-function getTraders(){try{return JSON.parse(localStorage.getItem('traders')||'[]')}catch(e){return[]}}
-function saveTraders(tr){localStorage.setItem('traders',JSON.stringify(tr))}
+// Modfied save functions to trigger auto-push
+function getRecordsRaw() { try{return JSON.parse(localStorage.getItem('records')||'[]')}catch(e){return[]} }
+function getRecords() { return getRecordsRaw(); }
+function saveRecords(r) { localStorage.setItem('records',JSON.stringify(r)); quietPushToDrive(); }
+
+function getTradersRaw() { try{return JSON.parse(localStorage.getItem('traders')||'[]')}catch(e){return[]} }
+function getTraders() { return getTradersRaw(); }
+function saveTraders(tr) { localStorage.setItem('traders',JSON.stringify(tr)); quietPushToDrive(); }
 
 let curTab='dash',editingRecord=null,curFarm='M',curHarvest='ghad';
 let photoTargets={},editingTrader=null;
@@ -1255,7 +1383,8 @@ document.getElementById('actionMenuDelete').addEventListener('click',()=>{
   closeActionMenu();
   if(!id)return;
   if(!confirm(t('confirmDelete')))return;
-  saveRecords(getRecords().filter(r=>r.id!==id));
+  const recs = getRecords().filter(r=>r.id!==id);
+  saveRecords(recs);
   showToast(t('deleted'));
   renderAll();
 });
@@ -2028,7 +2157,8 @@ function savePayment(id){
 
 function deleteRecord(id){
   if(!confirm(t('confirmDelete')))return;
-  saveRecords(getRecords().filter(r=>r.id!==id));
+  const recs = getRecords().filter(r=>r.id!==id);
+  saveRecords(recs);
   hideOverlay('detailOverlay');
   showToast(t('deleted'));renderAll();
 }
@@ -2041,7 +2171,7 @@ document.getElementById('addTraderBtn').addEventListener('click',()=>{
 document.getElementById('traderFormBack').addEventListener('click',()=>{ hideOverlay('traderFormOverlay');});
 document.getElementById('saveTraderBtn').addEventListener('click',()=>{
   const name=document.getElementById('tf_name').value.trim();
-  if(!name){showToast('नाव आवश्यक आहे');return;}
+  if(!name){showToast('नाव आवश्यकীয় आहे');return;}
   const traders=getTraders();
   const tr={id:editingTrader||genId(),name,phone:document.getElementById('tf_phone').value,village:document.getElementById('tf_village').value,note:document.getElementById('tf_note').value};
   if(editingTrader){const i=traders.findIndex(t=>t.id===editingTrader);if(i>=0)traders[i]=tr;}
@@ -2072,7 +2202,8 @@ function openLedger(traderId){
 }
 function deleteTrader(id){
   if(!confirm('व्यापारी हटवायचा आहे का?'))return;
-  saveTraders(getTraders().filter(t=>t.id!==id));
+  const tr = getTraders().filter(t=>t.id!==id);
+  saveTraders(tr);
   hideOverlay('ledgerOverlay');
   showToast(t('traderDeleted'));renderTraders();
 }
@@ -2083,9 +2214,6 @@ function closeSheet(){document.getElementById('sheetOverlay').classList.remove('
 function openLightbox(src){document.getElementById('lightboxImg').src=src;document.getElementById('lightbox').classList.add('open')}
 function closeLightbox(){document.getElementById('lightbox').classList.remove('open');setTimeout(()=>{document.getElementById('lightboxImg').src=''},300)}
 
-// ========================================
-// 🔴 PDF GENERATION
-// ========================================
 function generatePDF() {
   const allRecs = getRecords();
   if (!allRecs.length) {
@@ -2094,7 +2222,6 @@ function generatePDF() {
   }
   
   const recs = allRecs.slice().sort((a, b) => (b.date||'').localeCompare(a.date||''));
-  
   const stats = computeStats(recs, null);
   const statsM = computeStats(recs.filter(r => (r.farmType||'M') === 'M' || (r.farmType||'M') === 'MP'), 'M');
   const statsP = computeStats(recs.filter(r => (r.farmType||'M') === 'P' || (r.farmType||'M') === 'MP'), 'P');
@@ -2108,10 +2235,12 @@ function generatePDF() {
   const harvestL = { 'ghad': 'केळीचे घड', 'box': 'बॉक्स पॅकिंग', 'fanaya': 'फणाया' };
   const farmL = { 'M': 'शेत म', 'P': 'शेत प', 'MP': 'शेत म + शेत प (एकत्रित)' };
   
-  let html = `<div class="print-cover">
+  let html = `<div class="print-page">
+    <div class="print-cover">
       <div class="cover-title">केळी हिशोब साथी</div>
       <div class="cover-sub">संपूर्ण उत्पन्न अहवाल</div>
       <div class="cover-dates">कालावधी: ${fromDate} ते ${toDate}<br><span style="font-size:12px;opacity:.7">तयार केले: ${today2}</span></div>
+    </div>
   </div>`;
   
   recs.forEach((r, idx) => {
