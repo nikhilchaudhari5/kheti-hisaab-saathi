@@ -517,7 +517,7 @@ body {
   cursor:pointer; min-width: 44px;
 }
 
-#formOverlay, #detailOverlay, #traderFormOverlay, #ledgerOverlay, #editConfirmOverlay {
+#formOverlay, #detailOverlay, #traderFormOverlay, #ledgerOverlay, #editConfirmOverlay, #profileOverlay {
   position: fixed;
   top: 0; left: 0; right: 0; bottom: 0;
   width: 100%; height: 100%;
@@ -529,7 +529,7 @@ body {
   display: none;
 }
 
-#formOverlay.open, #detailOverlay.open, #traderFormOverlay.open, #ledgerOverlay.open, #editConfirmOverlay.open {
+#formOverlay.open, #detailOverlay.open, #traderFormOverlay.open, #ledgerOverlay.open, #editConfirmOverlay.open, #profileOverlay.open {
   display: block;
   padding-top: max(0px, env(safe-area-inset-top));
 }
@@ -670,6 +670,87 @@ body {
 
 .action-menu-cancel{ width:100%; padding:14px; border:none; background:var(--bg); font-size:15px; font-family:inherit; font-weight:600; color:var(--muted); cursor:pointer; min-height:48px; }
 
+/* ===== CLOUD CONNECTION STATUS PILL (NEW) ===== */
+.connection-pill{
+  position:fixed;
+  top:calc(env(safe-area-inset-top) + 8px);
+  right:12px;
+  background:rgba(0,0,0,.75);
+  color:#fff;
+  font-size:11px;
+  padding:5px 12px;
+  border-radius:14px;
+  z-index:500;
+  display:none;
+  align-items:center;
+  gap:6px;
+  transition:opacity .3s;
+}
+.connection-pill.show{display:flex}
+.connection-pill .dot{
+  width:7px;height:7px;border-radius:50%;
+  background:#fbbf24;
+}
+.connection-pill.connected .dot{background:#22c55e}
+.connection-pill.offline .dot{background:#94a3b8}
+.connection-pill.error .dot{background:#ef4444}
+
+.sync-banner{
+  display:none;
+  background:#fef3c7;
+  border:1px solid #fbbf24;
+  border-radius:10px;
+  padding:10px 14px;
+  margin-bottom:10px;
+  font-size:13px;
+  color:#92400e;
+  align-items:center;
+  justify-content:space-between;
+  gap:8px;
+}
+.sync-banner.show{display:flex}
+.sync-banner button{
+  background:#92400e;
+  color:#fff;
+  border:none;
+  border-radius:6px;
+  padding:6px 12px;
+  font-size:12px;
+  font-weight:600;
+  cursor:pointer;
+  white-space:nowrap;
+}
+
+/* ===== PROFILE ICON IN HEADER ===== */
+.profile-icon-btn{
+  min-height:44px; min-width:44px;
+  display:flex; align-items:center; justify-content:center;
+  background:rgba(255,255,255,.2);
+  border:1px solid rgba(255,255,255,.4);
+  border-radius:50%;
+  color:#fff; font-size:16px; cursor:pointer;
+}
+
+/* ===== PROFILE SCREEN ===== */
+.profile-section-title{
+  font-size:13px;font-weight:600;color:var(--muted);
+  text-transform:uppercase;letter-spacing:.5px;margin:18px 0 8px;
+}
+.profile-section-title:first-child{margin-top:0}
+.google-account-row{
+  display:flex; align-items:center; gap:10px;
+  padding:10px;background:var(--green-light);
+  border-radius:10px;margin-bottom:8px;
+}
+.google-account-row .gar-avatar{
+  width:36px;height:36px;border-radius:50%;
+  background:var(--green);color:#fff;
+  display:flex;align-items:center;justify-content:center;
+  font-weight:700;font-size:14px;flex-shrink:0;
+}
+.google-account-row .gar-email{font-size:13px;font-weight:600;flex:1}
+.google-account-row .gar-status{font-size:11px;color:var(--green)}
+
 .farm-header{background:var(--green-light);border-radius:8px;padding:8px 12px;font-weight:700;color:var(--green);margin:12px 0 8px;font-size:14px}
 
 .input-error{border-color:var(--red)!important}
@@ -755,26 +836,18 @@ body {
 </head>
 <body>
 <div id="app">
+<div class="connection-pill" id="connectionPill"><span class="dot"></span><span id="connectionPillText">जोडत आहे...</span></div>
 <header class="app-header">
 <h1 id="appName">केळी हिशोब साथी</h1>
 <div class="header-actions">
 <button class="icon-btn" id="pdfBtn" title="PDF / Share" style="display:none">📤</button>
 <button class="lang-btn" id="langBtn">EN</button>
+<button class="profile-icon-btn" id="profileIconBtn" title="Profile">👤</button>
 </div>
 </header>
 
 <div class="screen active" id="screen-dash">
   
-<!-- ====== NEW GOOGLE DRIVE BACKUP WIDGET ====== -->
-<div class="card" style="display:flex; justify-content:space-between; align-items:center; background:#e8f5ee; border:1.5px solid #a8dbbf; margin-bottom: 12px;">
-  <div>
-    <div style="font-weight:700; color:var(--green); font-size: 15px;">☁️ Cloud Backup</div>
-    <div style="font-size:11px; color:var(--green); opacity: 0.8;" id="driveStatus">Not connected</div>
-  </div>
-  <button class="pay-btn" style="width: auto; min-width: 80px; min-height: 36px; padding: 6px 12px; margin: 0; font-size: 13px;" id="driveBtn" onclick="handleAuthClick()">Connect</button>
-</div>
-<!-- ============================================= -->
-
 <div class="stat-grid" id="dash-stats"></div>
 <div class="sec-title" id="lbl-recent">अलीकडील नोंदी</div>
 <div id="dash-recent"></div>
@@ -905,6 +978,43 @@ body {
 <div style="padding:12px 12px 80px" id="editConfirmBody"></div>
 </div>
 
+<!-- PROFILE OVERLAY - FULL SCREEN -->
+<div id="profileOverlay">
+<div class="detail-header">
+<button class="back-btn" id="profileBack">←</button>
+<h2>प्रोफाइल</h2>
+</div>
+<div style="padding:12px 12px 80px">
+
+  <div class="sync-banner" id="syncBanner">
+    <span>⚠️ क्लाउड जोडणी संपली, परत जोडा</span>
+    <button id="reconnectBtn">पुन्हा जोडा</button>
+  </div>
+
+  <div class="profile-section-title">गुगल ड्राइव्ह बॅकअप</div>
+  <div id="googleAccountArea"></div>
+
+  <div class="profile-section-title">वैयक्तिक माहिती</div>
+  <div class="form-group">
+    <label class="form-label">शेतकऱ्याचे नाव</label>
+    <input type="text" class="form-input" id="profile_name" placeholder="तुमचे नाव">
+  </div>
+
+  <div class="profile-section-title">डीफॉल्ट सेटिंग्स</div>
+  <div class="form-group">
+    <label class="form-label">डीफॉल्ट मजुरी दर (प्रति घड)</label>
+    <input type="number" class="form-input" id="profile_defaultLabRate" placeholder="10">
+  </div>
+  <div class="form-group">
+    <label class="form-label">थकबाकी इशारा (किती दिवसांनी)</label>
+    <input type="number" class="form-input" id="profile_overdueDays" placeholder="15">
+  </div>
+
+  <button class="pay-btn" id="saveProfileBtn" style="margin-top:18px">जतन करा</button>
+
+</div>
+</div>
+
 <div id="ledgerOverlay">
 <div class="detail-header">
 <button class="back-btn" id="ledgerBack">←</button>
@@ -944,157 +1054,8 @@ body {
 
 <script>
 /* =========================================================================
-   🔴 GOOGLE DRIVE INTEGRATION 
-   ========================================================================= */
-
-// PASTE YOUR CLIENT ID EXACTLY BETWEEN THE QUOTES BELOW:
-const GOOGLE_CLIENT_ID = "45696939970-8v89erp2ue480n1r022sed7ti972kc42.apps.googleusercontent.com";
-
-let accessToken = null;
-let tokenClient = null;
-let fileId = null;
-
-// Wait for Google Script to load
-window.addEventListener('load', () => {
-  if (typeof google !== 'undefined' && GOOGLE_CLIENT_ID !== "YOUR_CLIENT_ID_HERE") {
-    tokenClient = google.accounts.oauth2.initTokenClient({
-      client_id: GOOGLE_CLIENT_ID,
-      scope: 'https://www.googleapis.com/auth/drive.file',
-      callback: (tokenResponse) => {
-        if (tokenResponse && tokenResponse.access_token) {
-          accessToken = tokenResponse.access_token;
-          
-          // Update UI
-          document.getElementById('driveBtn').textContent = 'Sync Now';
-          document.getElementById('driveBtn').onclick = handleDriveSync;
-          document.getElementById('driveStatus').textContent = 'Connected';
-          showToast('Google Drive Connected!');
-          
-          // Run initial sync right away
-          handleDriveSync(); 
-        }
-      }
-    });
-  }
-});
-
-function handleAuthClick() {
-  if (GOOGLE_CLIENT_ID === 'YOUR_CLIENT_ID_HERE') {
-    alert("Please paste your Client ID in the code first (Line 664)!");
-    return;
-  }
-  if (tokenClient) {
-    tokenClient.requestAccessToken({prompt: ''});
-  }
-}
-
-// Full Sync (Downloads, Merges, then Uploads)
-async function handleDriveSync() {
-  if (!accessToken) return;
-  document.getElementById('driveBtn').textContent = 'Syncing...';
-  
-  try {
-    // 1. Find the Backup file in Drive
-    if (!fileId) {
-      const searchRes = await fetch('https://www.googleapis.com/drive/v3/files?q=name="kheti-hisaab-data.json" and trashed=false', {
-        headers: { Authorization: `Bearer ${accessToken}` }
-      });
-      const searchData = await searchRes.json();
-      if (searchData.files && searchData.files.length > 0) {
-        fileId = searchData.files[0].id;
-      }
-    }
-
-    // 2. Download and Merge Cloud Data with Local Data
-    if (fileId) {
-      const dlRes = await fetch(`https://www.googleapis.com/drive/v3/files/${fileId}?alt=media`, {
-        headers: { Authorization: `Bearer ${accessToken}` }
-      });
-      if (dlRes.ok) {
-        const cloudData = await dlRes.json();
-        mergeData(cloudData);
-      }
-    }
-    
-    // 3. Push the new merged state back up to Cloud
-    await quietPushToDrive();
-    
-    document.getElementById('driveBtn').textContent = 'Sync Now';
-    showToast('Drive Sync Complete ✓');
-  } catch (e) {
-    console.error("Sync Error", e);
-    document.getElementById('driveBtn').textContent = 'Sync Now';
-    showToast('Sync Failed. Check internet.');
-  }
-}
-
-// Silent push that happens in background when you save a new record
-async function quietPushToDrive() {
-  if (!accessToken) return;
-  try {
-    const dataToSync = { records: getRecordsRaw(), traders: getTradersRaw(), timestamp: Date.now() };
-    const rawContent = JSON.stringify(dataToSync);
-
-    // If file doesn't exist yet, create it
-    if (!fileId) {
-      const metaRes = await fetch('https://www.googleapis.com/drive/v3/files', {
-        method: 'POST',
-        headers: { 'Authorization': `Bearer ${accessToken}`, 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name: 'kheti-hisaab-data.json', mimeType: 'application/json' })
-      });
-      const metaData = await metaRes.json();
-      if (metaData.id) fileId = metaData.id;
-    }
-
-    // Upload the raw data to the file
-    if (fileId) {
-      await fetch(`https://www.googleapis.com/upload/drive/v3/files/${fileId}?uploadType=media`, {
-        method: 'PATCH',
-        headers: { 'Authorization': `Bearer ${accessToken}`, 'Content-Type': 'application/json' },
-        body: rawContent
-      });
-      const time = new Date().toLocaleTimeString('en-IN', {hour: '2-digit', minute:'2-digit'});
-      document.getElementById('driveStatus').textContent = `Auto-synced at ${time}`;
-    }
-  } catch(e) { 
-    console.error('Auto-Push failed', e); 
-  }
-}
-
-function mergeData(cloudData) {
-  const localRecs = getRecordsRaw();
-  const localTraders = getTradersRaw();
-  
-  // Merge Records (Adds missing, updates existing if cloud has more payments)
-  const recMap = new Map(localRecs.map(r => [r.id, r]));
-  (cloudData.records || []).forEach(r => {
-    if (!recMap.has(r.id)) {
-      recMap.set(r.id, r);
-    } else {
-      const cL = r.payments ? r.payments.length : 0;
-      const lL = recMap.get(r.id).payments ? recMap.get(r.id).payments.length : 0;
-      if (cL > lL) recMap.set(r.id, r);
-    }
-  });
-  
-  // Merge Traders
-  const traderMap = new Map(localTraders.map(t => [t.id, t]));
-  (cloudData.traders || []).forEach(t => {
-    if (!traderMap.has(t.id)) traderMap.set(t.id, t);
-  });
-
-  // Save silently (bypasses auto-push to prevent infinite loop)
-  localStorage.setItem('records', JSON.stringify(Array.from(recMap.values())));
-  localStorage.setItem('traders', JSON.stringify(Array.from(traderMap.values())));
-  renderAll();
-}
-
-/* =========================================================================
    APP LOGIC & UTILS
    ========================================================================= */
-
-function showOverlay(id) { document.getElementById(id).classList.add('open'); }
-function hideOverlay(id) { document.getElementById(id).classList.remove('open'); }
 
 const LANG={
 mr:{appName:'केळी हिशोब साथी',dashboard:'डॅशबोर्ड',farmM:'शेत म',farmP:'शेत प',
@@ -1156,14 +1117,221 @@ payHistory:'Payment History',noPayments:'No payments yet'}
 let curLang=localStorage.getItem('lang')||'mr';
 function t(k){return LANG[curLang][k]||k;}
 
-// Modfied save functions to trigger auto-push
 function getRecordsRaw() { try{return JSON.parse(localStorage.getItem('records')||'[]')}catch(e){return[]} }
 function getRecords() { return getRecordsRaw(); }
-function saveRecords(r) { localStorage.setItem('records',JSON.stringify(r)); quietPushToDrive(); }
+function saveRecords(r) { localStorage.setItem('records',JSON.stringify(r)); }
 
 function getTradersRaw() { try{return JSON.parse(localStorage.getItem('traders')||'[]')}catch(e){return[]} }
 function getTraders() { return getTradersRaw(); }
-function saveTraders(tr) { localStorage.setItem('traders',JSON.stringify(tr)); quietPushToDrive(); }
+function saveTraders(tr) { localStorage.setItem('traders',JSON.stringify(tr)); }
+
+function mergeByIdAndTimestamp(localArr, importedArr){
+  const map = new Map();
+  localArr.forEach(r => map.set(r.id, r));
+  let added=0, updated=0, skipped=0;
+  importedArr.forEach(rec => {
+    const existing = map.get(rec.id);
+    if (!existing) { map.set(rec.id, rec); added++; }
+    else {
+      const eT = existing.updatedAt || existing.createdAt || 0;
+      const iT = rec.updatedAt || rec.createdAt || 0;
+      if (iT > eT) { map.set(rec.id, rec); updated++; }
+      else { skipped++; }
+    }
+  });
+  return { merged: Array.from(map.values()), added, updated, skipped };
+}
+
+/* ========================================
+   🔴 CLOUD SYNC (Google Drive, auto-connect)
+   ======================================== */
+
+const GOOGLE_CLIENT_ID = '45696939970-8v89erp2ue480n1r022sed7ti972kc42.apps.googleusercontent.com';
+const DRIVE_SCOPE = 'https://www.googleapis.com/auth/drive.file';
+const DRIVE_FILENAME = 'kheti-hisaab-data.json';
+
+let gAccessToken = null;
+let gUserEmail = null;
+let gDriveFileId = null; // cached once we find/create the file
+let tokenClient = null;
+
+function setConnectionPill(state, text){
+  const pill = document.getElementById('connectionPill');
+  pill.className = 'connection-pill show ' + state;
+  document.getElementById('connectionPillText').textContent = text;
+  if(state === 'connected'){
+    setTimeout(()=>{ pill.classList.remove('show'); }, 2500);
+  }
+}
+
+function getProfile(){
+  try{ return JSON.parse(localStorage.getItem('profile')||'{}') }catch(e){ return {} }
+}
+function saveProfile(p){ localStorage.setItem('profile', JSON.stringify(p)); }
+
+/* Called once Google's script has loaded */
+function initGoogleAuth(){
+  if(!window.google || !window.google.accounts){
+    setConnectionPill('error','गुगल लोड झाले नाही');
+    return;
+  }
+  tokenClient = google.accounts.oauth2.initTokenClient({
+    client_id: GOOGLE_CLIENT_ID,
+    scope: DRIVE_SCOPE,
+    callback: (response) => {
+      if(response.error){
+        document.getElementById('syncBanner').classList.add('show');
+        setConnectionPill('error','जोडणी अयशस्वी');
+        return;
+      }
+      gAccessToken = response.access_token;
+      localStorage.setItem('gHasConnectedBefore','1');
+      setConnectionPill('connected','जोडले ✓');
+      document.getElementById('syncBanner').classList.remove('show');
+      fetchUserInfoAndRender();
+      driveAutoSync();
+    }
+  });
+
+  attemptAutoConnect();
+}
+
+function attemptAutoConnect(){
+  if(!navigator.onLine){
+    setConnectionPill('offline','ऑफलाइन मोड');
+    return;
+  }
+  const hasConnectedBefore = localStorage.getItem('gHasConnectedBefore');
+  if(!hasConnectedBefore){
+    // First time ever on this device - we cannot silently connect (Google requires
+    // a real user gesture the first time). Just stay idle; Profile screen will show
+    // the one-time "Google सह सुरक्षित करा" button.
+    return;
+  }
+  setConnectionPill('connecting','जोडत आहे...');
+  if(tokenClient){
+    try{
+      tokenClient.requestAccessToken({ prompt: '' }); // '' = silent if possible
+    }catch(e){
+      setConnectionPill('error','जोडणी अयशस्वी');
+      document.getElementById('syncBanner').classList.add('show');
+    }
+  }
+}
+
+function connectGoogleManually(){
+  if(!tokenClient){ showToast('गुगल अजून लोड होत आहे, परत प्रयत्न करा'); return; }
+  setConnectionPill('connecting','जोडत आहे...');
+  tokenClient.requestAccessToken({ prompt: 'consent' });
+}
+
+function fetchUserInfoAndRender(){
+  if(!gAccessToken)return;
+  fetch('https://www.googleapis.com/oauth2/v2/userinfo', {
+    headers: { Authorization: 'Bearer ' + gAccessToken }
+  }).then(r=>r.json()).then(info=>{
+    gUserEmail = info.email;
+    renderGoogleAccountArea();
+  }).catch(()=>{ renderGoogleAccountArea(); });
+}
+
+function renderGoogleAccountArea(){
+  const el = document.getElementById('googleAccountArea');
+  if(!el)return;
+  if(gAccessToken){
+    const initials = (gUserEmail||'?').slice(0,2).toUpperCase();
+    el.innerHTML = `<div class="google-account-row">
+      <div class="gar-avatar">${initials}</div>
+      <div style="flex:1">
+        <div class="gar-email">${gUserEmail||'जोडलेले'}</div>
+        <div class="gar-status">✓ बॅकअप सुरू आहे</div>
+      </div>
+    </div>`;
+  } else {
+    el.innerHTML = `<button class="pay-btn" id="connectGoogleBtn">🔗 Google सह सुरक्षित करा</button>
+      <div class="form-hint">तुमचा डेटा तुमच्या स्वतःच्या Google Drive मध्ये सुरक्षित ठेवण्यासाठी एकदाच जोडा.</div>`;
+    setTimeout(()=>{
+      const btn=document.getElementById('connectGoogleBtn');
+      if(btn) btn.addEventListener('click', connectGoogleManually);
+    },0);
+  }
+}
+
+/* ===== Drive file read/write, reusing the SAME tested merge logic as Export/Import ===== */
+
+function driveFindOrCreateFileId(){
+  return fetch(`https://www.googleapis.com/drive/v3/files?q=name='${DRIVE_FILENAME}'+and+trashed=false&spaces=drive`, {
+    headers: { Authorization: 'Bearer ' + gAccessToken }
+  }).then(r=>r.json()).then(data=>{
+    if(data.files && data.files.length){
+      gDriveFileId = data.files[0].id;
+      return gDriveFileId;
+    }
+    // create it
+    return fetch('https://www.googleapis.com/drive/v3/files', {
+      method:'POST',
+      headers: { Authorization: 'Bearer ' + gAccessToken, 'Content-Type':'application/json' },
+      body: JSON.stringify({ name: DRIVE_FILENAME })
+    }).then(r=>r.json()).then(file=>{ gDriveFileId = file.id; return gDriveFileId; });
+  });
+}
+
+function driveDownloadJSON(){
+  return driveFindOrCreateFileId().then(fileId=>{
+    return fetch(`https://www.googleapis.com/drive/v3/files/${fileId}?alt=media`, {
+      headers: { Authorization: 'Bearer ' + gAccessToken }
+    }).then(r=> r.ok ? r.json().catch(()=>null) : null );
+  });
+}
+
+function driveUploadJSON(dataObj){
+  return driveFindOrCreateFileId().then(fileId=>{
+    return fetch(`https://www.googleapis.com/upload/drive/v3/files/${fileId}?uploadType=media`, {
+      method:'PATCH',
+      headers: { Authorization: 'Bearer ' + gAccessToken, 'Content-Type':'application/json' },
+      body: JSON.stringify(dataObj)
+    });
+  });
+}
+
+/* Pull from Drive, merge with local (SAME safe merge as Export/Import), then push merged result back */
+function driveAutoSync(){
+  if(!gAccessToken)return;
+  driveDownloadJSON().then(remote=>{
+    if(remote && remote.records){
+      const recResult = mergeByIdAndTimestamp(getRecords(), remote.records);
+      saveRecords(recResult.merged);
+      const traderResult = mergeByIdAndTimestamp(getTraders(), remote.traders||[]);
+      saveTraders(traderResult.merged);
+      if(recResult.added || recResult.updated){
+        showToast(`☁️ सिंक: नवीन ${recResult.added}, अपडेट ${recResult.updated}`);
+        renderAll();
+      }
+    }
+    // push current (now-merged) local state back up, so Drive always has the latest
+    driveUploadJSON({
+      exportedAt: Date.now(),
+      records: getRecords(),
+      traders: getTraders()
+    });
+  }).catch(()=>{
+    // Drive call failed (expired token mid-session, etc.) - fail quietly, local data is safe regardless
+    setConnectionPill('error','सिंक अयशस्वी (स्थानिक डेटा सुरक्षित आहे)');
+  });
+}
+
+/* Call this after every save/edit/delete/payment so Drive stays current */
+function syncToDriveIfConnected(){
+  if(gAccessToken) driveAutoSync();
+}
+
+window.addEventListener('online', attemptAutoConnect);
+window.addEventListener('offline', ()=> setConnectionPill('offline','ऑफलाइन मोड'));
+
+/* ========================================================================= */
+
+function showOverlay(id) { document.getElementById(id).classList.add('open'); }
+function hideOverlay(id) { document.getElementById(id).classList.remove('open'); }
 
 let curTab='dash',editingRecord=null,curFarm='M',curHarvest='ghad';
 let photoTargets={},editingTrader=null;
@@ -1256,9 +1424,10 @@ let pressTimer=null, pressedCard=null;
 
 function attachLongPress(container){
   container.addEventListener('touchstart', handlePressStart, {passive:true});
+  container.addEventListener('touchmove', handlePressCancel, {passive:true});
   container.addEventListener('touchend', handlePressEnd);
-  container.addEventListener('touchmove', handlePressCancel);
   container.addEventListener('mousedown', handlePressStart);
+  container.addEventListener('mousemove', handlePressCancel);
   container.addEventListener('mouseup', handlePressEnd);
   container.addEventListener('mouseleave', handlePressCancel);
 }
@@ -1387,6 +1556,7 @@ document.getElementById('actionMenuDelete').addEventListener('click',()=>{
   saveRecords(recs);
   showToast(t('deleted'));
   renderAll();
+  syncToDriveIfConnected();
 });
 
 function buildRecordSnapshot(){
@@ -1511,6 +1681,7 @@ function performUpdate(){
   editingRecord=null;
   showToast('नोंद अपडेट झाली ✓');
   renderAll();
+  syncToDriveIfConnected();
 }
 
 function recCardHTML(r){
@@ -1953,6 +2124,7 @@ function saveRecord(){
   hideOverlay('formOverlay');
   showToast(t('saved'));
   renderAll();
+  syncToDriveIfConnected();
 }
 
 function openPhotoSheet(key){
@@ -2153,6 +2325,7 @@ function savePayment(id){
   r.payments.push({amt, date:payDate, mode:payMode, ref:payRef, addedAt:Date.now()});
   saveRecords(recs);closeSheet();openDetail(id);
   showToast(t('paymentSaved'));renderAll();
+  syncToDriveIfConnected();
 }
 
 function deleteRecord(id){
@@ -2161,6 +2334,7 @@ function deleteRecord(id){
   saveRecords(recs);
   hideOverlay('detailOverlay');
   showToast(t('deleted'));renderAll();
+  syncToDriveIfConnected();
 }
 
 document.getElementById('addTraderBtn').addEventListener('click',()=>{
@@ -2209,6 +2383,28 @@ function deleteTrader(id){
 }
 document.getElementById('ledgerBack').addEventListener('click',()=>{ hideOverlay('ledgerOverlay');});
 document.getElementById('editConfirmBack').addEventListener('click',()=>{ hideOverlay('editConfirmOverlay');});
+
+document.getElementById('profileIconBtn').addEventListener('click',()=>{
+  const p = getProfile();
+  document.getElementById('profile_name').value = p.name||'';
+  document.getElementById('profile_defaultLabRate').value = p.defaultLabRate||10;
+  document.getElementById('profile_overdueDays').value = p.overdueDays||15;
+  renderGoogleAccountArea();
+  showOverlay('profileOverlay');
+});
+document.getElementById('profileBack').addEventListener('click',()=>hideOverlay('profileOverlay'));
+
+document.getElementById('saveProfileBtn').addEventListener('click',()=>{
+  saveProfile({
+    name: document.getElementById('profile_name').value,
+    defaultLabRate: Number(document.getElementById('profile_defaultLabRate').value||10),
+    overdueDays: Number(document.getElementById('profile_overdueDays').value||15)
+  });
+  showToast('प्रोफाइल जतन झाली ✓');
+  hideOverlay('profileOverlay');
+});
+
+document.getElementById('reconnectBtn').addEventListener('click', connectGoogleManually);
 
 function closeSheet(){document.getElementById('sheetOverlay').classList.remove('open')}
 function openLightbox(src){document.getElementById('lightboxImg').src=src;document.getElementById('lightbox').classList.add('open')}
@@ -2379,6 +2575,16 @@ if(!localStorage.getItem('editHintShown')){
   setTimeout(showEditHint,1200);
   localStorage.setItem('editHintShown','1');
 }
+
+// Wait for Google's script to finish loading, then attempt auto-connect
+function waitForGoogleAndInit(){
+  if(window.google && window.google.accounts){
+    initGoogleAuth();
+  } else {
+    setTimeout(waitForGoogleAndInit, 200);
+  }
+}
+waitForGoogleAndInit();
 </script>
 <script>
 if ('serviceWorker' in navigator) {
