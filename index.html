@@ -6,7 +6,6 @@
 <title>केळी हिशोब</title>
 <link rel="manifest" href="manifest.json">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-<!-- Google Identity Services for Drive Sync -->
 <script src="https://accounts.google.com/gsi/client" async defer></script>
 <style>
 /* ========================================
@@ -685,6 +684,7 @@ body {
   align-items:center;
   gap:6px;
   transition:opacity .3s;
+  cursor:pointer;
 }
 .connection-pill.show{display:flex}
 .connection-pill .dot{
@@ -694,6 +694,7 @@ body {
 .connection-pill.connected .dot{background:#22c55e}
 .connection-pill.offline .dot{background:#94a3b8}
 .connection-pill.error .dot{background:#ef4444}
+.connection-pill.warning .dot{background:#f97316}
 
 .sync-banner{
   display:none;
@@ -778,10 +779,9 @@ body {
 @media print {
   body>*:not(#printArea){display:none!important}
   #printArea{display:block!important}
-  .print-page{page-break-after:always;padding:24px;font-family:'Noto Sans Devanagari','Inter',sans-serif;font-size:12px;color:#000}
-  .print-page:last-child{page-break-after:auto}
+  .print-page{page-break-inside:avoid;padding:24px;font-family:'Noto Sans Devanagari','Inter',sans-serif;font-size:12px;color:#000;margin-bottom:20px;}
   
-  .print-cover { display:flex; flex-direction:column; align-items:center; justify-content:center; height:90vh; text-align:center; }
+  .print-cover { display:flex; flex-direction:column; align-items:center; justify-content:center; height:90vh; text-align:center; page-break-after:always; }
   .print-cover .cover-title { font-size:32px; font-weight:700; color:#1a6b3c; margin-bottom:12px; }
   .print-cover .cover-sub { font-size:14px; color:#666; margin-bottom:24px; }
   .print-cover .cover-dates { font-size:16px; color:#1e293b; background:#e8f5ee; padding:10px 24px; border-radius:8px; border:1px solid #a8dbbf; }
@@ -836,7 +836,10 @@ body {
 </head>
 <body>
 <div id="app">
-<div class="connection-pill" id="connectionPill"><span class="dot"></span><span id="connectionPillText">जोडत आहे...</span></div>
+<div class="connection-pill" id="connectionPill" onclick="document.getElementById('profileIconBtn').click()">
+  <span class="dot"></span><span id="connectionPillText">जोडत आहे...</span>
+</div>
+
 <header class="app-header">
 <h1 id="appName">केळी हिशोब साथी</h1>
 <div class="header-actions">
@@ -978,7 +981,6 @@ body {
 <div style="padding:12px 12px 80px" id="editConfirmBody"></div>
 </div>
 
-<!-- PROFILE OVERLAY - FULL SCREEN -->
 <div id="profileOverlay">
 <div class="detail-header">
 <button class="back-btn" id="profileBack">←</button>
@@ -1152,7 +1154,7 @@ const DRIVE_FILENAME = 'kheti-hisaab-data.json';
 
 let gAccessToken = null;
 let gUserEmail = null;
-let gDriveFileId = null; // cached once we find/create the file
+let gDriveFileId = null; 
 let tokenClient = null;
 
 function setConnectionPill(state, text){
@@ -1181,7 +1183,7 @@ function initGoogleAuth(){
     callback: (response) => {
       if(response.error){
         document.getElementById('syncBanner').classList.add('show');
-        setConnectionPill('error','जोडणी अयशस्वी');
+        setConnectionPill('warning','☁️ सिंकसाठी टॅप करा');
         return;
       }
       gAccessToken = response.access_token;
@@ -1203,17 +1205,25 @@ function attemptAutoConnect(){
   }
   const hasConnectedBefore = localStorage.getItem('gHasConnectedBefore');
   if(!hasConnectedBefore){
-    // First time ever on this device - we cannot silently connect (Google requires
-    // a real user gesture the first time). Just stay idle; Profile screen will show
-    // the one-time "Google सह सुरक्षित करा" button.
+    setConnectionPill('offline','☁️ टॅप करून सिंक करा');
     return;
   }
+  
   setConnectionPill('connecting','जोडत आहे...');
+  
+  // Timeout added so app doesn't freeze on "Connecting..." if Google blocks the request
+  let syncTimeout = setTimeout(()=>{
+    if(document.getElementById('connectionPill').classList.contains('connecting')){
+       setConnectionPill('warning','☁️ सिंकसाठी टॅप करा');
+    }
+  }, 3500);
+
   if(tokenClient){
     try{
-      tokenClient.requestAccessToken({ prompt: '' }); // '' = silent if possible
+      tokenClient.requestAccessToken({ prompt: '' }); 
     }catch(e){
-      setConnectionPill('error','जोडणी अयशस्वी');
+      clearTimeout(syncTimeout);
+      setConnectionPill('warning','☁️ सिंकसाठी टॅप करा');
       document.getElementById('syncBanner').classList.add('show');
     }
   }
@@ -1257,8 +1267,6 @@ function renderGoogleAccountArea(){
   }
 }
 
-/* ===== Drive file read/write, reusing the SAME tested merge logic as Export/Import ===== */
-
 function driveFindOrCreateFileId(){
   return fetch(`https://www.googleapis.com/drive/v3/files?q=name='${DRIVE_FILENAME}'+and+trashed=false&spaces=drive`, {
     headers: { Authorization: 'Bearer ' + gAccessToken }
@@ -1267,7 +1275,6 @@ function driveFindOrCreateFileId(){
       gDriveFileId = data.files[0].id;
       return gDriveFileId;
     }
-    // create it
     return fetch('https://www.googleapis.com/drive/v3/files', {
       method:'POST',
       headers: { Authorization: 'Bearer ' + gAccessToken, 'Content-Type':'application/json' },
@@ -1294,7 +1301,6 @@ function driveUploadJSON(dataObj){
   });
 }
 
-/* Pull from Drive, merge with local (SAME safe merge as Export/Import), then push merged result back */
 function driveAutoSync(){
   if(!gAccessToken)return;
   driveDownloadJSON().then(remote=>{
@@ -1308,19 +1314,16 @@ function driveAutoSync(){
         renderAll();
       }
     }
-    // push current (now-merged) local state back up, so Drive always has the latest
     driveUploadJSON({
       exportedAt: Date.now(),
       records: getRecords(),
       traders: getTraders()
     });
   }).catch(()=>{
-    // Drive call failed (expired token mid-session, etc.) - fail quietly, local data is safe regardless
-    setConnectionPill('error','सिंक अयशस्वी (स्थानिक डेटा सुरक्षित आहे)');
+    setConnectionPill('warning','☁️ सिंकसाठी टॅप करा');
   });
 }
 
-/* Call this after every save/edit/delete/payment so Drive stays current */
 function syncToDriveIfConnected(){
   if(gAccessToken) driveAutoSync();
 }
@@ -1420,37 +1423,58 @@ function computeStats(records,farmFilter){
   return{income,pending,received,weightQ,ghads,labour};
 }
 
-let pressTimer=null, pressedCard=null;
-
-function attachLongPress(container){
-  container.addEventListener('touchstart', handlePressStart, {passive:true});
-  container.addEventListener('touchmove', handlePressCancel, {passive:true});
-  container.addEventListener('touchend', handlePressEnd);
-  container.addEventListener('mousedown', handlePressStart);
-  container.addEventListener('mousemove', handlePressCancel);
-  container.addEventListener('mouseup', handlePressEnd);
-  container.addEventListener('mouseleave', handlePressCancel);
-}
+/* ===== ROBUST LONG PRESS SYSTEM ===== */
+let holdTimer=null, pressedCard=null, startX=0, startY=0;
+const MOVE_THRESHOLD = 15;
 
 function handlePressStart(e){
-  const card=e.target.closest('.rec-card');
-  if(!card)return;
-  pressedCard=card;
+  const card = e.target.closest('.rec-card');
+  if(!card) return;
+  pressedCard = card;
+  const touch = e.touches ? e.touches[0] : e;
+  startX = touch.clientX;
+  startY = touch.clientY;
   card.classList.add('pressing');
-  pressTimer=setTimeout(()=>{
+
+  holdTimer = setTimeout(() => {
     card.classList.remove('pressing');
-    if(navigator.vibrate)navigator.vibrate(40);
+    if(navigator.vibrate) navigator.vibrate(40);
     openActionMenu(card.dataset.id); 
-  },550);
+    pressedCard = null;
+  }, 550);
+}
+
+function handleTouchMove(e){
+  if(!pressedCard) return;
+  const touch = e.touches ? e.touches[0] : e;
+  const deltaX = Math.abs(touch.clientX - startX);
+  const deltaY = Math.abs(touch.clientY - startY);
+  if(deltaX > MOVE_THRESHOLD || deltaY > MOVE_THRESHOLD){
+    handlePressCancel();
+  }
 }
 
 function handlePressEnd(e){
-  clearTimeout(pressTimer);
-  if(pressedCard)pressedCard.classList.remove('pressing');
+  if(holdTimer) clearTimeout(holdTimer);
+  if(pressedCard) pressedCard.classList.remove('pressing');
+  pressedCard = null;
 }
+
 function handlePressCancel(){
-  clearTimeout(pressTimer);
-  if(pressedCard)pressedCard.classList.remove('pressing');
+  if(holdTimer) clearTimeout(holdTimer);
+  if(pressedCard) pressedCard.classList.remove('pressing');
+  pressedCard = null;
+}
+
+function attachLongPress(container){
+  container.addEventListener('touchstart', handlePressStart, {passive:true});
+  container.addEventListener('touchmove', handleTouchMove, {passive:true});
+  container.addEventListener('touchend', handlePressEnd);
+  container.addEventListener('touchcancel', handlePressCancel);
+  container.addEventListener('mousedown', handlePressStart);
+  container.addEventListener('mousemove', handleTouchMove);
+  container.addEventListener('mouseup', handlePressEnd);
+  container.addEventListener('mouseleave', handlePressCancel);
 }
 
 function showEditHint(){
@@ -2410,6 +2434,38 @@ function closeSheet(){document.getElementById('sheetOverlay').classList.remove('
 function openLightbox(src){document.getElementById('lightboxImg').src=src;document.getElementById('lightbox').classList.add('open')}
 function closeLightbox(){document.getElementById('lightbox').classList.remove('open');setTimeout(()=>{document.getElementById('lightboxImg').src=''},300)}
 
+function getPhotosHtmlForPDF(r, prefix) {
+  let html = '';
+  const arr = [];
+  if(r[`${prefix}photoTollBefore`]) arr.push({src: r[`${prefix}photoTollBefore`], label: 'टोल आधी'});
+  if(r[`${prefix}photoTollAfter`]) arr.push({src: r[`${prefix}photoTollAfter`], label: 'टोल नंतर'});
+  (r[`${prefix}photoPatti`]||[]).forEach((p,i)=>{ if(p) arr.push({src: p, label: `पट्टी ${i+1}`}); });
+  if(arr.length > 0) {
+    html += `<div class="entry-card" style="page-break-inside: avoid;"><div class="entry-card-title">पावत्या / फोटो</div><div style="display:flex;gap:12px;flex-wrap:wrap;justify-content:space-around;">`;
+    arr.forEach(ph => {
+      html += `<div style="flex: 1 1 30%; text-align:center; min-width:120px;"><div style="font-size:11px;color:#555;margin-bottom:4px;font-weight:600;">${ph.label}</div><img src="${ph.src}" style="width:100%;max-width:200px;height:auto;border:1px solid #ddd;border-radius:4px;object-fit:contain;"></div>`;
+    });
+    html += `</div></div>`;
+  }
+  return html;
+}
+
+function getCombinedPhotosHtmlForPDF(r) {
+  let html = '';
+  const arr = [];
+  if(r.c_photoTollBefore) arr.push({src: r.c_photoTollBefore, label: 'टोल आधी'});
+  if(r.c_photoTollAfter) arr.push({src: r.c_photoTollAfter, label: 'टोल नंतर'});
+  (r.c_photoPatti||[]).forEach((p,i)=>{ if(p) arr.push({src: p, label: `पट्टी ${i+1}`}); });
+  if(arr.length > 0) {
+    html += `<div class="entry-card" style="page-break-inside: avoid;"><div class="entry-card-title">पावत्या / फोटो</div><div style="display:flex;gap:12px;flex-wrap:wrap;justify-content:space-around;">`;
+    arr.forEach(ph => {
+      html += `<div style="flex: 1 1 30%; text-align:center; min-width:120px;"><div style="font-size:11px;color:#555;margin-bottom:4px;font-weight:600;">${ph.label}</div><img src="${ph.src}" style="width:100%;max-width:200px;height:auto;border:1px solid #ddd;border-radius:4px;object-fit:contain;"></div>`;
+    });
+    html += `</div></div>`;
+  }
+  return html;
+}
+
 function generatePDF() {
   const allRecs = getRecords();
   if (!allRecs.length) {
@@ -2482,6 +2538,10 @@ function generatePDF() {
         <div class="entry-field-row"><span class="efl">शेत प — घड संख्या × दर</span><span class="efv">${r.p_ghads || 0} × ₹${fmt(r.p_labourRate || 10)} = ₹${fmt(r.p_totalLabour || 0)}</span></div>
         <div class="entry-field-row"><span class="efl" style="font-weight:700">एकूण मजुरी</span><span class="efv">₹${fmt(r.combinedLabour || 0)}</span></div>
       </div>`;
+      
+      // ADD PDF PHOTOS (COMBINED)
+      html += getCombinedPhotosHtmlForPDF(r);
+      
     } else {
       const p = farmType.toLowerCase();
       html += `<div class="entry-card">
@@ -2501,6 +2561,9 @@ function generatePDF() {
         <div class="entry-card-title">मजुरी खर्च</div>
         <div class="entry-field-row"><span class="efl">घड संख्या × दर</span><span class="efv">${r[`${p}_ghads`] || 0} × ₹${fmt(r[`${p}_labourRate`] || 10)} = ₹${fmt(r[`${p}_totalLabour`] || 0)}</span></div>
       </div>`;
+      
+      // ADD PDF PHOTOS (SINGLE FARM)
+      html += getPhotosHtmlForPDF(r, p + '_');
     }
     
     html += `<div class="entry-hero-box">
