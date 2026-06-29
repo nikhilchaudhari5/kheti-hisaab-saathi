@@ -238,6 +238,7 @@ body {
    🔴 PRINT STYLES 
    ======================================== */
 @media print {
+  html, body { height: auto !important; min-height: auto !important; overflow: visible !important; }
   body>*:not(#printArea){display:none!important}
   #printArea{display:block!important}
   .print-page{page-break-inside:avoid;padding:24px;font-family:'Noto Sans Devanagari','Inter',sans-serif;font-size:12px;color:#000;margin-bottom:20px;}
@@ -291,7 +292,14 @@ body {
 </head>
 <body>
 
-<div id="login-screen" style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; background: #1a6b3c; color: white; padding: 20px; text-align: center;">
+<!-- 1. LOADING SCREEN (Visible by default) -->
+<div id="loading-screen" style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; background: #1a6b3c; color: white;">
+  <div style="font-size: 48px; margin-bottom: 12px;">🍌</div>
+  <div style="font-weight: 600; font-size: 18px;">लोड होत आहे...</div>
+</div>
+
+<!-- 2. LOGIN SCREEN (Hidden by default) -->
+<div id="login-screen" style="display: none; flex-direction: column; align-items: center; justify-content: center; height: 100vh; background: #1a6b3c; color: white; padding: 20px; text-align: center;">
   <div style="font-size: 64px; margin-bottom: 10px;">🍌</div>
   <h1 style="font-size: 28px; font-weight: 700; margin-bottom: 8px;">केळी हिशोब साथी</h1>
   <p style="font-size: 14px; opacity: 0.85; margin-bottom: 32px; max-width: 280px;">तुमचा शेतीचा हिशोब सुरक्षित आणि कायमस्वरूपी क्लाउडवर ठेवा.</p>
@@ -301,6 +309,7 @@ body {
   </button>
 </div>
 
+<!-- 3. MAIN APP CONTENT (Hidden by default until authenticated) -->
 <div id="app" style="display: none;">
 <div class="connection-pill" id="connectionPill" onclick="document.getElementById('profileIconBtn').click()">
   <span class="dot"></span><span id="connectionPillText">जोडत आहे...</span>
@@ -361,6 +370,7 @@ body {
 </nav>
 </div>
 
+<!-- FORMS & OVERLAYS -->
 <div id="formOverlay">
 <div class="detail-header"><button class="back-btn" id="formBack">←</button><h2 id="formTitle">नवीन नोंद</h2></div>
 <div style="padding:12px 12px 80px" id="formBody">
@@ -450,6 +460,9 @@ body {
 <div class="toast" id="toast"></div>
 <div id="printArea"></div>
 
+<!-- =========================================================================
+   🔴 JAVASCRIPT & FIREBASE LOGIC
+   ========================================================================= -->
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
@@ -472,12 +485,16 @@ window.currentUserUid = null;
 window.appRecords = [];
 window.appTraders = [];
 
-// FIREBASE AUTH LISTENER (Replaces Google Drive Logic)
+// FIREBASE AUTH LISTENER
 onAuthStateChanged(auth, async (user) => {
+  const loadingView = document.getElementById('loading-screen');
   const loginView = document.getElementById('login-screen');
   const mainAppView = document.getElementById('app');
   const connPillText = document.getElementById('connectionPillText');
   const connPill = document.getElementById('connectionPill');
+
+  // Hide the loading screen immediately once Firebase responds
+  if(loadingView) loadingView.style.display = 'none';
 
   if (user) {
     window.currentUserUid = user.uid;
@@ -568,7 +585,7 @@ valPayAmt:'रक्कम टाका!',payDate:'पेमेंट तार�
 payRef:'संदर्भ / नोट',payRefHint:'चेक नं. / UTR / Transaction ID',
 optional:'ऐच्छिक',modeCash:'रोख',modeCheque:'चेक',modeRTGS:'RTGS / NEFT',
 modePhonePe:'PhonePe',modeGPay:'Google Pay',modeUPI:'UPI',
-payHistory:'पेमेंट इतिहास',noPayments:'पेमेंट नाही'},
+payHistory:'Payment History',noPayments:'पेमेंट नाही'},
 en:{appName:'Kheti Hisaab Saathi',dashboard:'Dashboard',farmM:'Farm M',farmP:'Farm P',
 records:'Records',traders:'Traders',addRecord:'New Record',totalIncome:'Total Income',
 pending:'Pending',received:'Received',weight:'Total Weight',ghads:'Ghads',labour:'Labour',
