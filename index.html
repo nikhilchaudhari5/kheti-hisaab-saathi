@@ -6,246 +6,75 @@
 <title>केळी हिशोब</title>
 <link rel="manifest" href="manifest.json">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-<script src="https://accounts.google.com/gsi/client" async defer></script>
 <style>
 /* ========================================
    🔴 RESET & BASE STYLES
    ======================================== */
-*{
-  box-sizing:border-box;
-  margin:0;
-  padding:0;
-  -webkit-tap-highlight-color:transparent;
-}
+*{ box-sizing:border-box; margin:0; padding:0; -webkit-tap-highlight-color:transparent; }
 
 :root{
-  --green:#1a6b3c;
-  --green-light:#e8f5ee;
-  --red:#dc2626;
-  --red-light:#fee2e2;
-  --blue:#1d4ed8;
-  --blue-light:#dbeafe;
-  --card:#fff;
-  --bg:#f1f5f9;
-  --border:#e2e8f0;
-  --text:#1e293b;
-  --muted:#64748b
+  --green:#1a6b3c; --green-light:#e8f5ee; --red:#dc2626; --red-light:#fee2e2;
+  --blue:#1d4ed8; --blue-light:#dbeafe; --card:#fff; --bg:#f1f5f9;
+  --border:#e2e8f0; --text:#1e293b; --muted:#64748b
 }
 
-html, body {
-  width: 100%;
-  height: 100%;
-  overflow-x: hidden; 
-  margin: 0;
-  padding: 0;
-}
+html, body { width: 100%; height: 100%; overflow-x: hidden; margin: 0; padding: 0; }
 
 body {
   font-family:'Noto Sans Devanagari','Inter',sans-serif;
-  background:var(--bg);
-  color:var(--text);
-  min-height: 100vh;
-  position: relative;
-  overflow-x: hidden;
-  font-size: 16px;
-  line-height: 1.5;
-  padding: 
-    max(0px, env(safe-area-inset-top))
-    max(0px, env(safe-area-inset-right))
-    max(0px, env(safe-area-inset-bottom))
-    max(0px, env(safe-area-inset-left));
+  background:var(--bg); color:var(--text); min-height: 100vh; position: relative;
+  overflow-x: hidden; font-size: 16px; line-height: 1.5;
+  padding: max(0px, env(safe-area-inset-top)) max(0px, env(safe-area-inset-right)) max(0px, env(safe-area-inset-bottom)) max(0px, env(safe-area-inset-left));
 }
 
 /* ========================================
    🔴 HEADER STYLES
    ======================================== */
 .app-header {
-  background: var(--green);
-  color: #fff;
-  padding: 12px 16px;
+  background: var(--green); color: #fff; padding: 12px 16px;
   padding-top: max(12px, env(safe-area-inset-top));
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  position: sticky;
-  top: 0;
-  z-index: 100;
-  box-shadow: 0 2px 8px rgba(0,0,0,.2);
-  width: 100%;
+  display: flex; align-items: center; justify-content: space-between;
+  position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 8px rgba(0,0,0,.2); width: 100%;
 }
-
-.app-header h1 {
-  font-size: 18px;
-  font-weight: 700;
-}
-
-.header-actions {
-  display: flex;
-  gap: 8px;
-  align-items: center;
-}
-
-.lang-btn, .icon-btn {
-  min-height: 44px;
-  min-width: 44px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 8px 10px;
-}
-
-.lang-btn {
-  background: rgba(255,255,255,.2);
-  border: 1px solid rgba(255,255,255,.4);
-  color: #fff;
-  border-radius: 20px;
-  font-size: 12px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.icon-btn {
-  background: none;
-  border: none;
-  color: #fff;
-  cursor: pointer;
-  font-size: 20px;
-  line-height: 1;
-}
+.app-header h1 { font-size: 18px; font-weight: 700; }
+.header-actions { display: flex; gap: 8px; align-items: center; }
+.lang-btn, .icon-btn { min-height: 44px; min-width: 44px; display: flex; align-items: center; justify-content: center; padding: 8px 10px; }
+.lang-btn { background: rgba(255,255,255,.2); border: 1px solid rgba(255,255,255,.4); color: #fff; border-radius: 20px; font-size: 12px; font-weight: 600; cursor: pointer; transition: all 0.2s ease; }
+.icon-btn { background: none; border: none; color: #fff; cursor: pointer; font-size: 20px; line-height: 1; }
 
 /* ========================================
    🔴 BOTTOM NAVIGATION
    ======================================== */
 .bottom-nav {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  width: 100%;
-  max-width: none; 
-  background: #fff;
-  border-top: 1px solid var(--border);
-  display: flex;
-  z-index: 100;
+  position: fixed; bottom: 0; left: 0; right: 0; width: 100%; max-width: none; 
+  background: #fff; border-top: 1px solid var(--border); display: flex; z-index: 100;
   padding-bottom: max(0px, env(safe-area-inset-bottom));
 }
-
-.nav-tab {
-  flex: 1;
-  padding: 8px 4px;
-  border: none;
-  background: none;
-  cursor: pointer;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 4px;
-  font-size: 11px;
-  font-weight: 600;
-  color: var(--muted);
-  font-family: inherit;
-  transition: color .2s;
-  min-height: 60px;
-}
-
-.nav-tab.active {
-  color: var(--green)
-}
-
-.nav-icon {
-  font-size: 20px;
-  line-height: 1;
-}
+.nav-tab { flex: 1; padding: 8px 4px; border: none; background: none; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 4px; font-size: 11px; font-weight: 600; color: var(--muted); font-family: inherit; transition: color .2s; min-height: 60px; }
+.nav-tab.active { color: var(--green) }
+.nav-icon { font-size: 20px; line-height: 1; }
 
 /* ========================================
    🔴 SCREEN CONTENT & FAB
    ======================================== */
-.screen {
-  display: none;
-  padding: 12px 12px 100px; 
-  width: 100%;
-  padding-left: max(12px, env(safe-area-inset-left));
-  padding-right: max(12px, env(safe-area-inset-right));
-}
-
-.screen.active {
-  display: block;
-}
-
-.fab {
-  position: fixed;
-  bottom: 70px;
-  right: 16px;
-  right: max(16px, env(safe-area-inset-right));
-  width: 52px;
-  height: 52px;
-  min-width: 52px;
-  min-height: 52px;
-  background: var(--green);
-  color: #fff;
-  border: none;
-  border-radius: 50%;
-  font-size: 28px;
-  cursor: pointer;
-  box-shadow: 0 4px 12px rgba(26,107,60,.4);
-  z-index: 99;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  line-height: 1;
-  transition: transform 0.2s ease;
-}
-
-.fab:active {
-  transform: scale(0.95);
-}
+.screen { display: none; padding: 12px 12px 100px; width: 100%; padding-left: max(12px, env(safe-area-inset-left)); padding-right: max(12px, env(safe-area-inset-right)); }
+.screen.active { display: block; }
+.fab { position: fixed; bottom: 70px; right: 16px; right: max(16px, env(safe-area-inset-right)); width: 52px; height: 52px; min-width: 52px; min-height: 52px; background: var(--green); color: #fff; border: none; border-radius: 50%; font-size: 28px; cursor: pointer; box-shadow: 0 4px 12px rgba(26,107,60,.4); z-index: 99; display: flex; align-items: center; justify-content: center; line-height: 1; transition: transform 0.2s ease; }
+.fab:active { transform: scale(0.95); }
 
 /* ========================================
    🔴 CARDS, STATS, RECORDS
    ======================================== */
-.card {
-  background: var(--card);
-  border-radius: 12px;
-  padding: 14px;
-  margin-bottom: 10px;
-  box-shadow: 0 1px 3px rgba(0,0,0,.08);
-  width: 100%;
-}
-
-.stat-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 10px;
-  margin-bottom: 12px;
-  width: 100%;
-}
-
-.stat-card {
-  background: var(--card);
-  border-radius: 12px;
-  padding: 12px;
-  box-shadow: 0 1px 3px rgba(0,0,0,.08);
-}
-
+.card { background: var(--card); border-radius: 12px; padding: 14px; margin-bottom: 10px; box-shadow: 0 1px 3px rgba(0,0,0,.08); width: 100%; }
+.stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 12px; width: 100%; }
+.stat-card { background: var(--card); border-radius: 12px; padding: 12px; box-shadow: 0 1px 3px rgba(0,0,0,.08); }
 .stat-label{font-size:11px;color:var(--muted);margin-bottom:4px}
 .stat-val{font-size:20px;font-weight:700;color:var(--green)}
 .stat-val.red{color:var(--red)}
 .stat-val.blue{color:var(--blue)}
 .sec-title{font-size:13px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin:16px 0 8px}
 
-.rec-card{
-  background:var(--card);
-  border-radius:12px;
-  padding:12px 14px;
-  margin-bottom:8px;
-  box-shadow:0 1px 3px rgba(0,0,0,.08);
-  cursor:pointer;
-  border-left:4px solid var(--green);
-  width: 100%;
-  min-height: 60px;
-}
-
+.rec-card{ background:var(--card); border-radius:12px; padding:12px 14px; margin-bottom:8px; box-shadow:0 1px 3px rgba(0,0,0,.08); cursor:pointer; border-left:4px solid var(--green); width: 100%; min-height: 60px; }
 .rec-card.pending{border-left-color:var(--red)}
 .rec-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:4px;flex-wrap:wrap;gap:8px}
 .rec-trader{font-weight:600;font-size:15px}
@@ -260,111 +89,20 @@ body {
 /* ========================================
    🔴 FORMS & INPUTS
    ======================================== */
-.form-group {
-  margin-bottom: 14px;
-  width: 100%;
-}
+.form-group { margin-bottom: 14px; width: 100%; }
+.form-label { font-size: 13px; font-weight: 600; color: var(--text); margin-bottom: 5px; display: block; }
+.form-input { width: 100%; padding: 12px 12px; border: 1.5px solid var(--border); border-radius: 8px; font-size: 16px; font-family: inherit; background: #fff; color: var(--text); outline: none; transition: border .2s; -webkit-appearance: none; appearance: none; min-height: 44px; }
+.form-input:focus { border-color: var(--green); box-shadow: 0 0 0 3px rgba(26, 107, 60, 0.1); }
+.form-input:disabled { background: #f5f5f5; cursor: not-allowed; }
+.form-select { appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%2364748b' stroke-width='1.5' fill='none'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 12px center; padding-right: 36px; }
+.form-hint { font-size: 11px; color: var(--muted); margin-top: 3px; }
+.row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; width: 100%; }
+@media (max-width: 480px) { .row2 { grid-template-columns: 1fr; } }
 
-.form-label {
-  font-size: 13px;
-  font-weight: 600;
-  color: var(--text);
-  margin-bottom: 5px;
-  display: block;
-}
-
-.form-input {
-  width: 100%;
-  padding: 12px 12px; 
-  border: 1.5px solid var(--border);
-  border-radius: 8px;
-  font-size: 16px; 
-  font-family: inherit;
-  background: #fff;
-  color: var(--text);
-  outline: none;
-  transition: border .2s;
-  -webkit-appearance: none;
-  appearance: none;
-  min-height: 44px;
-}
-
-.form-input:focus {
-  border-color: var(--green);
-  box-shadow: 0 0 0 3px rgba(26, 107, 60, 0.1);
-}
-
-.form-input:disabled {
-  background: #f5f5f5;
-  cursor: not-allowed;
-}
-
-.form-select {
-  appearance: none;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%2364748b' stroke-width='1.5' fill='none'/%3E%3C/svg%3E");
-  background-repeat: no-repeat;
-  background-position: right 12px center;
-  padding-right: 36px;
-}
-
-.form-hint {
-  font-size: 11px;
-  color: var(--muted);
-  margin-top: 3px;
-}
-
-.row2 {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 8px;
-  width: 100%;
-}
-
-@media (max-width: 480px) {
-  .row2 { grid-template-columns: 1fr; }
-}
-
-.toggle-group{
-  display:flex;
-  background:var(--bg);
-  border-radius:8px;
-  padding:3px;
-  gap:2px;
-  width: 100%;
-  flex-wrap: wrap;
-}
-
-.toggle-btn{
-  flex:1;
-  padding:8px;
-  border:none;
-  background:none;
-  border-radius:6px;
-  font-size:13px;
-  font-family:inherit;
-  cursor:pointer;
-  font-weight:500;
-  color:var(--muted);
-  transition:all .2s;
-  min-height: 44px; 
-}
-
-.toggle-btn.active{
-  background:#fff;
-  color:var(--green);
-  font-weight:600;
-  box-shadow:0 1px 3px rgba(0,0,0,.1)
-}
-
-.auto-box{
-  padding:10px 12px;
-  border-radius:8px;
-  font-weight:600;
-  font-size:15px;
-  margin-top:4px;
-  width: 100%;
-}
-
+.toggle-group{ display:flex; background:var(--bg); border-radius:8px; padding:3px; gap:2px; width: 100%; flex-wrap: wrap; }
+.toggle-btn{ flex:1; padding:8px; border:none; background:none; border-radius:6px; font-size:13px; font-family:inherit; cursor:pointer; font-weight:500; color:var(--muted); transition:all .2s; min-height: 44px; }
+.toggle-btn.active{ background:#fff; color:var(--green); font-weight:600; box-shadow:0 1px 3px rgba(0,0,0,.1) }
+.auto-box{ padding:10px 12px; border-radius:8px; font-weight:600; font-size:15px; margin-top:4px; width: 100%; }
 .auto-box.blue{background:var(--blue-light);color:var(--blue)}
 .auto-box.green{background:var(--green-light);color:var(--green)}
 .auto-box.red{background:var(--red-light);color:var(--red)}
@@ -372,194 +110,34 @@ body {
 /* ========================================
    🔴 PHOTO SLOTS
    ======================================== */
-.photo-slots{
-  display:grid;
-  grid-template-columns:1fr 1fr 1fr;
-  gap:8px;
-  margin-top:8px;
-  width: 100%;
-}
-
-@media (max-width: 480px) {
-  .photo-slots { grid-template-columns: 1fr 1fr; gap: 6px; }
-}
-
-.photo-slot{
-  aspect-ratio:1;
-  border:2px dashed var(--border);
-  border-radius:10px;
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  justify-content:center;
-  cursor:pointer;
-  background:#fafafa;
-  position:relative;
-  overflow:hidden;
-  font-size:11px;
-  color:var(--muted);
-  text-align:center;
-  gap:4px;
-  min-height: 80px;
-}
-
-.photo-slot img{
-  width:100%;
-  height:100%;
-  object-fit:cover;
-  position:absolute;
-  inset:0
-}
-
-.photo-slot .del-photo{
-  position:absolute;
-  top:2px;
-  right:2px;
-  width:24px;
-  height:24px;
-  background:rgba(220,38,38,.9);
-  border:none;
-  border-radius:50%;
-  color:#fff;
-  font-size:14px;
-  cursor:pointer;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  z-index:2;
-  min-width: 24px;
-}
-
+.photo-slots{ display:grid; grid-template-columns:1fr 1fr 1fr; gap:8px; margin-top:8px; width: 100%; }
+@media (max-width: 480px) { .photo-slots { grid-template-columns: 1fr 1fr; gap: 6px; } }
+.photo-slot{ aspect-ratio:1; border:2px dashed var(--border); border-radius:10px; display:flex; flex-direction:column; align-items:center; justify-content:center; cursor:pointer; background:#fafafa; position:relative; overflow:hidden; font-size:11px; color:var(--muted); text-align:center; gap:4px; min-height: 80px; }
+.photo-slot img{ width:100%; height:100%; object-fit:cover; position:absolute; inset:0 }
+.photo-slot .del-photo{ position:absolute; top:2px; right:2px; width:24px; height:24px; background:rgba(220,38,38,.9); border:none; border-radius:50%; color:#fff; font-size:14px; cursor:pointer; display:flex; align-items:center; justify-content:center; z-index:2; min-width: 24px; }
 .photo-label{font-size:11px;color:var(--muted);margin-bottom:4px}
 
 /* ========================================
    🔴 OVERLAYS & SHEETS
    ======================================== */
-.sheet-overlay{
-  display:none;
-  position:fixed;
-  top: 0; left: 0; right: 0; bottom: 0;
-  width: 100%; height: 100%;
-  background:rgba(0,0,0,.5);
-  z-index:200;
-  align-items:flex-end;
-  justify-content:center;
-  overflow-y: auto;
-}
-
+.sheet-overlay{ display:none; position:fixed; top: 0; left: 0; right: 0; bottom: 0; width: 100%; height: 100%; background:rgba(0,0,0,.5); z-index:200; align-items:flex-end; justify-content:center; overflow-y: auto; }
 .sheet-overlay.open{ display:flex; }
-
-.sheet{
-  background:#fff;
-  border-radius:16px 16px 0 0;
-  padding:20px;
-  padding-bottom: max(20px, env(safe-area-inset-bottom));
-  width:100%;
-  max-width:100%; 
-  animation:slideUp .3s ease;
-}
-
-@keyframes slideUp{
-  from{transform:translateY(100%)}
-  to{transform:translateY(0)}
-}
-
-.sheet-title{
-  font-size:16px;
-  font-weight:700;
-  margin-bottom:16px;
-  text-align:center
-}
-
-.sheet-btn{
-  width:100%;
-  padding:14px;
-  border:1.5px solid var(--border);
-  border-radius:10px;
-  background:#fff;
-  font-size:15px;
-  font-family:inherit;
-  cursor:pointer;
-  margin-bottom:8px;
-  display:flex;
-  align-items:center;
-  gap:10px;
-  font-weight:500;
-  min-height: 44px;
-  transition: all 0.2s ease;
-}
-
+.sheet{ background:#fff; border-radius:16px 16px 0 0; padding:20px; padding-bottom: max(20px, env(safe-area-inset-bottom)); width:100%; max-width:100%; animation:slideUp .3s ease; }
+@keyframes slideUp{ from{transform:translateY(100%)} to{transform:translateY(0)} }
+.sheet-title{ font-size:16px; font-weight:700; margin-bottom:16px; text-align:center }
+.sheet-btn{ width:100%; padding:14px; border:1.5px solid var(--border); border-radius:10px; background:#fff; font-size:15px; font-family:inherit; cursor:pointer; margin-bottom:8px; display:flex; align-items:center; gap:10px; font-weight:500; min-height: 44px; transition: all 0.2s ease; }
 .sheet-btn:active{ background:var(--bg); transform: scale(0.98); }
-
-.lightbox{
-  display:none;
-  position:fixed;
-  top: 0; left: 0; right: 0; bottom: 0;
-  width: 100%; height: 100%;
-  background:rgba(0,0,0,.95);
-  z-index:300;
-  align-items:center;
-  justify-content:center;
-}
-
+.lightbox{ display:none; position:fixed; top: 0; left: 0; right: 0; bottom: 0; width: 100%; height: 100%; background:rgba(0,0,0,.95); z-index:300; align-items:center; justify-content:center; }
 .lightbox.open{ display:flex; }
-
 .lightbox img{ max-width:95vw; max-height:90vh; object-fit:contain; }
+.lightbox-close{ position:absolute; top:16px; right:16px; background:rgba(255,255,255,.2); border:none; color:#fff; width:44px; height:44px; border-radius:50%; font-size:20px; cursor:pointer; min-width: 44px; }
 
-.lightbox-close{
-  position:absolute;
-  top:16px; right:16px;
-  background:rgba(255,255,255,.2);
-  border:none; color:#fff;
-  width:44px; height:44px;
-  border-radius:50%; font-size:20px;
-  cursor:pointer; min-width: 44px;
-}
-
-#formOverlay, #detailOverlay, #traderFormOverlay, #ledgerOverlay, #editConfirmOverlay, #profileOverlay {
-  position: fixed;
-  top: 0; left: 0; right: 0; bottom: 0;
-  width: 100%; height: 100%;
-  max-width: none; left: 0; transform: none;
-  background: #fff;
-  z-index: 150;
-  overflow-y: auto;
-  -webkit-overflow-scrolling: touch; 
-  display: none;
-}
-
-#formOverlay.open, #detailOverlay.open, #traderFormOverlay.open, #ledgerOverlay.open, #editConfirmOverlay.open, #profileOverlay.open {
-  display: block;
-  padding-top: max(0px, env(safe-area-inset-top));
-}
-
-.detail-header{
-  background:var(--green);
-  color:#fff;
-  padding:12px 16px;
-  padding-top: max(12px, env(safe-area-inset-top));
-  display:flex;
-  align-items:center;
-  gap:10px;
-  position: sticky;
-  top: 0; z-index: 101;
-}
-
+#formOverlay, #detailOverlay, #traderFormOverlay, #ledgerOverlay, #editConfirmOverlay, #profileOverlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; width: 100%; height: 100%; max-width: none; left: 0; transform: none; background: #fff; z-index: 150; overflow-y: auto; -webkit-overflow-scrolling: touch; display: none; }
+#formOverlay.open, #detailOverlay.open, #traderFormOverlay.open, #ledgerOverlay.open, #editConfirmOverlay.open, #profileOverlay.open { display: block; padding-top: max(0px, env(safe-area-inset-top)); }
+.detail-header{ background:var(--green); color:#fff; padding:12px 16px; padding-top: max(12px, env(safe-area-inset-top)); display:flex; align-items:center; gap:10px; position: sticky; top: 0; z-index: 101; }
 .detail-header h2{ font-size:16px; font-weight:700; }
-
-.back-btn{
-  background:none; border:none; color:#fff;
-  font-size:22px; cursor:pointer; padding:8px;
-  min-width: 44px; min-height: 44px;
-  display: flex; align-items: center; justify-content: center;
-}
-
-.detail-row{
-  display:flex; justify-content:space-between;
-  padding:6px 0; border-bottom:1px solid var(--bg);
-  font-size:14px; flex-wrap: wrap; gap: 8px;
-}
-
+.back-btn{ background:none; border:none; color:#fff; font-size:22px; cursor:pointer; padding:8px; min-width: 44px; min-height: 44px; display: flex; align-items: center; justify-content: center; }
+.detail-row{ display:flex; justify-content:space-between; padding:6px 0; border-bottom:1px solid var(--bg); font-size:14px; flex-wrap: wrap; gap: 8px; }
 .detail-row:last-child{border-bottom:none}
 .detail-row .label{color:var(--muted)}
 .detail-row .val{font-weight:600}
@@ -567,22 +145,9 @@ body {
 /* ========================================
    🔴 BUTTONS & MISC
    ======================================== */
-.danger-btn, .pay-btn {
-  width: 100%;
-  padding: 12px;
-  border: none;
-  border-radius: 10px;
-  font-size: 15px;
-  font-family: inherit;
-  font-weight: 600;
-  cursor: pointer;
-  min-height: 44px;
-  transition: all 0.2s ease;
-}
-
+.danger-btn, .pay-btn { width: 100%; padding: 12px; border: none; border-radius: 10px; font-size: 15px; font-family: inherit; font-weight: 600; cursor: pointer; min-height: 44px; transition: all 0.2s ease; }
 .pay-btn{ background:var(--green); color:#fff; margin-bottom:8px; }
 .pay-btn:active { background: #158638; transform: scale(0.98); }
-
 .danger-btn{ background:var(--red-light); color:var(--red); border:1.5px solid var(--red); margin-top:8px }
 .danger-btn:active { background: #fecaca; }
 
@@ -601,50 +166,26 @@ body {
 .empty-state .emoji{font-size:48px;display:block;margin-bottom:12px}
 
 /* ===== EDIT / LONG-PRESS / CONFIRM ===== */
-.rec-card{
-  -webkit-user-select:none; user-select:none; -webkit-touch-callout:none;
-  transition: transform .15s ease, box-shadow .15s ease;
-}
-.rec-card.pressing{
-  transform: scale(0.97);
-  box-shadow: 0 0 0 3px var(--green-light), 0 1px 3px rgba(0,0,0,.08);
-}
-.confirm-box{
-  background:#fff; border:1.5px solid var(--border);
-  border-radius:10px; padding:10px 12px; margin-bottom:8px;
-}
+.rec-card{ -webkit-user-select:none; user-select:none; -webkit-touch-callout:none; transition: transform .15s ease, box-shadow .15s ease; }
+.rec-card.pressing{ transform: scale(0.97); box-shadow: 0 0 0 3px var(--green-light), 0 1px 3px rgba(0,0,0,.08); }
+.confirm-box{ background:#fff; border:1.5px solid var(--border); border-radius:10px; padding:10px 12px; margin-bottom:8px; }
 .confirm-field-label{ font-size:11px; color:var(--muted); text-transform:uppercase; letter-spacing:.3px; margin-bottom:4px; }
 .confirm-old{ font-size:14px; color:var(--red); text-decoration:line-through; opacity:.7; }
 .confirm-new{ font-size:15px; color:var(--green); font-weight:700; }
 .confirm-arrow{ color:var(--muted); margin:0 6px; font-size:13px; }
 .confirm-unchanged{ font-size:14px; color:var(--text); }
-.edit-hint-toast{
-  position:fixed; bottom:100px; left:50%; transform:translateX(-50%);
-  background:#1e293b; color:#fff; padding:8px 16px; border-radius:20px;
-  font-size:12px; z-index:400; opacity:0; transition:opacity .3s; pointer-events:none; white-space:nowrap;
-}
+.edit-hint-toast{ position:fixed; bottom:100px; left:50%; transform:translateX(-50%); background:#1e293b; color:#fff; padding:8px 16px; border-radius:20px; font-size:12px; z-index:400; opacity:0; transition:opacity .3s; pointer-events:none; white-space:nowrap; }
 .edit-hint-toast.show{opacity:1}
 
 /* ===== LONG-PRESS ACTION MENU ===== */
-.action-menu-overlay{
-  display:none; position:fixed; top:0;left:0;right:0;bottom:0;
-  width:100vw;height:100vh; background:rgba(0,0,0,.4); z-index:250;
-  align-items:center; justify-content:center;
-}
+.action-menu-overlay{ display:none; position:fixed; top:0;left:0;right:0;bottom:0; width:100vw;height:100vh; background:rgba(0,0,0,.4); z-index:250; align-items:center; justify-content:center; }
 .action-menu-overlay.open{display:flex}
-.action-menu-box{
-  background:#fff; border-radius:14px; width:85%; max-width:320px;
-  overflow:hidden; box-shadow:0 10px 40px rgba(0,0,0,.3); animation:popIn .18s ease;
-}
+.action-menu-box{ background:#fff; border-radius:14px; width:85%; max-width:320px; overflow:hidden; box-shadow:0 10px 40px rgba(0,0,0,.3); animation:popIn .18s ease; }
 @keyframes popIn{ from{transform:scale(.9);opacity:0} to{transform:scale(1);opacity:1} }
 .action-menu-header{ padding:14px 16px; border-bottom:1px solid var(--border); text-align:center; }
 .action-menu-header .trader{font-weight:700;font-size:15px}
 .action-menu-header .meta{font-size:12px;color:var(--muted);margin-top:2px}
-.action-menu-btn{
-  width:100%; padding:14px 16px; border:none; background:#fff;
-  font-size:15px; font-family:inherit; font-weight:600; text-align:left;
-  display:flex; align-items:center; gap:10px; cursor:pointer; min-height:48px; border-bottom:1px solid var(--bg);
-}
+.action-menu-btn{ width:100%; padding:14px 16px; border:none; background:#fff; font-size:15px; font-family:inherit; font-weight:600; text-align:left; display:flex; align-items:center; gap:10px; cursor:pointer; min-height:48px; border-bottom:1px solid var(--bg); }
 .action-menu-btn:active{background:var(--bg)}
 .action-menu-btn:last-child{border-bottom:none}
 .action-menu-btn.edit{color:var(--blue)}
@@ -666,94 +207,19 @@ body {
 .combined-section-header{ display:flex; align-items:center; justify-content:space-between; margin:18px 0 8px; }
 .combined-section-header .sec-title{margin:0}
 .combined-count-badge{ background:#fef9c3; color:#854d0e; font-size:11px; font-weight:700; padding:2px 10px; border-radius:10px; }
-
 .action-menu-cancel{ width:100%; padding:14px; border:none; background:var(--bg); font-size:15px; font-family:inherit; font-weight:600; color:var(--muted); cursor:pointer; min-height:48px; }
 
-/* ===== CLOUD CONNECTION STATUS PILL (NEW) ===== */
-.connection-pill{
-  position:fixed;
-  top:calc(env(safe-area-inset-top) + 8px);
-  right:12px;
-  background:rgba(0,0,0,.75);
-  color:#fff;
-  font-size:11px;
-  padding:5px 12px;
-  border-radius:14px;
-  z-index:500;
-  display:none;
-  align-items:center;
-  gap:6px;
-  transition:opacity .3s;
-  cursor:pointer;
-}
+/* ===== CLOUD CONNECTION STATUS PILL ===== */
+.connection-pill{ position:fixed; top:calc(env(safe-area-inset-top) + 8px); right:12px; background:rgba(0,0,0,.75); color:#fff; font-size:11px; padding:5px 12px; border-radius:14px; z-index:500; display:none; align-items:center; gap:6px; transition:opacity .3s; cursor:pointer; }
 .connection-pill.show{display:flex}
-.connection-pill .dot{
-  width:7px;height:7px;border-radius:50%;
-  background:#fbbf24;
-}
+.connection-pill .dot{ width:7px;height:7px;border-radius:50%; background:#fbbf24; }
 .connection-pill.connected .dot{background:#22c55e}
 .connection-pill.offline .dot{background:#94a3b8}
 .connection-pill.error .dot{background:#ef4444}
-.connection-pill.warning .dot{background:#f97316}
-
-.sync-banner{
-  display:none;
-  background:#fef3c7;
-  border:1px solid #fbbf24;
-  border-radius:10px;
-  padding:10px 14px;
-  margin-bottom:10px;
-  font-size:13px;
-  color:#92400e;
-  align-items:center;
-  justify-content:space-between;
-  gap:8px;
-}
-.sync-banner.show{display:flex}
-.sync-banner button{
-  background:#92400e;
-  color:#fff;
-  border:none;
-  border-radius:6px;
-  padding:6px 12px;
-  font-size:12px;
-  font-weight:600;
-  cursor:pointer;
-  white-space:nowrap;
-}
 
 /* ===== PROFILE ICON IN HEADER ===== */
-.profile-icon-btn{
-  min-height:44px; min-width:44px;
-  display:flex; align-items:center; justify-content:center;
-  background:rgba(255,255,255,.2);
-  border:1px solid rgba(255,255,255,.4);
-  border-radius:50%;
-  color:#fff; font-size:16px; cursor:pointer;
-}
-
-/* ===== PROFILE SCREEN ===== */
-.profile-section-title{
-  font-size:13px;font-weight:600;color:var(--muted);
-  text-transform:uppercase;letter-spacing:.5px;margin:18px 0 8px;
-}
-.profile-section-title:first-child{margin-top:0}
-.google-account-row{
-  display:flex; align-items:center; gap:10px;
-  padding:10px;background:var(--green-light);
-  border-radius:10px;margin-bottom:8px;
-}
-.google-account-row .gar-avatar{
-  width:36px;height:36px;border-radius:50%;
-  background:var(--green);color:#fff;
-  display:flex;align-items:center;justify-content:center;
-  font-weight:700;font-size:14px;flex-shrink:0;
-}
-.google-account-row .gar-email{font-size:13px;font-weight:600;flex:1}
-.google-account-row .gar-status{font-size:11px;color:var(--green)}
-
+.profile-icon-btn{ min-height:44px; min-width:44px; display:flex; align-items:center; justify-content:center; background:rgba(255,255,255,.2); border:1px solid rgba(255,255,255,.4); border-radius:50%; color:#fff; font-size:16px; cursor:pointer; }
 .farm-header{background:var(--green-light);border-radius:8px;padding:8px 12px;font-weight:700;color:var(--green);margin:12px 0 8px;font-size:14px}
-
 .input-error{border-color:var(--red)!important}
 .error-msg{color:var(--red);font-size:12px;margin-top:4px;width: 100%}
 
@@ -764,13 +230,8 @@ body {
 .pay-mode-badge.rtgs{background:#dbeafe;color:#1e40af}
 .pay-mode-badge.phonepay,.pay-mode-badge.gpay,.pay-mode-badge.upi{background:#f3e8ff;color:#7e22ce}
 
-.toast{
-  position:fixed; bottom: 100px; left:50%; transform:translateX(-50%);
-  background:#1e293b; color:#fff; padding:10px 20px; border-radius:24px;
-  font-size:14px; z-index:400; opacity:0; transition:opacity .3s; pointer-events:none; white-space:nowrap;
-}
+.toast{ position:fixed; bottom: 100px; left:50%; transform:translateX(-50%); background:#1e293b; color:#fff; padding:10px 20px; border-radius:24px; font-size:14px; z-index:400; opacity:0; transition:opacity .3s; pointer-events:none; white-space:nowrap; }
 .toast.show{opacity:1}
-
 #printArea{display:none}
 
 /* ========================================
@@ -780,12 +241,10 @@ body {
   body>*:not(#printArea){display:none!important}
   #printArea{display:block!important}
   .print-page{page-break-inside:avoid;padding:24px;font-family:'Noto Sans Devanagari','Inter',sans-serif;font-size:12px;color:#000;margin-bottom:20px;}
-  
   .print-cover { display:flex; flex-direction:column; align-items:center; justify-content:center; height:90vh; text-align:center; page-break-after:always; }
   .print-cover .cover-title { font-size:32px; font-weight:700; color:#1a6b3c; margin-bottom:12px; }
   .print-cover .cover-sub { font-size:14px; color:#666; margin-bottom:24px; }
   .print-cover .cover-dates { font-size:16px; color:#1e293b; background:#e8f5ee; padding:10px 24px; border-radius:8px; border:1px solid #a8dbbf; }
-  
   .entry-number-badge { display:inline-block; background:#1a6b3c; color:#fff; font-size:20px; font-weight:700; padding:6px 18px; border-radius:8px; margin-bottom:4px; }
   .entry-card { border:1.5px solid #ccc; border-radius:10px; padding:14px 16px; margin:10px 0; background:#fafafa; }
   .entry-card-title { font-size:13px; font-weight:700; color:#1a6b3c; text-transform:uppercase; letter-spacing:.5px; margin-bottom:8px; border-bottom:1px solid #ddd; padding-bottom:4px; }
@@ -793,17 +252,14 @@ body {
   .entry-field-row:last-child { border-bottom:none }
   .entry-field-row .efl { color:#555 }
   .entry-field-row .efv { font-weight:700; color:#1e293b }
-  
   .entry-hero-box { background:#1a6b3c; color:#fff; border-radius:10px; padding:14px 18px; margin:10px 0; display:flex; justify-content:space-between; align-items:center; }
   .entry-hero-box .ehl { font-size:13px; opacity:.9 }
   .entry-hero-box .ehv { font-size:24px; font-weight:700 }
   .entry-hero-box.pending-box { background:#dc2626 }
-  
   .entry-trader-banner { background:#fff; border:2px solid #1a6b3c; border-radius:10px; padding:12px 16px; margin-bottom:12px; text-align:center; }
   .entry-trader-banner .etb-name { font-size:20px; font-weight:700; color:#1a6b3c }
   .entry-trader-banner .etb-date { font-size:13px; color:#666; margin-top:2px }
   .entry-trader-banner .etb-farm { display:inline-block; margin-top:6px; background:#fef9c3; color:#854d0e; font-size:12px; font-weight:700; padding:3px 12px; border-radius:12px; }
-  
   .summary-final-page .sfp-title { font-size:20px; font-weight:700; color:#1a6b3c; margin-bottom:14px; border-bottom:3px solid #1a6b3c; padding-bottom:8px; }
   .summary-final-row { display:flex; justify-content:space-between; padding:8px 0; font-size:14px; border-bottom:1px solid #eee; }
   .summary-final-row.grand { font-size:18px; font-weight:700; color:#1a6b3c; border-top:2px solid #1a6b3c; border-bottom:none; margin-top:8px; padding-top:10px; }
@@ -826,7 +282,6 @@ body {
   .detail-header { padding: 10px 12px; padding-top: max(10px, env(safe-area-inset-top)); }
   .detail-header h2 { font-size: 15px; }
 }
-
 @media (max-width: 380px) {
   .app-header h1 { font-size: 14px; }
   .stat-grid { grid-template-columns: 1fr; }
@@ -835,7 +290,18 @@ body {
 </style>
 </head>
 <body>
-<div id="app">
+
+<div id="login-screen" style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; background: #1a6b3c; color: white; padding: 20px; text-align: center;">
+  <div style="font-size: 64px; margin-bottom: 10px;">🍌</div>
+  <h1 style="font-size: 28px; font-weight: 700; margin-bottom: 8px;">केळी हिशोब साथी</h1>
+  <p style="font-size: 14px; opacity: 0.85; margin-bottom: 32px; max-width: 280px;">तुमचा शेतीचा हिशोब सुरक्षित आणि कायमस्वरूपी क्लाउडवर ठेवा.</p>
+  
+  <button class="pay-btn" style="background: white; color: #1a6b3c; max-width: 280px; font-size: 16px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);" onclick="window.connectGoogleManually()">
+    🔗 Google सह लॉग इन करा
+  </button>
+</div>
+
+<div id="app" style="display: none;">
 <div class="connection-pill" id="connectionPill" onclick="document.getElementById('profileIconBtn').click()">
   <span class="dot"></span><span id="connectionPillText">जोडत आहे...</span>
 </div>
@@ -896,24 +362,12 @@ body {
 </div>
 
 <div id="formOverlay">
-<div class="detail-header">
-<button class="back-btn" id="formBack">←</button>
-<h2 id="formTitle">नवीन नोंद</h2>
-</div>
+<div class="detail-header"><button class="back-btn" id="formBack">←</button><h2 id="formTitle">नवीन नोंद</h2></div>
 <div style="padding:12px 12px 80px" id="formBody">
 <div class="sec-title" data-t="basicInfo">मूलभूत माहिती</div>
-<div class="form-group">
-<label class="form-label" data-t="date">तारीख</label>
-<input type="date" class="form-input" id="f_date">
-</div>
-<div class="form-group">
-<label class="form-label" data-t="trader">व्यापारी</label>
-<select class="form-input form-select" id="f_trader"></select>
-</div>
-<div class="form-group">
-<label class="form-label" data-t="vehicle">वाहन क्रमांक (ऐच्छिक)</label>
-<input type="text" class="form-input" id="f_vehicle" placeholder="MH 19 AB 1234">
-</div>
+<div class="form-group"><label class="form-label" data-t="date">तारीख</label><input type="date" class="form-input" id="f_date"></div>
+<div class="form-group"><label class="form-label" data-t="trader">व्यापारी</label><select class="form-input form-select" id="f_trader"></select></div>
+<div class="form-group"><label class="form-label" data-t="vehicle">वाहन क्रमांक (ऐच्छिक)</label><input type="text" class="form-input" id="f_vehicle" placeholder="MH 19 AB 1234"></div>
 <div class="sec-title" data-t="farmSel">शेत निवड</div>
 <div class="toggle-group" id="farmToggle">
 <button class="toggle-btn active" data-farm="M">🌿 <span data-t="farmMLong">मोरगाव</span></button>
@@ -928,9 +382,7 @@ body {
 </div>
 <div id="farmFields"></div>
 <div class="sec-title" data-t="rate">दर (प्रति क्विंटल)</div>
-<div class="form-group">
-<input type="number" class="form-input" id="f_rate" placeholder="₹ दर" oninput="recalcAll()">
-</div>
+<div class="form-group"><input type="number" class="form-input" id="f_rate" placeholder="₹ दर" oninput="recalcAll()"></div>
 <div id="combinedSummary" style="display:none">
 <div class="sec-title" data-t="combinedSummary">एकत्रित सारांश</div>
 <div class="summary-box" id="combinedBox"></div>
@@ -943,27 +395,16 @@ body {
 </div>
 <div class="auto-box red" id="f_pendingDisplay">थकबाकी: ₹0</div>
 <div class="sec-title" data-t="note">टीप</div>
-<div class="form-group">
-<textarea class="form-input" id="f_note" rows="2" placeholder="ऐच्छिक..."></textarea>
-</div>
+<div class="form-group"><textarea class="form-input" id="f_note" rows="2" placeholder="ऐच्छिक..."></textarea></div>
 <div id="saveError" class="error-msg" style="display:none;margin-bottom:8px;text-align:center;font-size:14px"></div>
 <button class="pay-btn" id="saveRecordBtn" style="margin-top:8px" data-t="saveRecord">नोंद जतन करा</button>
 </div>
 </div>
 
-<div id="detailOverlay">
-<div class="detail-header">
-<button class="back-btn" id="detailBack">←</button>
-<h2 id="detailTitle">नोंद तपशील</h2>
-</div>
-<div style="padding:12px 12px 80px" id="detailBody"></div>
-</div>
+<div id="detailOverlay"><div class="detail-header"><button class="back-btn" id="detailBack">←</button><h2 id="detailTitle">नोंद तपशील</h2></div><div style="padding:12px 12px 80px" id="detailBody"></div></div>
 
 <div id="traderFormOverlay">
-<div class="detail-header">
-<button class="back-btn" id="traderFormBack">←</button>
-<h2 id="traderFormTitle">व्यापारी जोडा</h2>
-</div>
+<div class="detail-header"><button class="back-btn" id="traderFormBack">←</button><h2 id="traderFormTitle">व्यापारी जोडा</h2></div>
 <div style="padding:12px">
 <div class="form-group"><label class="form-label" data-t="traderName">नाव *</label><input type="text" class="form-input" id="tf_name" placeholder="व्यापाऱ्याचे नाव"></div>
 <div class="form-group"><label class="form-label" data-t="phone">फोन</label><input type="tel" class="form-input" id="tf_phone" placeholder="मोबाईल नंबर"></div>
@@ -973,70 +414,25 @@ body {
 </div>
 </div>
 
-<div id="editConfirmOverlay">
-<div class="detail-header">
-<button class="back-btn" id="editConfirmBack">←</button>
-<h2>बदल तपासा</h2>
-</div>
-<div style="padding:12px 12px 80px" id="editConfirmBody"></div>
-</div>
+<div id="editConfirmOverlay"><div class="detail-header"><button class="back-btn" id="editConfirmBack">←</button><h2>बदल तपासा</h2></div><div style="padding:12px 12px 80px" id="editConfirmBody"></div></div>
 
 <div id="profileOverlay">
-<div class="detail-header">
-<button class="back-btn" id="profileBack">←</button>
-<h2>प्रोफाइल</h2>
-</div>
+<div class="detail-header"><button class="back-btn" id="profileBack">←</button><h2>प्रोफाइल</h2></div>
 <div style="padding:12px 12px 80px">
-
-  <div class="sync-banner" id="syncBanner">
-    <span>⚠️ क्लाउड जोडणी संपली, परत जोडा</span>
-    <button id="reconnectBtn">पुन्हा जोडा</button>
-  </div>
-
-  <div class="profile-section-title">गुगल ड्राइव्ह बॅकअप</div>
-  <div id="googleAccountArea"></div>
-
   <div class="profile-section-title">वैयक्तिक माहिती</div>
-  <div class="form-group">
-    <label class="form-label">शेतकऱ्याचे नाव</label>
-    <input type="text" class="form-input" id="profile_name" placeholder="तुमचे नाव">
-  </div>
-
+  <div class="form-group"><label class="form-label">शेतकऱ्याचे नाव</label><input type="text" class="form-input" id="profile_name" placeholder="तुमचे नाव"></div>
   <div class="profile-section-title">डीफॉल्ट सेटिंग्स</div>
-  <div class="form-group">
-    <label class="form-label">डीफॉल्ट मजुरी दर (प्रति घड)</label>
-    <input type="number" class="form-input" id="profile_defaultLabRate" placeholder="10">
-  </div>
-  <div class="form-group">
-    <label class="form-label">थकबाकी इशारा (किती दिवसांनी)</label>
-    <input type="number" class="form-input" id="profile_overdueDays" placeholder="15">
-  </div>
-
+  <div class="form-group"><label class="form-label">डीफॉल्ट मजुरी दर (प्रति घड)</label><input type="number" class="form-input" id="profile_defaultLabRate" placeholder="10"></div>
+  <div class="form-group"><label class="form-label">थकबाकी इशारा (किती दिवसांनी)</label><input type="number" class="form-input" id="profile_overdueDays" placeholder="15"></div>
   <button class="pay-btn" id="saveProfileBtn" style="margin-top:18px">जतन करा</button>
-
+  <button class="danger-btn" onclick="window.logoutFirebase()" style="margin-top:18px">लॉग आउट (Log Out)</button>
 </div>
 </div>
 
-<div id="ledgerOverlay">
-<div class="detail-header">
-<button class="back-btn" id="ledgerBack">←</button>
-<h2 id="ledgerTitle">व्यापारी खातेवही</h2>
-</div>
-<div style="padding:12px 12px 80px" id="ledgerBody"></div>
-</div>
+<div id="ledgerOverlay"><div class="detail-header"><button class="back-btn" id="ledgerBack">←</button><h2 id="ledgerTitle">व्यापारी खातेवही</h2></div><div style="padding:12px 12px 80px" id="ledgerBody"></div></div>
 
-<div class="sheet-overlay" id="sheetOverlay" onclick="closeSheet()">
-<div class="sheet" onclick="event.stopPropagation()">
-<div class="sheet-title" id="sheetTitle"></div>
-<div id="sheetContent"></div>
-<button class="sheet-btn" onclick="closeSheet()" style="justify-content:center;color:var(--red)">❌ <span data-t="cancel">रद्द करा</span></button>
-</div>
-</div>
-
-<div class="lightbox" id="lightbox" onclick="closeLightbox()">
-<button class="lightbox-close" onclick="closeLightbox()">✕</button>
-<img id="lightboxImg" src="" alt="">
-</div>
+<div class="sheet-overlay" id="sheetOverlay" onclick="closeSheet()"><div class="sheet" onclick="event.stopPropagation()"><div class="sheet-title" id="sheetTitle"></div><div id="sheetContent"></div><button class="sheet-btn" onclick="closeSheet()" style="justify-content:center;color:var(--red)">❌ <span data-t="cancel">रद्द करा</span></button></div></div>
+<div class="lightbox" id="lightbox" onclick="closeLightbox()"><button class="lightbox-close" onclick="closeLightbox()">✕</button><img id="lightboxImg" src="" alt=""></div>
 
 <div class="action-menu-overlay" id="actionMenuOverlay" onclick="closeActionMenu()">
   <div class="action-menu-box" onclick="event.stopPropagation()">  
@@ -1054,11 +450,97 @@ body {
 <div class="toast" id="toast"></div>
 <div id="printArea"></div>
 
-<script>
-/* =========================================================================
-   APP LOGIC & UTILS
-   ========================================================================= */
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import { getFirestore, doc, setDoc, getDocs, collection, deleteDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
+const firebaseConfig = {
+  apiKey: "AIzaSyAbLfEPer8fwicNFa0h5aZ_ABCSRP-hL3o",
+  authDomain: "kheti-hisaab-saathi-d075e.firebaseapp.com",
+  projectId: "kheti-hisaab-saathi-d075e",
+  storageBucket: "kheti-hisaab-saathi-d075e.firebasestorage.app",
+  messagingSenderId: "650596721828",
+  appId: "1:650596721828:web:e8d8f8293cb8db35d03231"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+
+window.currentUserUid = null;
+window.appRecords = [];
+window.appTraders = [];
+
+// FIREBASE AUTH LISTENER (Replaces Google Drive Logic)
+onAuthStateChanged(auth, async (user) => {
+  const loginView = document.getElementById('login-screen');
+  const mainAppView = document.getElementById('app');
+  const connPillText = document.getElementById('connectionPillText');
+  const connPill = document.getElementById('connectionPill');
+
+  if (user) {
+    window.currentUserUid = user.uid;
+    if(loginView) loginView.style.display = 'none';
+    if(mainAppView) mainAppView.style.display = 'block';
+    
+    connPill.className = 'connection-pill show connected';
+    connPillText.textContent = 'जोडले ✓ (Online)';
+    setTimeout(() => { connPill.classList.remove('show'); }, 2500);
+    
+    await fetchCloudData(); 
+  } else {
+    window.currentUserUid = null;
+    window.appRecords = [];
+    window.appTraders = [];
+    if(loginView) loginView.style.display = 'flex';
+    if(mainAppView) mainAppView.style.display = 'none';
+    
+    connPill.className = 'connection-pill show offline';
+    connPillText.textContent = 'लॉग इन करा';
+  }
+});
+
+window.connectGoogleManually = () => {
+  const provider = new GoogleAuthProvider();
+  signInWithPopup(auth, provider).catch(error => {
+    console.error("Login failed:", error);
+    alert("Login failed. Please try again.");
+  });
+};
+
+window.logoutFirebase = () => {
+  if(confirm("नक्की लॉग आउट करायचे आहे?")) {
+    signOut(auth).then(() => {
+      document.getElementById('profileOverlay').classList.remove('open');
+    });
+  }
+};
+
+async function fetchCloudData() {
+  if (!window.currentUserUid) return;
+  try {
+    const recordsSnap = await getDocs(collection(db, "users", window.currentUserUid, "records"));
+    const tradersSnap = await getDocs(collection(db, "users", window.currentUserUid, "traders"));
+    
+    window.appRecords = [];
+    window.appTraders = [];
+    
+    recordsSnap.forEach(doc => window.appRecords.push(doc.data()));
+    tradersSnap.forEach(doc => window.appTraders.push(doc.data()));
+    
+    renderAll(); 
+  } catch (error) {
+    console.error("Data fetch error:", error);
+    showToast("इंटरनेट कनेक्शन तपासा");
+  }
+}
+
+// Override Local Storage Functions to read from Memory (Fetched from Cloud)
+window.getRecords = function() { return window.appRecords || []; }
+window.getTraders = function() { return window.appTraders || []; }
+
+// Helper variables & logic for the app
 const LANG={
 mr:{appName:'केळी हिशोब साथी',dashboard:'डॅशबोर्ड',farmM:'शेत म',farmP:'शेत प',
 records:'नोंदी',traders:'व्यापारी',addRecord:'नवीन नोंद',totalIncome:'एकूण उत्पन्न',
@@ -1117,236 +599,29 @@ payHistory:'Payment History',noPayments:'No payments yet'}
 };
 
 let curLang=localStorage.getItem('lang')||'mr';
-function t(k){return LANG[curLang][k]||k;}
+window.t = function(k){return LANG[curLang][k]||k;}
 
-function getRecordsRaw() { try{return JSON.parse(localStorage.getItem('records')||'[]')}catch(e){return[]} }
-function getRecords() { return getRecordsRaw(); }
-function saveRecords(r) { localStorage.setItem('records',JSON.stringify(r)); }
-
-function getTradersRaw() { try{return JSON.parse(localStorage.getItem('traders')||'[]')}catch(e){return[]} }
-function getTraders() { return getTradersRaw(); }
-function saveTraders(tr) { localStorage.setItem('traders',JSON.stringify(tr)); }
-
-function mergeByIdAndTimestamp(localArr, importedArr){
-  const map = new Map();
-  localArr.forEach(r => map.set(r.id, r));
-  let added=0, updated=0, skipped=0;
-  importedArr.forEach(rec => {
-    const existing = map.get(rec.id);
-    if (!existing) { map.set(rec.id, rec); added++; }
-    else {
-      const eT = existing.updatedAt || existing.createdAt || 0;
-      const iT = rec.updatedAt || rec.createdAt || 0;
-      if (iT > eT) { map.set(rec.id, rec); updated++; }
-      else { skipped++; }
-    }
-  });
-  return { merged: Array.from(map.values()), added, updated, skipped };
-}
-
-/* ========================================
-   🔴 CLOUD SYNC (Google Drive, auto-connect)
-   ======================================== */
-
-const GOOGLE_CLIENT_ID = '45696939970-8v89erp2ue480n1r022sed7ti972kc42.apps.googleusercontent.com';
-const DRIVE_SCOPE = 'https://www.googleapis.com/auth/drive.file';
-const DRIVE_FILENAME = 'kheti-hisaab-data.json';
-
-let gAccessToken = null;
-let gUserEmail = null;
-let gDriveFileId = null; 
-let tokenClient = null;
-
-function setConnectionPill(state, text){
-  const pill = document.getElementById('connectionPill');
-  pill.className = 'connection-pill show ' + state;
-  document.getElementById('connectionPillText').textContent = text;
-  if(state === 'connected'){
-    setTimeout(()=>{ pill.classList.remove('show'); }, 2500);
-  }
-}
-
-function getProfile(){
-  try{ return JSON.parse(localStorage.getItem('profile')||'{}') }catch(e){ return {} }
-}
+function getProfile(){ try{ return JSON.parse(localStorage.getItem('profile')||'{}') }catch(e){ return {} } }
 function saveProfile(p){ localStorage.setItem('profile', JSON.stringify(p)); }
 
-/* Called once Google's script has loaded */
-function initGoogleAuth(){
-  if(!window.google || !window.google.accounts){
-    setConnectionPill('error','गुगल लोड झाले नाही');
-    return;
-  }
-  tokenClient = google.accounts.oauth2.initTokenClient({
-    client_id: GOOGLE_CLIENT_ID,
-    scope: DRIVE_SCOPE,
-    callback: (response) => {
-      if(response.error){
-        document.getElementById('syncBanner').classList.add('show');
-        setConnectionPill('warning','☁️ सिंकसाठी टॅप करा');
-        return;
-      }
-      gAccessToken = response.access_token;
-      localStorage.setItem('gHasConnectedBefore','1');
-      setConnectionPill('connected','जोडले ✓');
-      document.getElementById('syncBanner').classList.remove('show');
-      fetchUserInfoAndRender();
-      driveAutoSync();
-    }
-  });
+window.showOverlay = function(id) { document.getElementById(id).classList.add('open'); }
+window.hideOverlay = function(id) { document.getElementById(id).classList.remove('open'); }
 
-  attemptAutoConnect();
-}
+window.curTab='dash';
+window.editingRecord=null;
+window.curFarm='M';
+window.curHarvest='ghad';
+window.photoTargets={};
+window.editingTrader=null;
 
-function attemptAutoConnect(){
-  if(!navigator.onLine){
-    setConnectionPill('offline','ऑफलाइन मोड');
-    return;
-  }
-  const hasConnectedBefore = localStorage.getItem('gHasConnectedBefore');
-  if(!hasConnectedBefore){
-    setConnectionPill('offline','☁️ टॅप करून सिंक करा');
-    return;
-  }
-  
-  setConnectionPill('connecting','जोडत आहे...');
-  
-  // Timeout added so app doesn't freeze on "Connecting..." if Google blocks the request
-  let syncTimeout = setTimeout(()=>{
-    if(document.getElementById('connectionPill').classList.contains('connecting')){
-       setConnectionPill('warning','☁️ सिंकसाठी टॅप करा');
-    }
-  }, 3500);
+window.fmt = function(n){return Number(n||0).toLocaleString('en-IN')}
+window.fmtQ = function(n){return Number(n||0).toFixed(2)}
+window.genId = function(){return Date.now().toString(36)+Math.random().toString(36).slice(2)}
+window.today = function(){return new Date().toISOString().split('T')[0]}
+window.fmtDate = function(d){if(!d)return'';const[y,m,dd]=d.split('-');return`${dd}/${m}/${y}`}
+window.showToast = function(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2500)}
 
-  if(tokenClient){
-    try{
-      tokenClient.requestAccessToken({ prompt: '' }); 
-    }catch(e){
-      clearTimeout(syncTimeout);
-      setConnectionPill('warning','☁️ सिंकसाठी टॅप करा');
-      document.getElementById('syncBanner').classList.add('show');
-    }
-  }
-}
-
-function connectGoogleManually(){
-  if(!tokenClient){ showToast('गुगल अजून लोड होत आहे, परत प्रयत्न करा'); return; }
-  setConnectionPill('connecting','जोडत आहे...');
-  tokenClient.requestAccessToken({ prompt: 'consent' });
-}
-
-function fetchUserInfoAndRender(){
-  if(!gAccessToken)return;
-  fetch('https://www.googleapis.com/oauth2/v2/userinfo', {
-    headers: { Authorization: 'Bearer ' + gAccessToken }
-  }).then(r=>r.json()).then(info=>{
-    gUserEmail = info.email;
-    renderGoogleAccountArea();
-  }).catch(()=>{ renderGoogleAccountArea(); });
-}
-
-function renderGoogleAccountArea(){
-  const el = document.getElementById('googleAccountArea');
-  if(!el)return;
-  if(gAccessToken){
-    const initials = (gUserEmail||'?').slice(0,2).toUpperCase();
-    el.innerHTML = `<div class="google-account-row">
-      <div class="gar-avatar">${initials}</div>
-      <div style="flex:1">
-        <div class="gar-email">${gUserEmail||'जोडलेले'}</div>
-        <div class="gar-status">✓ बॅकअप सुरू आहे</div>
-      </div>
-    </div>`;
-  } else {
-    el.innerHTML = `<button class="pay-btn" id="connectGoogleBtn">🔗 Google सह सुरक्षित करा</button>
-      <div class="form-hint">तुमचा डेटा तुमच्या स्वतःच्या Google Drive मध्ये सुरक्षित ठेवण्यासाठी एकदाच जोडा.</div>`;
-    setTimeout(()=>{
-      const btn=document.getElementById('connectGoogleBtn');
-      if(btn) btn.addEventListener('click', connectGoogleManually);
-    },0);
-  }
-}
-
-function driveFindOrCreateFileId(){
-  return fetch(`https://www.googleapis.com/drive/v3/files?q=name='${DRIVE_FILENAME}'+and+trashed=false&spaces=drive`, {
-    headers: { Authorization: 'Bearer ' + gAccessToken }
-  }).then(r=>r.json()).then(data=>{
-    if(data.files && data.files.length){
-      gDriveFileId = data.files[0].id;
-      return gDriveFileId;
-    }
-    return fetch('https://www.googleapis.com/drive/v3/files', {
-      method:'POST',
-      headers: { Authorization: 'Bearer ' + gAccessToken, 'Content-Type':'application/json' },
-      body: JSON.stringify({ name: DRIVE_FILENAME })
-    }).then(r=>r.json()).then(file=>{ gDriveFileId = file.id; return gDriveFileId; });
-  });
-}
-
-function driveDownloadJSON(){
-  return driveFindOrCreateFileId().then(fileId=>{
-    return fetch(`https://www.googleapis.com/drive/v3/files/${fileId}?alt=media`, {
-      headers: { Authorization: 'Bearer ' + gAccessToken }
-    }).then(r=> r.ok ? r.json().catch(()=>null) : null );
-  });
-}
-
-function driveUploadJSON(dataObj){
-  return driveFindOrCreateFileId().then(fileId=>{
-    return fetch(`https://www.googleapis.com/upload/drive/v3/files/${fileId}?uploadType=media`, {
-      method:'PATCH',
-      headers: { Authorization: 'Bearer ' + gAccessToken, 'Content-Type':'application/json' },
-      body: JSON.stringify(dataObj)
-    });
-  });
-}
-
-function driveAutoSync(){
-  if(!gAccessToken)return;
-  driveDownloadJSON().then(remote=>{
-    if(remote && remote.records){
-      const recResult = mergeByIdAndTimestamp(getRecords(), remote.records);
-      saveRecords(recResult.merged);
-      const traderResult = mergeByIdAndTimestamp(getTraders(), remote.traders||[]);
-      saveTraders(traderResult.merged);
-      if(recResult.added || recResult.updated){
-        showToast(`☁️ सिंक: नवीन ${recResult.added}, अपडेट ${recResult.updated}`);
-        renderAll();
-      }
-    }
-    driveUploadJSON({
-      exportedAt: Date.now(),
-      records: getRecords(),
-      traders: getTraders()
-    });
-  }).catch(()=>{
-    setConnectionPill('warning','☁️ सिंकसाठी टॅप करा');
-  });
-}
-
-function syncToDriveIfConnected(){
-  if(gAccessToken) driveAutoSync();
-}
-
-window.addEventListener('online', attemptAutoConnect);
-window.addEventListener('offline', ()=> setConnectionPill('offline','ऑफलाइन मोड'));
-
-/* ========================================================================= */
-
-function showOverlay(id) { document.getElementById(id).classList.add('open'); }
-function hideOverlay(id) { document.getElementById(id).classList.remove('open'); }
-
-let curTab='dash',editingRecord=null,curFarm='M',curHarvest='ghad';
-let photoTargets={},editingTrader=null;
-
-function fmt(n){return Number(n||0).toLocaleString('en-IN')}
-function fmtQ(n){return Number(n||0).toFixed(2)}
-function genId(){return Date.now().toString(36)+Math.random().toString(36).slice(2)}
-function today(){return new Date().toISOString().split('T')[0]}
-function fmtDate(d){if(!d)return'';const[y,m,dd]=d.split('-');return`${dd}/${m}/${y}`}
-function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2500)}
-
-function calcFarm(Q,kg,dQ,dKg,is3pct,ghads,labourRate,rate){
+window.calcFarm = function(Q,kg,dQ,dKg,is3pct,ghads,labourRate,rate){
   const totalWQ=Number(Q||0)+Number(kg||0)/100;
   const dedQ=Number(dQ||0)+Number(dKg||0)/100;
   const after=totalWQ-dedQ;
@@ -1358,48 +633,46 @@ function calcFarm(Q,kg,dQ,dKg,is3pct,ghads,labourRate,rate){
   return{totalWQ,dedQ,threePct,netWQ,gross,labCost,net};
 }
 
-function applyLang(){
+window.applyLang = function(){
   document.querySelectorAll('[data-t]').forEach(el=>{
     const k=el.getAttribute('data-t');
-    el.textContent=t(k);
+    el.textContent=window.t(k);
   });
-  document.getElementById('appName').textContent=t('appName');
+  document.getElementById('appName').textContent=window.t('appName');
   document.getElementById('langBtn').textContent=curLang==='mr'?'EN':'MR';
   document.documentElement.lang=curLang==='mr'?'mr':'en';
 }
+
 document.getElementById('langBtn').addEventListener('click',()=>{
   curLang=curLang==='mr'?'en':'mr';
   localStorage.setItem('lang',curLang);
-  applyLang();
-  renderAll();
+  window.applyLang();
+  window.renderAll();
 });
 
-function statCardsHTML(stats){
-  return`<div class="stat-card"><div class="stat-label">${t('totalIncome')}</div><div class="stat-val">₹${fmt(stats.income)}</div></div>
-<div class="stat-card"><div class="stat-label">${t('pending')}</div><div class="stat-val red">₹${fmt(stats.pending)}</div></div>
-<div class="stat-card"><div class="stat-label">${t('received')}</div><div class="stat-val">₹${fmt(stats.received)}</div></div>
-<div class="stat-card"><div class="stat-label">${t('weight')} Q</div><div class="stat-val blue">${fmtQ(stats.weightQ)}</div></div>
-<div class="stat-card"><div class="stat-label">${t('ghads')}</div><div class="stat-val blue">${stats.ghads}</div></div>
-<div class="stat-card"><div class="stat-label">${t('labour')}</div><div class="stat-val">₹${fmt(stats.labour)}</div></div>`;
+window.statCardsHTML = function(stats){
+  return`<div class="stat-card"><div class="stat-label">${window.t('totalIncome')}</div><div class="stat-val">₹${window.fmt(stats.income)}</div></div>
+<div class="stat-card"><div class="stat-label">${window.t('pending')}</div><div class="stat-val red">₹${window.fmt(stats.pending)}</div></div>
+<div class="stat-card"><div class="stat-label">${window.t('received')}</div><div class="stat-val">₹${window.fmt(stats.received)}</div></div>
+<div class="stat-card"><div class="stat-label">${window.t('weight')} Q</div><div class="stat-val blue">${window.fmtQ(stats.weightQ)}</div></div>
+<div class="stat-card"><div class="stat-label">${window.t('ghads')}</div><div class="stat-val blue">${stats.ghads}</div></div>
+<div class="stat-card"><div class="stat-label">${window.t('labour')}</div><div class="stat-val">₹${window.fmt(stats.labour)}</div></div>`;
 }
 
-function computeGhadBreakdown(records, farm){
+window.computeGhadBreakdown = function(records, farm){
   let solo=0, fromCombined=0;
   const p=farm.toLowerCase();
   records.forEach(r=>{
     const farmType = r.farmType || 'M';
-    if(farmType===farm){
-      solo += r[`${p}_ghads`]||0;
-    } else if(farmType==='MP'){
-      fromCombined += r[`${p}_ghads`]||0;
-    }
+    if(farmType===farm){ solo += r[`${p}_ghads`]||0; } 
+    else if(farmType==='MP'){ fromCombined += r[`${p}_ghads`]||0; }
   });
   return { solo, fromCombined, total: solo+fromCombined };
 }
 
-function ghadBreakdownHTML(farm){
-  const recs=getRecords();
-  const b=computeGhadBreakdown(recs, farm);
+window.ghadBreakdownHTML = function(farm){
+  const recs=window.getRecords();
+  const b=window.computeGhadBreakdown(recs, farm);
   const farmLabel=farm==='M'?'शेत म':'शेत प';
   return `<div class="stat-label">घड तपशील (${farmLabel})</div>
     <div class="ghad-line solo"><span class="ghad-tag">फक्त ${farmLabel} (एकटे)</span><span class="ghad-num">${b.solo}</span></div>
@@ -1407,7 +680,7 @@ function ghadBreakdownHTML(farm){
     <div class="ghad-line total"><span class="ghad-tag">एकूण घड</span><span class="ghad-num">${b.total}</span></div>`;
 }
 
-function computeStats(records,farmFilter){
+window.computeStats = function(records,farmFilter){
   let income=0,pending=0,received=0,weightQ=0,ghads=0,labour=0;
   records.forEach(r=>{
     const farmType = r.farmType || 'M';
@@ -1424,81 +697,79 @@ function computeStats(records,farmFilter){
 }
 
 /* ===== ROBUST LONG PRESS SYSTEM ===== */
-let holdTimer=null, pressedCard=null, startX=0, startY=0;
+window.holdTimer=null; window.pressedCard=null; window.startX=0; window.startY=0;
 const MOVE_THRESHOLD = 15;
 
-function handlePressStart(e){
+window.handlePressStart = function(e){
   const card = e.target.closest('.rec-card');
   if(!card) return;
-  pressedCard = card;
+  window.pressedCard = card;
   const touch = e.touches ? e.touches[0] : e;
-  startX = touch.clientX;
-  startY = touch.clientY;
+  window.startX = touch.clientX;
+  window.startY = touch.clientY;
   card.classList.add('pressing');
 
-  holdTimer = setTimeout(() => {
+  window.holdTimer = setTimeout(() => {
     card.classList.remove('pressing');
     if(navigator.vibrate) navigator.vibrate(40);
-    openActionMenu(card.dataset.id); 
-    pressedCard = null;
+    window.openActionMenu(card.dataset.id); 
+    window.pressedCard = null;
   }, 550);
 }
 
-function handleTouchMove(e){
-  if(!pressedCard) return;
+window.handleTouchMove = function(e){
+  if(!window.pressedCard) return;
   const touch = e.touches ? e.touches[0] : e;
-  const deltaX = Math.abs(touch.clientX - startX);
-  const deltaY = Math.abs(touch.clientY - startY);
+  const deltaX = Math.abs(touch.clientX - window.startX);
+  const deltaY = Math.abs(touch.clientY - window.startY);
   if(deltaX > MOVE_THRESHOLD || deltaY > MOVE_THRESHOLD){
-    handlePressCancel();
+    window.handlePressCancel();
   }
 }
 
-function handlePressEnd(e){
-  if(holdTimer) clearTimeout(holdTimer);
-  if(pressedCard) pressedCard.classList.remove('pressing');
-  pressedCard = null;
+window.handlePressEnd = function(e){
+  if(window.holdTimer) clearTimeout(window.holdTimer);
+  if(window.pressedCard) window.pressedCard.classList.remove('pressing');
+  window.pressedCard = null;
 }
 
-function handlePressCancel(){
-  if(holdTimer) clearTimeout(holdTimer);
-  if(pressedCard) pressedCard.classList.remove('pressing');
-  pressedCard = null;
+window.handlePressCancel = function(){
+  if(window.holdTimer) clearTimeout(window.holdTimer);
+  if(window.pressedCard) window.pressedCard.classList.remove('pressing');
+  window.pressedCard = null;
 }
 
-function attachLongPress(container){
-  container.addEventListener('touchstart', handlePressStart, {passive:true});
-  container.addEventListener('touchmove', handleTouchMove, {passive:true});
-  container.addEventListener('touchend', handlePressEnd);
-  container.addEventListener('touchcancel', handlePressCancel);
-  container.addEventListener('mousedown', handlePressStart);
-  container.addEventListener('mousemove', handleTouchMove);
-  container.addEventListener('mouseup', handlePressEnd);
-  container.addEventListener('mouseleave', handlePressCancel);
+window.attachLongPress = function(container){
+  container.addEventListener('touchstart', window.handlePressStart, {passive:true});
+  container.addEventListener('touchmove', window.handleTouchMove, {passive:true});
+  container.addEventListener('touchend', window.handlePressEnd);
+  container.addEventListener('touchcancel', window.handlePressCancel);
+  container.addEventListener('mousedown', window.handlePressStart);
+  container.addEventListener('mousemove', window.handleTouchMove);
+  container.addEventListener('mouseup', window.handlePressEnd);
+  container.addEventListener('mouseleave', window.handlePressCancel);
 }
 
-function showEditHint(){
+window.showEditHint = function(){
   const old=document.getElementById('editHintToast');
   if(old)return;
   const div=document.createElement('div');
-  div.id='editHintToast';
-  div.className='edit-hint-toast';
-  div.textContent='✏️ संपादित/हटवण्यासाठी नोंदीवर दाबून ठेवा (Long-press for options)';
+  div.id='editHintToast'; div.className='edit-hint-toast';
+  div.textContent='✏️ संपादित/हटवण्यासाठी नोंदीवर दाबून ठेवा';
   document.body.appendChild(div);
   setTimeout(()=>div.classList.add('show'),50);
   setTimeout(()=>{div.classList.remove('show');setTimeout(()=>div.remove(),300);},3000);
 }
 
-function openEditForm(recordId){
-  const r=getRecords().find(x=>x.id===recordId);
+window.openEditForm = function(recordId){
+  const r=window.getRecords().find(x=>x.id===recordId);
   if(!r)return;
-  editingRecord=recordId;
-  photoTargets={};
-  curFarm=r.farmType||'M';
-  curHarvest=r.harvestType||'ghad';
-
+  window.editingRecord=recordId;
+  window.photoTargets={};
+  window.curFarm=r.farmType||'M';
+  window.curHarvest=r.harvestType||'ghad';
   window._skipResetEdit=true;
-  openAddForm(); 
+  window.openAddForm(); 
 
   setTimeout(()=>{
     document.getElementById('formTitle').textContent='नोंद संपादित करा';
@@ -1509,82 +780,89 @@ function openEditForm(recordId){
     document.getElementById('f_received').value=r.received||'';
     document.getElementById('f_note').value=r.note||'';
 
-    document.querySelectorAll('#farmToggle .toggle-btn').forEach(b=>b.classList.toggle('active',b.dataset.farm===curFarm));
-    document.querySelectorAll('#harvestToggle .toggle-btn').forEach(b=>b.classList.toggle('active',b.dataset.harvest===curHarvest));
-    buildFarmFields();
+    document.querySelectorAll('#farmToggle .toggle-btn').forEach(b=>b.classList.toggle('active',b.dataset.farm===window.curFarm));
+    document.querySelectorAll('#harvestToggle .toggle-btn').forEach(b=>b.classList.toggle('active',b.dataset.harvest===window.curHarvest));
+    window.buildFarmFields();
 
     setTimeout(()=>{
-      const farms=curFarm==='MP'?['M','P']:[curFarm];
+      const farms=window.curFarm==='MP'?['M','P']:[window.curFarm];
       farms.forEach(fm=>{
         const p=fm.toLowerCase();
-        setVal(`f_${fm}_wQ`, r[`${p}_totalWQ`]);
-        setVal(`f_${fm}_wKg`, r[`${p}_totalWKg`]);
-        setVal(`f_${fm}_dQ`, r[`${p}_dedQ`]);
-        setVal(`f_${fm}_dKg`, r[`${p}_dedKg`]);
+        window.setVal(`f_${fm}_wQ`, r[`${p}_totalWQ`]);
+        window.setVal(`f_${fm}_wKg`, r[`${p}_totalWKg`]);
+        window.setVal(`f_${fm}_dQ`, r[`${p}_dedQ`]);
+        window.setVal(`f_${fm}_dKg`, r[`${p}_dedKg`]);
         const chk=document.getElementById(`f_${fm}_3pct`);
         if(chk)chk.checked=!!r[`${p}_is3Pct`];
-        setVal(`f_${fm}_ghads`, r[`${p}_ghads`]);
-        setVal(`f_${fm}_labRate`, r[`${p}_labourRate`]);
+        window.setVal(`f_${fm}_ghads`, r[`${p}_ghads`]);
+        window.setVal(`f_${fm}_labRate`, r[`${p}_labourRate`]);
         
-        if(r[`${p}_photoTollBefore`]){photoTargets[(farms.length>1?fm+'_':'')+'tollBefore']=r[`${p}_photoTollBefore`];updatePhotoSlot((farms.length>1?fm+'_':'')+'tollBefore',r[`${p}_photoTollBefore`]);}
-        if(r[`${p}_photoTollAfter`]){photoTargets[(farms.length>1?fm+'_':'')+'tollAfter']=r[`${p}_photoTollAfter`];updatePhotoSlot((farms.length>1?fm+'_':'')+'tollAfter',r[`${p}_photoTollAfter`]);}
+        if(r[`${p}_photoTollBefore`]){window.photoTargets[(farms.length>1?fm+'_':'')+'tollBefore']=r[`${p}_photoTollBefore`];window.updatePhotoSlot((farms.length>1?fm+'_':'')+'tollBefore',r[`${p}_photoTollBefore`]);}
+        if(r[`${p}_photoTollAfter`]){window.photoTargets[(farms.length>1?fm+'_':'')+'tollAfter']=r[`${p}_photoTollAfter`];window.updatePhotoSlot((farms.length>1?fm+'_':'')+'tollAfter',r[`${p}_photoTollAfter`]);}
         (r[`${p}_photoPatti`]||[]).forEach((ph,i)=>{
           if(ph){
             const key=(farms.length>1?fm+'_':'')+'patti_'+i;
-            photoTargets[key]=ph; updatePhotoSlot(key,ph);
+            window.photoTargets[key]=ph; window.updatePhotoSlot(key,ph);
           }
         });
       });
-      recalcAll();
+      window.recalcAll();
     },50);
   },50);
 }
-function setVal(id,val){const el=document.getElementById(id);if(el)el.value=val||'';}
+window.setVal = function(id,val){const el=document.getElementById(id);if(el)el.value=val||'';}
 
-let actionMenuRecordId=null;
+window.actionMenuRecordId=null;
 
-function openActionMenu(recordId){
-  const r=getRecords().find(x=>x.id===recordId);
+window.openActionMenu = function(recordId){
+  const r=window.getRecords().find(x=>x.id===recordId);
   if(!r)return;
-  actionMenuRecordId=recordId;
+  window.actionMenuRecordId=recordId;
   const farmType = r.farmType || 'M';
   document.getElementById('actionMenuTrader').textContent=r.traderName||'?';
   const farmLabel=farmType==='M'?'शेत म':farmType==='P'?'शेत प':'म+प';
-  document.getElementById('actionMenuMeta').textContent=`${fmtDate(r.date)} · ${farmLabel} · ₹${fmt(r.combinedNetIncome||0)}`;
-  showOverlay('actionMenuOverlay');
+  document.getElementById('actionMenuMeta').textContent=`${window.fmtDate(r.date)} · ${farmLabel} · ₹${window.fmt(r.combinedNetIncome||0)}`;
+  window.showOverlay('actionMenuOverlay');
 }
 
-function closeActionMenu(){
-  hideOverlay('actionMenuOverlay');
-  actionMenuRecordId=null;
+window.closeActionMenu = function(){
+  window.hideOverlay('actionMenuOverlay');
+  window.actionMenuRecordId=null;
 }
 
 document.getElementById('actionMenuView').addEventListener('click',()=>{
-  const id=actionMenuRecordId;
-  closeActionMenu();
-  if(id)openDetail(id);
+  const id=window.actionMenuRecordId;
+  window.closeActionMenu();
+  if(id)window.openDetail(id);
 });
 
 document.getElementById('actionMenuEdit').addEventListener('click',()=>{
-  const id=actionMenuRecordId;
-  closeActionMenu();
-  if(id)openEditForm(id);
+  const id=window.actionMenuRecordId;
+  window.closeActionMenu();
+  if(id)window.openEditForm(id);
 });
 
-document.getElementById('actionMenuDelete').addEventListener('click',()=>{
-  const id=actionMenuRecordId;
-  closeActionMenu();
+// FIREBASE DELETE RECORD
+document.getElementById('actionMenuDelete').addEventListener('click', async ()=>{
+  const id=window.actionMenuRecordId;
+  window.closeActionMenu();
   if(!id)return;
-  if(!confirm(t('confirmDelete')))return;
-  const recs = getRecords().filter(r=>r.id!==id);
-  saveRecords(recs);
-  showToast(t('deleted'));
-  renderAll();
-  syncToDriveIfConnected();
+  if(!confirm(window.t('confirmDelete')))return;
+  
+  if(!window.currentUserUid) return;
+  try {
+    const recordRef = doc(db, "users", window.currentUserUid, "records", id);
+    await deleteDoc(recordRef);
+    window.showToast(window.t('deleted'));
+    await fetchCloudData(); 
+  } catch (error) {
+    console.error("Error deleting:", error);
+    alert("Could not delete. Check your internet connection.");
+  }
 });
 
-function buildRecordSnapshot(){
-  const farms=curFarm==='MP'?['M','P']:[curFarm];
+window.buildRecordSnapshot = function(){
+  const farms=window.curFarm==='MP'?['M','P']:[window.curFarm];
   const rate=Number(document.getElementById('f_rate')?.value||0);
   const snap={
     date:document.getElementById('f_date').value,
@@ -1593,8 +871,8 @@ function buildRecordSnapshot(){
     rate,
     received:Number(document.getElementById('f_received').value||0),
     note:document.getElementById('f_note').value,
-    farmType:curFarm,
-    harvestType:curHarvest
+    farmType:window.curFarm,
+    harvestType:window.curHarvest
   };
   farms.forEach(fm=>{
     const p=fm.toLowerCase();
@@ -1605,7 +883,7 @@ function buildRecordSnapshot(){
   return snap;
 }
 
-function diffRow(label, oldVal, newVal, unit){
+window.diffRow = function(label, oldVal, newVal, unit){
   unit=unit||'';
   const changed = String(oldVal)!==String(newVal);
   if(!changed){
@@ -1616,69 +894,70 @@ function diffRow(label, oldVal, newVal, unit){
   </div>`;
 }
 
-function openEditConfirm(){
+window.openEditConfirm = function(){
   const errEl=document.getElementById('saveError');
   errEl.style.display='none';
   const traderId=document.getElementById('f_trader').value;
-  const trader=getTraders().find(x=>x.id===traderId);
-  if(!trader){errEl.textContent=t('valTrader');errEl.style.display='block';return;}
+  const trader=window.getTraders().find(x=>x.id===traderId);
+  if(!trader){errEl.textContent=window.t('valTrader');errEl.style.display='block';return;}
   const rate=Number(document.getElementById('f_rate').value||0);
-  if(!rate){errEl.textContent=t('valRate');errEl.style.display='block';return;}
+  if(!rate){errEl.textContent=window.t('valRate');errEl.style.display='block';return;}
 
-  const oldRec=getRecords().find(x=>x.id===editingRecord);
-  const snap=buildRecordSnapshot();
+  const oldRec=window.getRecords().find(x=>x.id===window.editingRecord);
+  const snap=window.buildRecordSnapshot();
 
   let html=`<div class="card"><div class="sec-title" style="margin-top:0">तुम्ही खालील माहिती अपडेट करत आहात</div></div>`;
-  html+=diffRow('तारीख', fmtDate(oldRec.date), fmtDate(snap.date));
-  html+=diffRow('व्यापारी', oldRec.traderName, trader.name);
-  html+=diffRow('दर', '₹'+fmt(oldRec.rate), '₹'+fmt(snap.rate), '/Q');
-  html+=diffRow('मिळालेली रक्कम', '₹'+fmt(oldRec.received), '₹'+fmt(snap.received));
+  html+=window.diffRow('तारीख', window.fmtDate(oldRec.date), window.fmtDate(snap.date));
+  html+=window.diffRow('व्यापारी', oldRec.traderName, trader.name);
+  html+=window.diffRow('दर', '₹'+window.fmt(oldRec.rate), '₹'+window.fmt(snap.rate), '/Q');
+  html+=window.diffRow('मिळालेली रक्कम', '₹'+window.fmt(oldRec.received), '₹'+window.fmt(snap.received));
 
-  const farms=curFarm==='MP'?['M','P']:[curFarm];
+  const farms=window.curFarm==='MP'?['M','P']:[window.curFarm];
   farms.forEach(fm=>{
     const p=fm.toLowerCase();
-    const label=fm==='M'?t('farmMLong'):t('farmPLong');
-    html+=diffRow(`${label} - वजन`, `${oldRec[`${p}_totalWQ`]||0}Q ${oldRec[`${p}_totalWKg`]||0}kg`, `${snap[`${p}_wQ`]}Q ${snap[`${p}_wKg`]}kg`);
-    html+=diffRow(`${label} - घड`, oldRec[`${p}_ghads`]||0, snap[`${p}_ghads`]);
+    const label=fm==='M'?window.t('farmMLong'):window.t('farmPLong');
+    html+=window.diffRow(`${label} - वजन`, `${oldRec[`${p}_totalWQ`]||0}Q ${oldRec[`${p}_totalWKg`]||0}kg`, `${snap[`${p}_wQ`]}Q ${snap[`${p}_wKg`]}kg`);
+    html+=window.diffRow(`${label} - घड`, oldRec[`${p}_ghads`]||0, snap[`${p}_ghads`]);
   });
 
   html+=`<button class="pay-btn" id="confirmUpdateBtn" style="margin-top:12px">✅ होय, अपडेट करा</button>
   <button class="sheet-btn" id="cancelUpdateBtn" style="justify-content:center">❌ रद्द करा, परत जा</button>`;
 
   document.getElementById('editConfirmBody').innerHTML=html;
-  showOverlay('editConfirmOverlay');
+  window.showOverlay('editConfirmOverlay');
 
-  document.getElementById('confirmUpdateBtn').onclick=performUpdate;
-  document.getElementById('cancelUpdateBtn').onclick=()=>hideOverlay('editConfirmOverlay');
+  document.getElementById('confirmUpdateBtn').onclick=window.performUpdate;
+  document.getElementById('cancelUpdateBtn').onclick=()=>window.hideOverlay('editConfirmOverlay');
 }
 
-function performUpdate(){
+// FIREBASE UPDATE RECORD
+window.performUpdate = async function(){
   const traderId=document.getElementById('f_trader').value;
-  const trader=getTraders().find(x=>x.id===traderId);
+  const trader=window.getTraders().find(x=>x.id===traderId);
   const traderName = trader ? trader.name : '?';
   const rate=Number(document.getElementById('f_rate').value||0);
-  const farms=curFarm==='MP'?['M','P']:[curFarm];
+  const farms=window.curFarm==='MP'?['M','P']:[window.curFarm];
   const date=document.getElementById('f_date').value;
   const received=Number(document.getElementById('f_received').value||0);
   const note=document.getElementById('f_note').value;
   const vehicle=document.getElementById('f_vehicle').value;
 
-  const recs=getRecords();
-  const idx=recs.findIndex(x=>x.id===editingRecord);
+  const recs=window.getRecords();
+  const idx=recs.findIndex(x=>x.id===window.editingRecord);
   if(idx<0)return;
 
-  const rec={...recs[idx],date,traderId,traderName,vehicle,harvestType:curHarvest,farmType:curFarm,rate,note,received};
+  const rec={...recs[idx],date,traderId,traderName,vehicle,harvestType:window.curHarvest,farmType:window.curFarm,rate,note,received};
   let totalNet=0,totalWQ=0,totalLabour=0,totalGross=0;
 
   farms.forEach(fm=>{
     const Q=Number(document.getElementById(`f_${fm}_wQ`)?.value||0);
     const kg=Number(document.getElementById(`f_${fm}_wKg`)?.value||0);
-    const dQ=curHarvest!=='box'?Number(document.getElementById(`f_${fm}_dQ`)?.value||0):0;
-    const dKg=curHarvest!=='box'?Number(document.getElementById(`f_${fm}_dKg`)?.value||0):0;
-    const is3=curHarvest!=='box'?(document.getElementById(`f_${fm}_3pct`)?.checked||false):false;
+    const dQ=window.curHarvest!=='box'?Number(document.getElementById(`f_${fm}_dQ`)?.value||0):0;
+    const dKg=window.curHarvest!=='box'?Number(document.getElementById(`f_${fm}_dKg`)?.value||0):0;
+    const is3=window.curHarvest!=='box'?(document.getElementById(`f_${fm}_3pct`)?.checked||false):false;
     const ghads=Number(document.getElementById(`f_${fm}_ghads`)?.value||0);
     const labRate=Number(document.getElementById(`f_${fm}_labRate`)?.value||10)||10;
-    const c=calcFarm(Q,kg,dQ,dKg,is3,ghads,labRate,rate);
+    const c=window.calcFarm(Q,kg,dQ,dKg,is3,ghads,labRate,rate);
     const p=fm.toLowerCase();
     rec[`${p}_totalWQ`]=Q;rec[`${p}_totalWKg`]=kg;rec[`${p}_totalWeightQ`]=c.totalWQ;
     rec[`${p}_dedQ`]=dQ;rec[`${p}_dedKg`]=dKg;rec[`${p}_deductionQ`]=c.dedQ;
@@ -1687,84 +966,88 @@ function performUpdate(){
     rec[`${p}_grossIncome`]=c.gross;rec[`${p}_netIncome`]=c.net;
     totalNet+=c.net;totalWQ+=c.netWQ;totalLabour+=c.labCost;totalGross+=c.gross;
     const prefix=farms.length>1?`${fm}_`:'';
-    rec[`${p}_photoTollBefore`]=photoTargets[prefix+'tollBefore']||rec[`${p}_photoTollBefore`]||null;
-    rec[`${p}_photoTollAfter`]=photoTargets[prefix+'tollAfter']||rec[`${p}_photoTollAfter`]||null;
-    const newPatti=[0,1,2].map(i=>photoTargets[`${prefix}patti_${i}`]||null).filter(Boolean);
+    rec[`${p}_photoTollBefore`]=window.photoTargets[prefix+'tollBefore']||rec[`${p}_photoTollBefore`]||null;
+    rec[`${p}_photoTollAfter`]=window.photoTargets[prefix+'tollAfter']||rec[`${p}_photoTollAfter`]||null;
+    const newPatti=[0,1,2].map(i=>window.photoTargets[`${prefix}patti_${i}`]||null).filter(Boolean);
     rec[`${p}_photoPatti`]=newPatti.length?newPatti:(rec[`${p}_photoPatti`]||[]);
   });
-  if(curFarm==='P'){rec.m_totalWQ=0;rec.m_netWeightQ=0;rec.m_netIncome=0;rec.m_totalLabour=0;rec.m_grossIncome=0;rec.m_ghads=0;}
-  if(curFarm==='M'){rec.p_totalWQ=0;rec.p_netWeightQ=0;rec.p_netIncome=0;rec.p_totalLabour=0;rec.p_grossIncome=0;rec.p_ghads=0;}
+  if(window.curFarm==='P'){rec.m_totalWQ=0;rec.m_netWeightQ=0;rec.m_netIncome=0;rec.m_totalLabour=0;rec.m_grossIncome=0;rec.m_ghads=0;}
+  if(window.curFarm==='M'){rec.p_totalWQ=0;rec.p_netWeightQ=0;rec.p_netIncome=0;rec.p_totalLabour=0;rec.p_grossIncome=0;rec.p_ghads=0;}
   rec.combinedNetWeightQ=totalWQ;rec.combinedGrossIncome=totalGross;
   rec.combinedLabour=totalLabour;rec.combinedNetIncome=totalNet;
   rec.pending=Math.max(0,totalNet-received);
 
-  recs[idx]=rec;
-  saveRecords(recs);
-  hideOverlay('editConfirmOverlay');
-  hideOverlay('formOverlay');
-  editingRecord=null;
-  showToast('नोंद अपडेट झाली ✓');
-  renderAll();
-  syncToDriveIfConnected();
+  if(!window.currentUserUid) return;
+  try {
+    const recordRef = doc(db, "users", window.currentUserUid, "records", rec.id);
+    await setDoc(recordRef, rec);
+    
+    window.hideOverlay('editConfirmOverlay');
+    window.hideOverlay('formOverlay');
+    window.editingRecord=null;
+    window.showToast('नोंद अपडेट झाली ✓');
+    await fetchCloudData(); 
+  } catch(error) {
+    console.error("Update Error:", error);
+    alert("अपडेट करता आले नाही. इंटरनेट कनेक्शन तपासा.");
+  }
 }
 
-function recCardHTML(r){
+window.recCardHTML = function(r){
   const hasPend=(r.pending||0)>0;
   const farmType = r.farmType || 'M';
   const farmBadge=farmType==='M'?`<span class="badge badge-m">शेत म</span>`:farmType==='P'?`<span class="badge badge-p">शेत प</span>`:`<span class="badge badge-mp">म+प</span>`;
   const inc=r.combinedNetIncome||0;
-  return`<div class="rec-card ${hasPend?'pending':''}" data-id="${r.id}" onclick="openDetail('${r.id}')">
-    <div class="rec-top"><span class="rec-trader">${r.traderName||'?'}</span><span class="rec-income ${hasPend?'pending':''}">₹${fmt(inc)}</span></div>
-    <div class="rec-meta">${fmtDate(r.date)} ${farmBadge} ${fmtQ(r.combinedNetWeightQ||0)}Q ${hasPend?`<span style="color:var(--red)">थकबाकी ₹${fmt(r.pending)}</span>`:''}</div>
+  return`<div class="rec-card ${hasPend?'pending':''}" data-id="${r.id}" onclick="window.openDetail('${r.id}')">
+    <div class="rec-top"><span class="rec-trader">${r.traderName||'?'}</span><span class="rec-income ${hasPend?'pending':''}">₹${window.fmt(inc)}</span></div>
+    <div class="rec-meta">${window.fmtDate(r.date)} ${farmBadge} ${window.fmtQ(r.combinedNetWeightQ||0)}Q ${hasPend?`<span style="color:var(--red)">थकबाकी ₹${window.fmt(r.pending)}</span>`:''}</div>
   </div>`;
 }
 
-function renderDash(){
-  const recs=getRecords();
-  document.getElementById('dash-stats').innerHTML=statCardsHTML(computeStats(recs,null));
+window.renderDash = function(){
+  const recs=window.getRecords();
+  document.getElementById('dash-stats').innerHTML=window.statCardsHTML(window.computeStats(recs,null));
   const recent=[...recs].sort((a,b)=>(b.date||'').localeCompare(a.date||'')).slice(0,5);
   const el=document.getElementById('dash-recent');
-  el.innerHTML=recent.length?recent.map(r=>recCardHTML(r)).join(''):`<div class="empty-state"><span class="emoji">🌱</span>${t('noRecords')}</div>`;
+  el.innerHTML=recent.length?recent.map(r=>window.recCardHTML(r)).join(''):`<div class="empty-state"><span class="emoji">🌱</span>${window.t('noRecords')}</div>`;
 
   const combinedRecs=[...recs].filter(r=>(r.farmType||'M')==='MP').sort((a,b)=>(b.date||'').localeCompare(a.date||''));
   document.getElementById('combinedCountBadge').textContent=combinedRecs.length;
   document.getElementById('combinedHeader').style.display=combinedRecs.length?'flex':'none';
   const combinedEl=document.getElementById('dash-combined');
-  combinedEl.innerHTML=combinedRecs.length
-    ? combinedRecs.map(r=>recCardHTML(r)).join('')
-    : '';
+  combinedEl.innerHTML=combinedRecs.length ? combinedRecs.map(r=>window.recCardHTML(r)).join('') : '';
 }
 
-function renderFarmScreen(farm){
-  const recs=getRecords().filter(r=>(r.farmType||'M')===farm||(r.farmType||'M')==='MP');
-  document.getElementById('farm'+farm+'-stats').innerHTML=statCardsHTML(computeStats(recs,farm));
-  document.getElementById('farm'+farm+'-ghadBreakdown').innerHTML=ghadBreakdownHTML(farm);
+window.renderFarmScreen = function(farm){
+  const recs=window.getRecords().filter(r=>(r.farmType||'M')===farm||(r.farmType||'M')==='MP');
+  document.getElementById('farm'+farm+'-stats').innerHTML=window.statCardsHTML(window.computeStats(recs,farm));
+  document.getElementById('farm'+farm+'-ghadBreakdown').innerHTML=window.ghadBreakdownHTML(farm);
   const el=document.getElementById('farm'+farm+'-records');
   const sorted=[...recs].sort((a,b)=>(b.date||'').localeCompare(a.date||''));
-  el.innerHTML=sorted.length?sorted.map(r=>recCardHTML(r)).join(''):`<div class="empty-state"><span class="emoji">🌿</span>${t('noRecords')}</div>`;
+  el.innerHTML=sorted.length?sorted.map(r=>window.recCardHTML(r)).join(''):`<div class="empty-state"><span class="emoji">🌿</span>${window.t('noRecords')}</div>`;
 }
 
-function renderAllRecords(){
-  const recs=[...getRecords()].sort((a,b)=>(b.date||'').localeCompare(a.date||''));
+window.renderAllRecords = function(){
+  const recs=[...window.getRecords()].sort((a,b)=>(b.date||'').localeCompare(a.date||''));
   const el=document.getElementById('all-records');
-  el.innerHTML=recs.length?recs.map(r=>recCardHTML(r)).join(''):`<div class="empty-state"><span class="emoji">📋</span>${t('noRecords')}</div>`;
+  el.innerHTML=recs.length?recs.map(r=>window.recCardHTML(r)).join(''):`<div class="empty-state"><span class="emoji">📋</span>${window.t('noRecords')}</div>`;
 }
 
-function renderTraders(){
-  const traders=getTraders(),recs=getRecords();
+window.renderTraders = function(){
+  const traders=window.getTraders(),recs=window.getRecords();
   const el=document.getElementById('traders-list');
-  if(!traders.length){el.innerHTML=`<div class="empty-state"><span class="emoji">🤝</span>${t('noTraders')}</div>`;return;}
+  if(!traders.length){el.innerHTML=`<div class="empty-state"><span class="emoji">🤝</span>${window.t('noTraders')}</div>`;return;}
   el.innerHTML=traders.map(tr=>{
     const trRecs=recs.filter(r=>r.traderId===tr.id);
     const totInc=trRecs.reduce((s,r)=>s+(r.combinedNetIncome||0),0);
     const totPend=trRecs.reduce((s,r)=>s+(r.pending||0),0);
     const initials=(tr.name||'?').split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase();
-    return`<div class="card trader-card" onclick="openLedger('${tr.id}')">
+    return`<div class="card trader-card" onclick="window.openLedger('${tr.id}')">
       <div class="trader-avatar">${initials}</div>
       <div class="trader-info">
         <div class="trader-name">${tr.name}</div>
         <div class="trader-meta">${tr.phone||''} ${tr.village?'· '+tr.village:''}</div>
-        <div class="trader-meta" style="margin-top:4px">${trRecs.length} ${t('records_count')} · ₹${fmt(totInc)} <span style="color:var(--red)">थकबाकी ₹${fmt(totPend)}</span></div>
+        <div class="trader-meta" style="margin-top:4px">${trRecs.length} ${window.t('records_count')} · ₹${window.fmt(totInc)} <span style="color:var(--red)">थकबाकी ₹${window.fmt(totPend)}</span></div>
       </div>
     </div>`;
   }).join('');
@@ -1772,102 +1055,102 @@ function renderTraders(){
 
 document.querySelectorAll('.nav-tab').forEach(btn=>{
   btn.addEventListener('click',()=>{
-    curTab=btn.dataset.tab;
+    window.curTab=btn.dataset.tab;
     document.querySelectorAll('.nav-tab').forEach(b=>b.classList.remove('active'));
     btn.classList.add('active');
     document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
-    document.getElementById('screen-'+curTab).classList.add('active');
-    const showFab=['dash','farmM','farmP','records'].includes(curTab);
+    document.getElementById('screen-'+window.curTab).classList.add('active');
+    const showFab=['dash','farmM','farmP','records'].includes(window.curTab);
     document.getElementById('fabBtn').style.display=showFab?'flex':'none';
-    const hasRecs=getRecords().length>0;
-    document.getElementById('pdfBtn').style.display=(curTab==='dash'&&hasRecs)?'block':'none';
-    renderAll();
+    const hasRecs=window.getRecords().length>0;
+    document.getElementById('pdfBtn').style.display=(window.curTab==='dash'&&hasRecs)?'block':'none';
+    window.renderAll();
   });
 });
 
-document.getElementById('fabBtn').addEventListener('click',openAddForm);
+document.getElementById('fabBtn').addEventListener('click', () => window.openAddForm());
+
 document.getElementById('pdfBtn').addEventListener('click', async () => {
   if (navigator.share && /Android|iPhone/i.test(navigator.userAgent)) {
-    const recs = getRecords();
-    const stats = computeStats(recs, null);
-    const statsM = computeStats(recs.filter(r=>(r.farmType||'M')==='M'||(r.farmType||'M')==='MP'), 'M');
-    const statsP = computeStats(recs.filter(r=>(r.farmType||'M')==='P'||(r.farmType||'M')==='MP'), 'P');
+    const recs = window.getRecords();
+    const stats = window.computeStats(recs, null);
+    const statsM = window.computeStats(recs.filter(r=>(r.farmType||'M')==='M'||(r.farmType||'M')==='MP'), 'M');
+    const statsP = window.computeStats(recs.filter(r=>(r.farmType||'M')==='P'||(r.farmType||'M')==='MP'), 'P');
     const dates = recs.map(r=>r.date).sort();
-    const from = dates.length ? fmtDate(dates[0]) : '—';
-    const to = dates.length ? fmtDate(dates[dates.length-1]) : '—';
+    const from = dates.length ? window.fmtDate(dates[0]) : '—';
+    const to = dates.length ? window.fmtDate(dates[dates.length-1]) : '—';
     const shareText = `🌿 केळी हिशोब साथी — उत्पन्न अहवाल
 ━━━━━━━━━━━━━━━━
 📅 कालावधी: ${from} ते ${to}
 📋 एकूण नोंदी: ${recs.length}
 
 🌿 शेत म (मोरगाव काढचं शेत)
-  वजन: ${fmtQ(statsM.weightQ)} Q
-  उत्पन्न: ₹${fmt(statsM.income)}
-  मिळाले: ₹${fmt(statsM.received)}
-  थकबाकी: ₹${fmt(statsM.pending)}
+  वजन: ${window.fmtQ(statsM.weightQ)} Q
+  उत्पन्न: ₹${window.fmt(statsM.income)}
+  मिळाले: ₹${window.fmt(statsM.received)}
+  थकबाकी: ₹${window.fmt(statsM.pending)}
 
 🌿 शेत प (पाटोंदी काढचं शेत)
-  वजन: ${fmtQ(statsP.weightQ)} Q
-  उत्पन्न: ₹${fmt(statsP.income)}
-  मिळाले: ₹${fmt(statsP.received)}
-  थकबाकी: ₹${fmt(statsP.pending)}
+  वजन: ${window.fmtQ(statsP.weightQ)} Q
+  उत्पन्न: ₹${window.fmt(statsP.income)}
+  मिळाले: ₹${window.fmt(statsP.received)}
+  थकबाकी: ₹${window.fmt(statsP.pending)}
 
 ━━━━━━━━━━━━━━━━
 📊 एकूण
-  वजन: ${fmtQ(stats.weightQ)} Q
-  उत्पन्न: ₹${fmt(stats.income)}
-  मिळाले: ₹${fmt(stats.received)}
-  थकबाकी: ₹${fmt(stats.pending)}`;
+  वजन: ${window.fmtQ(stats.weightQ)} Q
+  उत्पन्न: ₹${window.fmt(stats.income)}
+  मिळाले: ₹${window.fmt(stats.received)}
+  थकबाकी: ₹${window.fmt(stats.pending)}`;
 
     document.getElementById('sheetTitle').textContent = '📤 Share करा';
     document.getElementById('sheetContent').innerHTML = `
-      <button class="sheet-btn" onclick="closeSheet();generatePDF()">📄 PDF / Print (सगळे photos सहित)</button>
-      <button class="sheet-btn" onclick="closeSheet();shareTextFn()">📱 WhatsApp / Share (summary)</button>`;
+      <button class="sheet-btn" onclick="window.closeSheet();window.generatePDF()">📄 PDF / Print (सगळे photos सहित)</button>
+      <button class="sheet-btn" onclick="window.closeSheet();window.shareTextFn()">📱 WhatsApp / Share (summary)</button>`;
     window._shareText = shareText;
     document.getElementById('sheetOverlay').classList.add('open');
   } else {
-    generatePDF();
+    window.generatePDF();
   }
 });
 
-function shareTextFn() {
+window.shareTextFn = function() {
   if (navigator.share) {
-    navigator.share({ title: 'केळी हिशोब साथी', text: window._shareText })
-      .catch(() => {});
+    navigator.share({ title: 'केळी हिशोब साथी', text: window._shareText }).catch(() => {});
   }
 }
 
-function renderAll(){
-  renderDash();
-  renderFarmScreen('M');
-  renderFarmScreen('P');
-  renderAllRecords();
-  renderTraders();
-  const hasRecs=getRecords().length>0;
-  document.getElementById('pdfBtn').style.display=(curTab==='dash'&&hasRecs)?'block':'none';
+window.renderAll = function(){
+  window.renderDash();
+  window.renderFarmScreen('M');
+  window.renderFarmScreen('P');
+  window.renderAllRecords();
+  window.renderTraders();
+  const hasRecs=window.getRecords().length>0;
+  document.getElementById('pdfBtn').style.display=(window.curTab==='dash'&&hasRecs)?'block':'none';
   ['dash-recent','farmM-records','farmP-records','all-records','dash-combined'].forEach(id=>{
     const el=document.getElementById(id);
     if(el && !el.dataset.longPressAttached){
-      attachLongPress(el);
+      window.attachLongPress(el);
       el.dataset.longPressAttached='1';
     }
   });
 }
 
-function openAddForm(){
-  const traders=getTraders();
+window.openAddForm = function(){
+  const traders=window.getTraders();
   if(!traders.length){
-    alert(t('addTraderFirst'));
-    editingTrader=null;
+    alert(window.t('addTraderFirst'));
+    window.editingTrader=null;
     ['tf_name','tf_phone','tf_village','tf_note'].forEach(id=>document.getElementById(id).value='');
-    showOverlay('traderFormOverlay');
+    window.showOverlay('traderFormOverlay');
     return;
   }
-  if(!window._skipResetEdit) editingRecord=null;
+  if(!window._skipResetEdit) window.editingRecord=null;
   window._skipResetEdit=false;
-  photoTargets={};
-  curFarm='M';curHarvest='ghad';
-  document.getElementById('f_date').value=today();
+  window.photoTargets={};
+  window.curFarm='M'; window.curHarvest='ghad';
+  document.getElementById('f_date').value=window.today();
   document.getElementById('f_vehicle').value='';
   document.getElementById('f_received').value='';
   document.getElementById('f_note').value='';
@@ -1877,131 +1160,129 @@ function openAddForm(){
   tSel.innerHTML=traders.map(tr=>`<option value="${tr.id}">${tr.name}</option>`).join('');
   document.querySelectorAll('#farmToggle .toggle-btn').forEach(b=>b.classList.toggle('active',b.dataset.farm==='M'));
   document.querySelectorAll('#harvestToggle .toggle-btn').forEach(b=>b.classList.toggle('active',b.dataset.harvest==='ghad'));
-  buildFarmFields();
-  showOverlay('formOverlay');
-  document.getElementById('formTitle').textContent=t('addRecord');
-  applyLang();
+  window.buildFarmFields();
+  window.showOverlay('formOverlay');
+  document.getElementById('formTitle').textContent=window.t('addRecord');
+  window.applyLang();
 }
-document.getElementById('formBack').addEventListener('click',()=>{ hideOverlay('formOverlay');});
+document.getElementById('formBack').addEventListener('click',()=>{ window.hideOverlay('formOverlay');});
 
 document.getElementById('farmToggle').addEventListener('click',e=>{
   const btn=e.target.closest('.toggle-btn');if(!btn)return;
   document.querySelectorAll('#farmToggle .toggle-btn').forEach(b=>b.classList.remove('active'));
-  btn.classList.add('active');curFarm=btn.dataset.farm;buildFarmFields();
+  btn.classList.add('active');window.curFarm=btn.dataset.farm;window.buildFarmFields();
 });
 document.getElementById('harvestToggle').addEventListener('click',e=>{
   const btn=e.target.closest('.toggle-btn');if(!btn)return;
   document.querySelectorAll('#harvestToggle .toggle-btn').forEach(b=>b.classList.remove('active'));
-  btn.classList.add('active');curHarvest=btn.dataset.harvest;buildFarmFields();
+  btn.classList.add('active');window.curHarvest=btn.dataset.harvest;window.buildFarmFields();
 });
 
-function buildFarmFields(){
-  const isCombined = curFarm==='MP';
+window.buildFarmFields = function(){
+  const isCombined = window.curFarm==='MP';
   let html='';
 
   if(isCombined){
-    html+=`<div class="farm-header">🌿🌿 ${t('farmMLong')} + ${t('farmPLong')} — एकत्रित मोजणी</div>`;
-    html+=`<div class="form-group"><div class="sec-title" style="margin-top:8px">${t('weight')} (एकत्रित — गाडी एकदाच वजन होते)</div><div class="row2">
-      <div><label class="form-label">Q</label><input type="number" class="form-input" id="f_C_wQ" placeholder="0" min="0" oninput="recalcAll()"></div>
-      <div><label class="form-label">kg</label><input type="number" class="form-input" id="f_C_wKg" placeholder="0" min="0" max="99" oninput="recalcAll()"></div>
+    html+=`<div class="farm-header">🌿🌿 ${window.t('farmMLong')} + ${window.t('farmPLong')} — एकत्रित मोजणी</div>`;
+    html+=`<div class="form-group"><div class="sec-title" style="margin-top:8px">${window.t('weight')} (एकत्रित — गाडी एकदाच वजन होते)</div><div class="row2">
+      <div><label class="form-label">Q</label><input type="number" class="form-input" id="f_C_wQ" placeholder="0" min="0" oninput="window.recalcAll()"></div>
+      <div><label class="form-label">kg</label><input type="number" class="form-input" id="f_C_wKg" placeholder="0" min="0" max="99" oninput="window.recalcAll()"></div>
     </div><div class="form-hint">दोन्ही शेतांची मिळून एकूण गाडी वजन (2 Q + 34 kg = 2.34 Q)</div></div>`;
 
-    if(curHarvest!=='box'){
-      html+=`<div class="form-group"><div class="sec-title" style="margin-top:8px">${t('deduction')} (एकत्रित)</div><div class="row2">
-        <div><label class="form-label">Q</label><input type="number" class="form-input" id="f_C_dQ" placeholder="0" min="0" oninput="recalcAll()"></div>
-        <div><label class="form-label">kg</label><input type="number" class="form-input" id="f_C_dKg" placeholder="0" min="0" max="99" oninput="recalcAll()"></div>
+    if(window.curHarvest!=='box'){
+      html+=`<div class="form-group"><div class="sec-title" style="margin-top:8px">${window.t('deduction')} (एकत्रित)</div><div class="row2">
+        <div><label class="form-label">Q</label><input type="number" class="form-input" id="f_C_dQ" placeholder="0" min="0" oninput="window.recalcAll()"></div>
+        <div><label class="form-label">kg</label><input type="number" class="form-input" id="f_C_dKg" placeholder="0" min="0" max="99" oninput="window.recalcAll()"></div>
       </div></div>
       <div class="form-group" style="display:flex;align-items:center;gap:10px">
-        <input type="checkbox" id="f_C_3pct" style="width:18px;height:18px;cursor:pointer" onchange="recalcAll()">
-        <label for="f_C_3pct" style="font-size:14px;margin:0;cursor:pointer">${t('threePct')} <span id="f_C_3pctAmt" style="color:var(--blue);font-size:12px"></span></label>
+        <input type="checkbox" id="f_C_3pct" style="width:18px;height:18px;cursor:pointer" onchange="window.recalcAll()">
+        <label for="f_C_3pct" style="font-size:14px;margin:0;cursor:pointer">${window.t('threePct')} <span id="f_C_3pctAmt" style="color:var(--blue);font-size:12px"></span></label>
       </div>`;
     }
 
-    html+=`<div class="auto-box blue" id="f_C_netW" style="margin-bottom:8px">${t('netWeight')}: 0.00 Q</div>`;
+    html+=`<div class="auto-box blue" id="f_C_netW" style="margin-bottom:8px">${window.t('netWeight')}: 0.00 Q</div>`;
     html+=`<div class="auto-box green" id="f_C_grossInc" style="margin-bottom:12px">एकत्रित उत्पन्न (Gross): ₹0</div>`;
 
     html+=`<div class="sec-title">पावत्या (एकत्रित — फक्त एकदाच अपलोड करा)</div>`;
-    html+=photoSectionHTML('tollBefore','टोल आधी',1);
-    html+=photoSectionHTML('tollAfter','टोल नंतर',1);
-    html+=photoSectionHTML('patti','पट्टी',3);
+    html+=window.photoSectionHTML('tollBefore','टोल आधी',1);
+    html+=window.photoSectionHTML('tollAfter','टोल नंतर',1);
+    html+=window.photoSectionHTML('patti','पट्टी',3);
 
     html+=`<div class="sec-title" style="margin-top:18px">👷 प्रत्येक शेताची मजुरी (वेगवेगळी)</div>`;
 
     ['M','P'].forEach(fm=>{
-      const label=fm==='M'?t('farmMFull'):t('farmPFull');
+      const label=fm==='M'?window.t('farmMFull'):window.t('farmPFull');
       html+=`<div class="farm-header" style="margin-top:10px">🌿 ${label}</div>`;
       html+=`<div class="form-group"><div class="row2">
-        <div><label class="form-label">${t('ghadsCount')}</label><input type="number" class="form-input" id="f_${fm}_ghads" placeholder="0" min="0" oninput="recalcAll()"></div>
-        <div><label class="form-label">${t('labourRate')}</label><input type="number" class="form-input" id="f_${fm}_labRate" placeholder="10" min="0" oninput="recalcAll()"></div>
+        <div><label class="form-label">${window.t('ghadsCount')}</label><input type="number" class="form-input" id="f_${fm}_ghads" placeholder="0" min="0" oninput="window.recalcAll()"></div>
+        <div><label class="form-label">${window.t('labourRate')}</label><input type="number" class="form-input" id="f_${fm}_labRate" placeholder="10" min="0" oninput="window.recalcAll()"></div>
       </div>
       <div class="auto-box blue" style="margin-top:6px;font-size:13px" id="f_${fm}_labFormula">0 × ₹10 = ₹0</div></div>`;
     });
 
   } else {
-    const fm=curFarm;
-    const label=fm==='M'?t('farmMFull'):t('farmPFull');
+    const fm=window.curFarm;
+    const label=fm==='M'?window.t('farmMFull'):window.t('farmPFull');
     html+=`<div class="farm-header">🌿 ${label}</div>`;
-    html+=`<div class="form-group"><div class="sec-title" style="margin-top:8px">${t('weight')}</div><div class="row2">
-      <div><label class="form-label">Q</label><input type="number" class="form-input" id="f_${fm}_wQ" placeholder="0" min="0" oninput="recalcAll()"></div>
-      <div><label class="form-label">kg</label><input type="number" class="form-input" id="f_${fm}_wKg" placeholder="0" min="0" max="99" oninput="recalcAll()"></div>
+    html+=`<div class="form-group"><div class="sec-title" style="margin-top:8px">${window.t('weight')}</div><div class="row2">
+      <div><label class="form-label">Q</label><input type="number" class="form-input" id="f_${fm}_wQ" placeholder="0" min="0" oninput="window.recalcAll()"></div>
+      <div><label class="form-label">kg</label><input type="number" class="form-input" id="f_${fm}_wKg" placeholder="0" min="0" max="99" oninput="window.recalcAll()"></div>
     </div><div class="form-hint">2 Q + 34 kg = 2.34 Q</div></div>`;
-    if(curHarvest!=='box'){
-      html+=`<div class="form-group"><div class="sec-title" style="margin-top:8px">${t('deduction')}</div><div class="row2">
-        <div><label class="form-label">Q</label><input type="number" class="form-input" id="f_${fm}_dQ" placeholder="0" min="0" oninput="recalcAll()"></div>
-        <div><label class="form-label">kg</label><input type="number" class="form-input" id="f_${fm}_dKg" placeholder="0" min="0" max="99" oninput="recalcAll()"></div>
+    if(window.curHarvest!=='box'){
+      html+=`<div class="form-group"><div class="sec-title" style="margin-top:8px">${window.t('deduction')}</div><div class="row2">
+        <div><label class="form-label">Q</label><input type="number" class="form-input" id="f_${fm}_dQ" placeholder="0" min="0" oninput="window.recalcAll()"></div>
+        <div><label class="form-label">kg</label><input type="number" class="form-input" id="f_${fm}_dKg" placeholder="0" min="0" max="99" oninput="window.recalcAll()"></div>
       </div></div>
       <div class="form-group" style="display:flex;align-items:center;gap:10px">
-        <input type="checkbox" id="f_${fm}_3pct" style="width:18px;height:18px;cursor:pointer" onchange="recalcAll()">
-        <label for="f_${fm}_3pct" style="font-size:14px;margin:0;cursor:pointer">${t('threePct')} <span id="f_${fm}_3pctAmt" style="color:var(--blue);font-size:12px"></span></label>
+        <input type="checkbox" id="f_${fm}_3pct" style="width:18px;height:18px;cursor:pointer" onchange="window.recalcAll()">
+        <label for="f_${fm}_3pct" style="font-size:14px;margin:0;cursor:pointer">${window.t('threePct')} <span id="f_${fm}_3pctAmt" style="color:var(--blue);font-size:12px"></span></label>
       </div>`;
     }
-    html+=`<div class="auto-box blue" id="f_${fm}_netW" style="margin-bottom:8px">${t('netWeight')}: 0.00 Q</div>`;
-    html+=`<div class="form-group"><div class="sec-title" style="margin-top:8px">${t('labour')}</div><div class="row2">
-      <div><label class="form-label">${t('ghadsCount')}</label><input type="number" class="form-input" id="f_${fm}_ghads" placeholder="0" min="0" oninput="recalcAll()"></div>
-      <div><label class="form-label">${t('labourRate')}</label><input type="number" class="form-input" id="f_${fm}_labRate" placeholder="10" min="0" oninput="recalcAll()"></div>
+    html+=`<div class="auto-box blue" id="f_${fm}_netW" style="margin-bottom:8px">${window.t('netWeight')}: 0.00 Q</div>`;
+    html+=`<div class="form-group"><div class="sec-title" style="margin-top:8px">${window.t('labour')}</div><div class="row2">
+      <div><label class="form-label">${window.t('ghadsCount')}</label><input type="number" class="form-input" id="f_${fm}_ghads" placeholder="0" min="0" oninput="window.recalcAll()"></div>
+      <div><label class="form-label">${window.t('labourRate')}</label><input type="number" class="form-input" id="f_${fm}_labRate" placeholder="10" min="0" oninput="window.recalcAll()"></div>
     </div>
     <div class="auto-box blue" style="margin-top:6px;font-size:13px" id="f_${fm}_labFormula">0 × ₹10 = ₹0</div></div>
-    <div class="auto-box green" id="f_${fm}_netInc" style="margin-bottom:8px">${t('netIncome')}: ₹0</div>`;
+    <div class="auto-box green" id="f_${fm}_netInc" style="margin-bottom:8px">${window.t('netIncome')}: ₹0</div>`;
     html+=`<div class="sec-title">पावत्या</div>`;
-    html+=photoSectionHTML('tollBefore','टोल आधी',1);
-    html+=photoSectionHTML('tollAfter','टोल नंतर',1);
-    html+=photoSectionHTML('patti','पट्टी',3);
+    html+=window.photoSectionHTML('tollBefore','टोल आधी',1);
+    html+=window.photoSectionHTML('tollAfter','टोल नंतर',1);
+    html+=window.photoSectionHTML('patti','पट्टी',3);
   }
-
   document.getElementById('farmFields').innerHTML=html;
-  recalcAll();
+  window.recalcAll();
 }
 
-function photoSectionHTML(key,label,max){
+window.photoSectionHTML = function(key,label,max){
   let slots='';
   for(let i=0;i<max;i++){
     const slotKey=max>1?`${key}_${i}`:key;
-    slots+=`<div class="photo-slot" id="slot_${slotKey}" onclick="openPhotoSheet('${slotKey}')">📷<span>${t('addPhoto')}</span></div>`;
+    slots+=`<div class="photo-slot" id="slot_${slotKey}" onclick="window.openPhotoSheet('${slotKey}')">📷<span>${window.t('addPhoto')}</span></div>`;
   }
   return`<div class="form-group"><div class="photo-label">${label}</div><div class="photo-slots" style="grid-template-columns:repeat(${max},1fr)">${slots}</div></div>`;
 }
 
-function recalcAll(){
+window.recalcAll = function(){
   const rate=Number(document.getElementById('f_rate')?.value||0);
   let totalNet=0, totalGross=0, totalLabour=0, netWQ=0;
 
-  if(curFarm==='MP'){
+  if(window.curFarm==='MP'){
     const Q=Number(document.getElementById('f_C_wQ')?.value||0);
     const kg=Number(document.getElementById('f_C_wKg')?.value||0);
-    const dQ=curHarvest!=='box'?Number(document.getElementById('f_C_dQ')?.value||0):0;
-    const dKg=curHarvest!=='box'?Number(document.getElementById('f_C_dKg')?.value||0):0;
-    const is3=curHarvest!=='box'?(document.getElementById('f_C_3pct')?.checked||false):false;
+    const dQ=window.curHarvest!=='box'?Number(document.getElementById('f_C_dQ')?.value||0):0;
+    const dKg=window.curHarvest!=='box'?Number(document.getElementById('f_C_dKg')?.value||0):0;
+    const is3=window.curHarvest!=='box'?(document.getElementById('f_C_3pct')?.checked||false):false;
 
-    const c=calcFarm(Q,kg,dQ,dKg,is3,0,0,rate);
-    netWQ=c.netWQ;
-    totalGross=c.gross;
+    const c=window.calcFarm(Q,kg,dQ,dKg,is3,0,0,rate);
+    netWQ=c.netWQ; totalGross=c.gross;
 
     const netWEl=document.getElementById('f_C_netW');
-    if(netWEl)netWEl.textContent=`${t('netWeight')}: ${fmtQ(c.netWQ)} Q`;
+    if(netWEl)netWEl.textContent=`${window.t('netWeight')}: ${window.fmtQ(c.netWQ)} Q`;
     const grossEl=document.getElementById('f_C_grossInc');
-    if(grossEl)grossEl.textContent=`एकत्रित उत्पन्न (Gross): ₹${fmt(c.gross)}`;
+    if(grossEl)grossEl.textContent=`एकत्रित उत्पन्न (Gross): ₹${window.fmt(c.gross)}`;
     const amt3El=document.getElementById('f_C_3pctAmt');
-    if(amt3El)amt3El.textContent=is3?`(-${fmtQ(c.threePct)} Q)`:'';
+    if(amt3El)amt3El.textContent=is3?`(-${window.fmtQ(c.threePct)} Q)`:'';
 
     let summaryRows='';
     ['M','P'].forEach(fm=>{
@@ -2010,118 +1291,114 @@ function recalcAll(){
       const labCost=ghads*labRate;
       totalLabour+=labCost;
       const labEl=document.getElementById(`f_${fm}_labFormula`);
-      if(labEl)labEl.textContent=`${ghads} × ₹${labRate} = ₹${fmt(labCost)}`;
-      const lbl=fm==='M'?t('farmMLong'):t('farmPLong');
-      summaryRows+=`<div class="summary-row"><span>${lbl} मजुरी: ${ghads} घड × ₹${labRate}</span><span style="font-weight:700">₹${fmt(labCost)}</span></div>`;
+      if(labEl)labEl.textContent=`${ghads} × ₹${labRate} = ₹${window.fmt(labCost)}`;
+      const lbl=fm==='M'?window.t('farmMLong'):window.t('farmPLong');
+      summaryRows+=`<div class="summary-row"><span>${lbl} मजुरी: ${ghads} घड × ₹${labRate}</span><span style="font-weight:700">₹${window.fmt(labCost)}</span></div>`;
     });
 
     totalNet=totalGross-totalLabour;
 
     document.getElementById('combinedSummary').style.display='block';
     document.getElementById('combinedBox').innerHTML=
-      `<div class="summary-row"><span>एकत्रित वजन: ${fmtQ(netWQ)}Q</span><span style="font-weight:700">₹${fmt(totalGross)}</span></div>`+
+      `<div class="summary-row"><span>एकत्रित वजन: ${window.fmtQ(netWQ)}Q</span><span style="font-weight:700">₹${window.fmt(totalGross)}</span></div>`+
       summaryRows+
-      `<hr class="summary-divider"><div class="summary-row summary-total"><span>निव्वळ उत्पन्न (Gross − मजुरी)</span><span>₹${fmt(totalNet)}</span></div>`;
-
+      `<hr class="summary-divider"><div class="summary-row summary-total"><span>निव्वळ उत्पन्न (Gross − मजुरी)</span><span>₹${window.fmt(totalNet)}</span></div>`;
   } else {
-    const fm=curFarm;
+    const fm=window.curFarm;
     const Q=Number(document.getElementById(`f_${fm}_wQ`)?.value||0);
     const kg=Number(document.getElementById(`f_${fm}_wKg`)?.value||0);
-    const dQ=curHarvest!=='box'?Number(document.getElementById(`f_${fm}_dQ`)?.value||0):0;
-    const dKg=curHarvest!=='box'?Number(document.getElementById(`f_${fm}_dKg`)?.value||0):0;
-    const is3=curHarvest!=='box'?(document.getElementById(`f_${fm}_3pct`)?.checked||false):false;
+    const dQ=window.curHarvest!=='box'?Number(document.getElementById(`f_${fm}_dQ`)?.value||0):0;
+    const dKg=window.curHarvest!=='box'?Number(document.getElementById(`f_${fm}_dKg`)?.value||0):0;
+    const is3=window.curHarvest!=='box'?(document.getElementById(`f_${fm}_3pct`)?.checked||false):false;
     const ghads=Number(document.getElementById(`f_${fm}_ghads`)?.value||0);
     const labRate=Number(document.getElementById(`f_${fm}_labRate`)?.value||10)||10;
-    const c=calcFarm(Q,kg,dQ,dKg,is3,ghads,labRate,rate);
+    const c=window.calcFarm(Q,kg,dQ,dKg,is3,ghads,labRate,rate);
 
     const netWEl=document.getElementById(`f_${fm}_netW`);
-    if(netWEl)netWEl.textContent=`${t('netWeight')}: ${fmtQ(c.netWQ)} Q`;
+    if(netWEl)netWEl.textContent=`${window.t('netWeight')}: ${window.fmtQ(c.netWQ)} Q`;
     const labEl=document.getElementById(`f_${fm}_labFormula`);
-    if(labEl)labEl.textContent=`${ghads} × ₹${labRate} = ₹${fmt(c.labCost)}`;
+    if(labEl)labEl.textContent=`${ghads} × ₹${labRate} = ₹${window.fmt(c.labCost)}`;
     const netEl=document.getElementById(`f_${fm}_netInc`);
-    if(netEl)netEl.textContent=`${t('netIncome')}: ₹${fmt(c.net)}`;
+    if(netEl)netEl.textContent=`${window.t('netIncome')}: ₹${window.fmt(c.net)}`;
     const amt3El=document.getElementById(`f_${fm}_3pctAmt`);
-    if(amt3El)amt3El.textContent=is3?`(-${fmtQ(c.threePct)} Q)`:'';
+    if(amt3El)amt3El.textContent=is3?`(-${window.fmtQ(c.threePct)} Q)`:'';
 
     totalNet=c.net; totalGross=c.gross; totalLabour=c.labCost; netWQ=c.netWQ;
     document.getElementById('combinedSummary').style.display='none';
   }
-
   const rec=Number(document.getElementById('f_received')?.value||0);
   const pend=Math.max(0,totalNet-rec);
-  document.getElementById('f_netDisplay').textContent=`${t('netIncome')}: ₹${fmt(totalNet)}`;
-  document.getElementById('f_pendingDisplay').textContent=`${t('pending')}: ₹${fmt(pend)}`;
+  document.getElementById('f_netDisplay').textContent=`${window.t('netIncome')}: ₹${window.fmt(totalNet)}`;
+  document.getElementById('f_pendingDisplay').textContent=`${window.t('pending')}: ₹${window.fmt(pend)}`;
 }
 
 document.getElementById('saveRecordBtn').addEventListener('click',()=>{
-  if(editingRecord){
-    openEditConfirm();
+  if(window.editingRecord){
+    window.openEditConfirm();
   } else {
-    saveRecord();
+    window.saveRecord();
   }
 });
 
-function saveRecord(){
+// FIREBASE SAVE RECORD
+window.saveRecord = async function(){
   const errEl=document.getElementById('saveError');
   errEl.style.display='none';
   const traderId=document.getElementById('f_trader').value;
-  const traders=getTraders();
+  const traders=window.getTraders();
   const trader=traders.find(x=>x.id===traderId);
-  if(!trader){errEl.textContent=t('valTrader');errEl.style.display='block';return;}
+  if(!trader){errEl.textContent=window.t('valTrader');errEl.style.display='block';return;}
   const rate=Number(document.getElementById('f_rate').value||0);
-  if(!rate){errEl.textContent=t('valRate');errEl.style.display='block';return;}
+  if(!rate){errEl.textContent=window.t('valRate');errEl.style.display='block';return;}
 
   const date=document.getElementById('f_date').value;
   const received=Number(document.getElementById('f_received').value||0);
   const note=document.getElementById('f_note').value;
   const vehicle=document.getElementById('f_vehicle').value;
-  const rec={id:genId(),createdAt:Date.now(),date,traderId,traderName:trader.name,vehicle,harvestType:curHarvest,farmType:curFarm,rate,note,received};
+  const recId = window.genId();
+  const rec={id:recId,createdAt:Date.now(),date,traderId,traderName:trader.name,vehicle,harvestType:window.curHarvest,farmType:window.curFarm,rate,note,received};
 
   let totalNet=0, totalGross=0, totalLabour=0, netWQ=0;
 
-  if(curFarm==='MP'){
+  if(window.curFarm==='MP'){
     const Q=Number(document.getElementById('f_C_wQ')?.value||0);
     const kg=Number(document.getElementById('f_C_wKg')?.value||0);
-    if(Q<=0 && kg<=0){errEl.textContent=t('valWeight');errEl.style.display='block';return;}
-
-    const dQ=curHarvest!=='box'?Number(document.getElementById('f_C_dQ')?.value||0):0;
-    const dKg=curHarvest!=='box'?Number(document.getElementById('f_C_dKg')?.value||0):0;
-    const is3=curHarvest!=='box'?(document.getElementById('f_C_3pct')?.checked||false):false;
-    const c=calcFarm(Q,kg,dQ,dKg,is3,0,0,rate);
+    if(Q<=0 && kg<=0){errEl.textContent=window.t('valWeight');errEl.style.display='block';return;}
+    const dQ=window.curHarvest!=='box'?Number(document.getElementById('f_C_dQ')?.value||0):0;
+    const dKg=window.curHarvest!=='box'?Number(document.getElementById('f_C_dKg')?.value||0):0;
+    const is3=window.curHarvest!=='box'?(document.getElementById('f_C_3pct')?.checked||false):false;
+    const c=window.calcFarm(Q,kg,dQ,dKg,is3,0,0,rate);
     netWQ=c.netWQ; totalGross=c.gross;
 
     rec.c_totalWQ=Q; rec.c_totalWKg=kg; rec.c_totalWeightQ=c.totalWQ;
     rec.c_dedQ=dQ; rec.c_dedKg=dKg; rec.c_deductionQ=c.dedQ;
     rec.c_is3Pct=is3; rec.c_threePctDed=c.threePct; rec.c_netWeightQ=c.netWQ;
     rec.c_grossIncome=c.gross;
-    rec.c_photoTollBefore=photoTargets['tollBefore']||null;
-    rec.c_photoTollAfter=photoTargets['tollAfter']||null;
-    rec.c_photoPatti=[0,1,2].map(i=>photoTargets[`patti_${i}`]||null).filter(Boolean);
+    rec.c_photoTollBefore=window.photoTargets['tollBefore']||null;
+    rec.c_photoTollAfter=window.photoTargets['tollAfter']||null;
+    rec.c_photoPatti=[0,1,2].map(i=>window.photoTargets[`patti_${i}`]||null).filter(Boolean);
 
     ['M','P'].forEach(fm=>{
       const ghads=Number(document.getElementById(`f_${fm}_ghads`)?.value||0);
       const labRate=Number(document.getElementById(`f_${fm}_labRate`)?.value||10)||10;
       const labCost=ghads*labRate;
       const p=fm.toLowerCase();
-      rec[`${p}_ghads`]=ghads;
-      rec[`${p}_labourRate`]=labRate;
-      rec[`${p}_totalLabour`]=labCost;
+      rec[`${p}_ghads`]=ghads; rec[`${p}_labourRate`]=labRate; rec[`${p}_totalLabour`]=labCost;
       totalLabour+=labCost;
     });
     totalNet=totalGross-totalLabour;
 
   } else {
-    const fm=curFarm;
+    const fm=window.curFarm;
     const Q=Number(document.getElementById(`f_${fm}_wQ`)?.value||0);
     const kg=Number(document.getElementById(`f_${fm}_wKg`)?.value||0);
-    if(Q<=0 && kg<=0){errEl.textContent=t('valWeight');errEl.style.display='block';return;}
-
-    const dQ=curHarvest!=='box'?Number(document.getElementById(`f_${fm}_dQ`)?.value||0):0;
-    const dKg=curHarvest!=='box'?Number(document.getElementById(`f_${fm}_dKg`)?.value||0):0;
-    const is3=curHarvest!=='box'?(document.getElementById(`f_${fm}_3pct`)?.checked||false):false;
+    if(Q<=0 && kg<=0){errEl.textContent=window.t('valWeight');errEl.style.display='block';return;}
+    const dQ=window.curHarvest!=='box'?Number(document.getElementById(`f_${fm}_dQ`)?.value||0):0;
+    const dKg=window.curHarvest!=='box'?Number(document.getElementById(`f_${fm}_dKg`)?.value||0):0;
+    const is3=window.curHarvest!=='box'?(document.getElementById(`f_${fm}_3pct`)?.checked||false):false;
     const ghads=Number(document.getElementById(`f_${fm}_ghads`)?.value||0);
     const labRate=Number(document.getElementById(`f_${fm}_labRate`)?.value||10)||10;
-    const c=calcFarm(Q,kg,dQ,dKg,is3,ghads,labRate,rate);
+    const c=window.calcFarm(Q,kg,dQ,dKg,is3,ghads,labRate,rate);
     const p=fm.toLowerCase();
 
     rec[`${p}_totalWQ`]=Q;rec[`${p}_totalWKg`]=kg;rec[`${p}_totalWeightQ`]=c.totalWQ;
@@ -2129,9 +1406,9 @@ function saveRecord(){
     rec[`${p}_is3Pct`]=is3;rec[`${p}_threePctDed`]=c.threePct;rec[`${p}_netWeightQ`]=c.netWQ;
     rec[`${p}_ghads`]=ghads;rec[`${p}_labourRate`]=labRate;rec[`${p}_totalLabour`]=c.labCost;
     rec[`${p}_grossIncome`]=c.gross;rec[`${p}_netIncome`]=c.net;
-    rec[`${p}_photoTollBefore`]=photoTargets['tollBefore']||null;
-    rec[`${p}_photoTollAfter`]=photoTargets['tollAfter']||null;
-    rec[`${p}_photoPatti`]=[0,1,2].map(i=>photoTargets[`patti_${i}`]||null).filter(Boolean);
+    rec[`${p}_photoTollBefore`]=window.photoTargets['tollBefore']||null;
+    rec[`${p}_photoTollAfter`]=window.photoTargets['tollAfter']||null;
+    rec[`${p}_photoPatti`]=[0,1,2].map(i=>window.photoTargets[`patti_${i}`]||null).filter(Boolean);
 
     totalNet=c.net; totalGross=c.gross; totalLabour=c.labCost; netWQ=c.netWQ;
   }
@@ -2142,25 +1419,30 @@ function saveRecord(){
   rec.combinedNetIncome=totalNet;
   rec.pending=Math.max(0,totalNet-received);
 
-  const recs=getRecords();
-  recs.unshift(rec);
-  saveRecords(recs);
-  hideOverlay('formOverlay');
-  showToast(t('saved'));
-  renderAll();
-  syncToDriveIfConnected();
+  if(!window.currentUserUid) return;
+  try {
+    const recordRef = doc(db, "users", window.currentUserUid, "records", rec.id);
+    await setDoc(recordRef, rec);
+    window.hideOverlay('formOverlay');
+    window.showToast(window.t('saved'));
+    await fetchCloudData();
+  } catch (error) {
+    console.error("Save Error:", error);
+    alert("नोंद जतन करता आली नाही. इंटरनेट तपासा.");
+  }
 }
 
-function openPhotoSheet(key){
-  document.getElementById('sheetTitle').textContent=t('addPhoto');
+window.openPhotoSheet = function(key){
+  document.getElementById('sheetTitle').textContent=window.t('addPhoto');
   document.getElementById('sheetContent').innerHTML=`
-    <label class="sheet-btn"><input type="file" accept="image/*" capture="environment" style="display:none" onchange="handlePhoto(event,'${key}')">📷 ${t('camera')}</label>
-    <label class="sheet-btn"><input type="file" accept="image/*" style="display:none" onchange="handlePhoto(event,'${key}')">🖼️ ${t('gallery')}</label>`;
+    <label class="sheet-btn"><input type="file" accept="image/*" capture="environment" style="display:none" onchange="window.handlePhoto(event,'${key}')">📷 ${window.t('camera')}</label>
+    <label class="sheet-btn"><input type="file" accept="image/*" style="display:none" onchange="window.handlePhoto(event,'${key}')">🖼️ ${window.t('gallery')}</label>`;
   document.getElementById('sheetOverlay').classList.add('open');
 }
-function handlePhoto(e,key){
+
+window.handlePhoto = function(e,key){
   const file=e.target.files[0];if(!file)return;
-  closeSheet();
+  window.closeSheet();
   const reader=new FileReader();
   reader.onload=ev=>{
     const img=new Image();
@@ -2171,52 +1453,52 @@ function handlePhoto(e,key){
       canvas.width=w;canvas.height=h;
       canvas.getContext('2d').drawImage(img,0,0,w,h);
       const b64=canvas.toDataURL('image/jpeg',0.6);
-      photoTargets[key]=b64;
-      updatePhotoSlot(key,b64);
+      window.photoTargets[key]=b64;
+      window.updatePhotoSlot(key,b64);
     };
     img.src=ev.target.result;
   };
   reader.readAsDataURL(file);
 }
-function updatePhotoSlot(key,b64){
+window.updatePhotoSlot = function(key,b64){
   const slot=document.getElementById(`slot_${key}`);
   if(!slot)return;
-  slot.innerHTML=`<img src="${b64}" alt=""><button class="del-photo" onclick="delPhoto(event,'${key}')">✕</button>`;
+  slot.innerHTML=`<img src="${b64}" alt=""><button class="del-photo" onclick="window.delPhoto(event,'${key}')">✕</button>`;
 }
-function delPhoto(e,key){
+window.delPhoto = function(e,key){
   e.stopPropagation();
-  delete photoTargets[key];
+  delete window.photoTargets[key];
   const slot=document.getElementById(`slot_${key}`);
-  if(slot)slot.innerHTML=`📷<span>${t('addPhoto')}</span>`;
+  if(slot)slot.innerHTML=`📷<span>${window.t('addPhoto')}</span>`;
 }
 
-function openDetail(id){
-  const r=getRecords().find(x=>x.id===id);
+window.openDetail = function(id){
+  const r=window.getRecords().find(x=>x.id===id);
   if(!r)return;
-  showOverlay('detailOverlay');
-  document.getElementById('detailTitle').textContent=t('recordDetail');
+  window.showOverlay('detailOverlay');
+  document.getElementById('detailTitle').textContent=window.t('recordDetail');
   const htLabel=r.harvestType==='ghad'?'केळीचे घड':r.harvestType==='box'?'Box Packing':'फणाया';
   const farmType = r.farmType || 'M';
   const farmBadge=farmType==='M'?`<span class="badge badge-m">शेत म</span>`:farmType==='P'?`<span class="badge badge-p">शेत प</span>`:`<span class="badge badge-mp">म+प</span>`;
   let html=`<div class="card">
     <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px">${farmBadge}<span class="badge" style="background:#f1f5f9;color:var(--muted)">${htLabel}</span></div>
-    <div class="detail-row"><span class="label">${t('trader')}</span><span class="val">${r.traderName}</span></div>
-    <div class="detail-row"><span class="label">${t('date')}</span><span class="val">${fmtDate(r.date)}</span></div>
-    ${r.vehicle?`<div class="detail-row"><span class="label">${t('vehicle')}</span><span class="val">${r.vehicle}</span></div>`:''}
+    <div class="detail-row"><span class="label">${window.t('trader')}</span><span class="val">${r.traderName}</span></div>
+    <div class="detail-row"><span class="label">${window.t('date')}</span><span class="val">${window.fmtDate(r.date)}</span></div>
+    ${r.vehicle?`<div class="detail-row"><span class="label">${window.t('vehicle')}</span><span class="val">${r.vehicle}</span></div>`:''}
   </div>`;
   const farmRows=(fm,prefix)=>{
-    const label=fm==='M'?t('farmMFull'):t('farmPFull');
+    const label=fm==='M'?window.t('farmMFull'):window.t('farmPFull');
     let h=`<div class="farm-header">🌿 ${label}</div><div class="card">`;
-    h+=`<div class="detail-row"><span class="label">${t('weight')}</span><span class="val">${r[`${prefix}totalWQ`]||0} Q + ${r[`${prefix}totalWKg`]||0} kg = ${fmtQ(r[`${prefix}totalWeightQ`]||0)} Q</span></div>`;
+    h+=`<div class="detail-row"><span class="label">${window.t('weight')}</span><span class="val">${r[`${prefix}totalWQ`]||0} Q + ${r[`${prefix}totalWKg`]||0} kg = ${window.fmtQ(r[`${prefix}totalWeightQ`]||0)} Q</span></div>`;
     if((r.harvestType||'ghad')!=='box'){
-      h+=`<div class="detail-row"><span class="label">${t('deduction')}</span><span class="val">${fmtQ(r[`${prefix}deductionQ`]||0)} Q</span></div>`;
-      if(r[`${prefix}is3Pct`])h+=`<div class="detail-row"><span class="label">${t('threePct')}</span><span class="val">-${fmtQ(r[`${prefix}threePctDed`]||0)} Q</span></div>`;
+      h+=`<div class="detail-row"><span class="label">${window.t('deduction')}</span><span class="val">${window.fmtQ(r[`${prefix}deductionQ`]||0)} Q</span></div>`;
+      if(r[`${prefix}is3Pct`])h+=`<div class="detail-row"><span class="label">${window.t('threePct')}</span><span class="val">-${window.fmtQ(r[`${prefix}threePctDed`]||0)} Q</span></div>`;
     }
-    h+=`<div class="detail-row"><span class="label">${t('netWeight')}</span><span class="val" style="color:var(--blue)">${fmtQ(r[`${prefix}netWeightQ`]||0)} Q</span></div>`;
-    h+=`<div class="detail-row"><span class="label">${t('rate')}</span><span class="val">₹${fmt(r.rate)}/Q</span></div>`;
-    h+=`<div class="detail-row"><span class="label">${t('grossIncome')}</span><span class="val">₹${fmt(r[`${prefix}grossIncome`]||0)}</span></div>`;
-    h+=`<div class="detail-row"><span class="label">${t('ghadsCount')}</span><span class="val">${r[`${prefix}ghads`]||0} × ₹${r[`${prefix}labourRate`]||10} = ₹${fmt(r[`${prefix}totalLabour`]||0)}</span></div>`;
-    h+=`<div class="detail-row"><span class="label">${t('netIncome')}</span><span class="val" style="color:var(--green);font-size:16px">₹${fmt(r[`${prefix}netIncome`]||0)}</span></div>`;
+    h+=`<div class="detail-row"><span class="label">${window.t('netWeight')}</span><span class="val" style="color:var(--blue)">${window.fmtQ(r[`${prefix}netWeightQ`]||0)} Q</span></div>`;
+    h+=`<div class="detail-row"><span class="label">${window.t('rate')}</span><span class="val">₹${window.fmt(r.rate)}/Q</span></div>`;
+    h+=`<div class="detail-row"><span class="label">${window.t('grossIncome')}</span><span class="val">₹${window.fmt(r[`${prefix}grossIncome`]||0)}</span></div>`;
+    h+=`<div class="detail-row"><span class="label">${window.t('ghadsCount')}</span><span class="val">${r[`${prefix}ghads`]||0} × ₹${r[`${prefix}labourRate`]||10} = ₹${window.fmt(r[`${prefix}totalLabour`]||0)}</span></div>`;
+    h+=`<div class="detail-row"><span class="label">${window.t('netIncome')}</span><span class="val" style="color:var(--green);font-size:16px">₹${window.fmt(r[`${prefix}netIncome`]||0)}</span></div>`;
     h+='</div>';
     const photos=[];
     if(r[`${prefix}photoTollBefore`])photos.push({src:r[`${prefix}photoTollBefore`],lbl:`${fm} — टोल आधी`});
@@ -2224,21 +1506,21 @@ function openDetail(id){
     (r[`${prefix}photoPatti`]||[]).forEach((s,i)=>{if(s)photos.push({src:s,lbl:`${fm} — पट्टी ${i+1}`});});
     if(photos.length){
       h+=`<div class="photo-slots" style="grid-template-columns:repeat(3,1fr);margin-bottom:10px">`;
-      photos.forEach(ph=>{h+=`<div style="position:relative;aspect-ratio:1;border-radius:8px;overflow:hidden;cursor:pointer" onclick="openLightbox('${ph.src}')"><img src="${ph.src}" style="width:100%;height:100%;object-fit:cover"><div style="position:absolute;bottom:0;left:0;right:0;background:rgba(0,0,0,.5);color:#fff;font-size:9px;padding:2px 4px">${ph.lbl}</div></div>`;});
+      photos.forEach(ph=>{h+=`<div style="position:relative;aspect-ratio:1;border-radius:8px;overflow:hidden;cursor:pointer" onclick="window.openLightbox('${ph.src}')"><img src="${ph.src}" style="width:100%;height:100%;object-fit:cover"><div style="position:absolute;bottom:0;left:0;right:0;background:rgba(0,0,0,.5);color:#fff;font-size:9px;padding:2px 4px">${ph.lbl}</div></div>`;});
       h+='</div>';
     }
     return h;
   };
   if(farmType==='MP'){
     html+=`<div class="farm-header">🌿🌿 एकत्रित मोजणी</div><div class="card">`;
-    html+=`<div class="detail-row"><span class="label">${t('weight')}</span><span class="val">${r.c_totalWQ||0} Q + ${r.c_totalWKg||0} kg = ${fmtQ(r.c_totalWeightQ||0)} Q</span></div>`;
+    html+=`<div class="detail-row"><span class="label">${window.t('weight')}</span><span class="val">${r.c_totalWQ||0} Q + ${r.c_totalWKg||0} kg = ${window.fmtQ(r.c_totalWeightQ||0)} Q</span></div>`;
     if((r.harvestType||'ghad')!=='box'){
-      html+=`<div class="detail-row"><span class="label">${t('deduction')}</span><span class="val">${fmtQ(r.c_deductionQ||0)} Q</span></div>`;
-      if(r.c_is3Pct)html+=`<div class="detail-row"><span class="label">${t('threePct')}</span><span class="val">-${fmtQ(r.c_threePctDed||0)} Q</span></div>`;
+      html+=`<div class="detail-row"><span class="label">${window.t('deduction')}</span><span class="val">${window.fmtQ(r.c_deductionQ||0)} Q</span></div>`;
+      if(r.c_is3Pct)html+=`<div class="detail-row"><span class="label">${window.t('threePct')}</span><span class="val">-${window.fmtQ(r.c_threePctDed||0)} Q</span></div>`;
     }
-    html+=`<div class="detail-row"><span class="label">${t('netWeight')}</span><span class="val" style="color:var(--blue)">${fmtQ(r.c_netWeightQ||0)} Q</span></div>`;
-    html+=`<div class="detail-row"><span class="label">${t('rate')}</span><span class="val">₹${fmt(r.rate)}/Q</span></div>`;
-    html+=`<div class="detail-row"><span class="label">एकत्रित उत्पन्न (Gross)</span><span class="val">₹${fmt(r.c_grossIncome||0)}</span></div>`;
+    html+=`<div class="detail-row"><span class="label">${window.t('netWeight')}</span><span class="val" style="color:var(--blue)">${window.fmtQ(r.c_netWeightQ||0)} Q</span></div>`;
+    html+=`<div class="detail-row"><span class="label">${window.t('rate')}</span><span class="val">₹${window.fmt(r.rate)}/Q</span></div>`;
+    html+=`<div class="detail-row"><span class="label">एकत्रित उत्पन्न (Gross)</span><span class="val">₹${window.fmt(r.c_grossIncome||0)}</span></div>`;
     html+='</div>';
 
     const photos=[];
@@ -2247,176 +1529,204 @@ function openDetail(id){
     (r.c_photoPatti||[]).forEach((s,i)=>{if(s)photos.push({src:s,lbl:`पट्टी ${i+1}`});});
     if(photos.length){
       html+=`<div class="photo-slots" style="grid-template-columns:repeat(3,1fr);margin-bottom:10px">`;
-      photos.forEach(ph=>{html+=`<div style="position:relative;aspect-ratio:1;border-radius:8px;overflow:hidden;cursor:pointer" onclick="openLightbox('${ph.src}')"><img src="${ph.src}" style="width:100%;height:100%;object-fit:cover"><div style="position:absolute;bottom:0;left:0;right:0;background:rgba(0,0,0,.5);color:#fff;font-size:9px;padding:2px 4px">${ph.lbl}</div></div>`;});
+      photos.forEach(ph=>{html+=`<div style="position:relative;aspect-ratio:1;border-radius:8px;overflow:hidden;cursor:pointer" onclick="window.openLightbox('${ph.src}')"><img src="${ph.src}" style="width:100%;height:100%;object-fit:cover"><div style="position:absolute;bottom:0;left:0;right:0;background:rgba(0,0,0,.5);color:#fff;font-size:9px;padding:2px 4px">${ph.lbl}</div></div>`;});
       html+='</div>';
     }
 
     html+=`<div class="farm-header">👷 मजुरी (शेतनिहाय)</div><div class="card">`;
     ['M','P'].forEach(fm=>{
-      const label=fm==='M'?t('farmMLong'):t('farmPLong');
+      const label=fm==='M'?window.t('farmMLong'):window.t('farmPLong');
       const p=fm.toLowerCase();
-      html+=`<div class="detail-row"><span class="label">${label}</span><span class="val">${r[`${p}_ghads`]||0} घड × ₹${r[`${p}_labourRate`]||10} = ₹${fmt(r[`${p}_totalLabour`]||0)}</span></div>`;
+      html+=`<div class="detail-row"><span class="label">${label}</span><span class="val">${r[`${p}_ghads`]||0} घड × ₹${r[`${p}_labourRate`]||10} = ₹${window.fmt(r[`${p}_totalLabour`]||0)}</span></div>`;
     });
-    html+=`<div class="detail-row" style="border-top:2px solid var(--border);margin-top:6px;padding-top:8px"><span class="label" style="font-weight:700">एकूण मजुरी</span><span class="val">₹${fmt(r.combinedLabour||0)}</span></div>`;
+    html+=`<div class="detail-row" style="border-top:2px solid var(--border);margin-top:6px;padding-top:8px"><span class="label" style="font-weight:700">एकूण मजुरी</span><span class="val">₹${window.fmt(r.combinedLabour||0)}</span></div>`;
     html+='</div>';
 
     html+=`<div class="farm-header">📊 अंतिम निव्वळ उत्पन्न</div><div class="card">
-      <div class="detail-row"><span class="label">एकत्रित Gross</span><span class="val">₹${fmt(r.combinedGrossIncome||0)}</span></div>
-      <div class="detail-row"><span class="label">वजा एकूण मजुरी</span><span class="val" style="color:var(--red)">-₹${fmt(r.combinedLabour||0)}</span></div>
-      <div class="detail-row"><span class="label" style="font-weight:700">निव्वळ उत्पन्न</span><span class="val" style="color:var(--green);font-size:16px">₹${fmt(r.combinedNetIncome)}</span></div>
+      <div class="detail-row"><span class="label">एकत्रित Gross</span><span class="val">₹${window.fmt(r.combinedGrossIncome||0)}</span></div>
+      <div class="detail-row"><span class="label">वजा एकूण मजुरी</span><span class="val" style="color:var(--red)">-₹${window.fmt(r.combinedLabour||0)}</span></div>
+      <div class="detail-row"><span class="label" style="font-weight:700">निव्वळ उत्पन्न</span><span class="val" style="color:var(--green);font-size:16px">₹${window.fmt(r.combinedNetIncome)}</span></div>
     </div>`;
   } else {
     if(farmType==='M') html+=farmRows('M','m_');
     if(farmType==='P') html+=farmRows('P','p_');
   }
-  html+=`<div class="farm-header">💰 ${t('payment')}</div><div class="card">
-    <div class="detail-row"><span class="label">${t('netIncome')}</span><span class="val" style="color:var(--green)">₹${fmt(r.combinedNetIncome)}</span></div>
-    <div class="detail-row"><span class="label">${t('received')}</span><span class="val">₹${fmt(r.received)}</span></div>
-    <div class="detail-row"><span class="label">${t('pending')}</span><span class="val" style="color:var(--red)">₹${fmt(r.pending)}</span></div>
+  html+=`<div class="farm-header">💰 ${window.t('payment')}</div><div class="card">
+    <div class="detail-row"><span class="label">${window.t('netIncome')}</span><span class="val" style="color:var(--green)">₹${window.fmt(r.combinedNetIncome)}</span></div>
+    <div class="detail-row"><span class="label">${window.t('received')}</span><span class="val">₹${window.fmt(r.received)}</span></div>
+    <div class="detail-row"><span class="label">${window.t('pending')}</span><span class="val" style="color:var(--red)">₹${window.fmt(r.pending)}</span></div>
   </div>`;
-  if(r.note)html+=`<div class="card"><div class="detail-row"><span class="label">${t('note')}</span><span class="val">${r.note}</span></div></div>`;
+  if(r.note)html+=`<div class="card"><div class="detail-row"><span class="label">${window.t('note')}</span><span class="val">${r.note}</span></div></div>`;
   const modeIcon={'cash':'💵','cheque':'🏦','rtgs':'🔁','phonepay':'📱','gpay':'📱','upi':'📲'};
-  const modeLabel={'cash':t('modeCash'),'cheque':t('modeCheque'),'rtgs':t('modeRTGS'),'phonepay':t('modePhonePe'),'gpay':t('modeGPay'),'upi':t('modeUPI')};
+  const modeLabel={'cash':window.t('modeCash'),'cheque':window.t('modeCheque'),'rtgs':window.t('modeRTGS'),'phonepay':window.t('modePhonePe'),'gpay':window.t('modeGPay'),'upi':window.t('modeUPI')};
   if(r.payments && r.payments.length){
-    html+=`<div class="farm-header">💳 ${t('payHistory')}</div><div class="card">`;
+    html+=`<div class="farm-header">💳 ${window.t('payHistory')}</div><div class="card">`;
     r.payments.forEach((p,i)=>{
       const icon=modeIcon[p.mode]||'💵';
       const label=modeLabel[p.mode]||p.mode;
       html+=`<div class="detail-row" style="flex-wrap:wrap;gap:4px">
         <div>
           <div style="font-weight:600;font-size:14px">${icon} ${label}</div>
-          <div style="font-size:11px;color:var(--muted)">${fmtDate(p.date)}${p.ref?' · '+p.ref:''}</div>
+          <div style="font-size:11px;color:var(--muted)">${window.fmtDate(p.date)}${p.ref?' · '+p.ref:''}</div>
         </div>
-        <div style="font-weight:700;font-size:16px;color:var(--green)">₹${fmt(p.amt)}</div>
+        <div style="font-weight:700;font-size:16px;color:var(--green)">₹${window.fmt(p.amt)}</div>
       </div>`;
     });
     const totalPaid=r.payments.reduce((s,p)=>s+p.amt,0);
     html+=`<div style="display:flex;justify-content:space-between;padding:8px 0;margin-top:4px;border-top:2px solid var(--border);font-weight:700">
-      <span>एकूण जमा</span><span style="color:var(--green)">₹${fmt(totalPaid)}</span>
+      <span>एकूण जमा</span><span style="color:var(--green)">₹${window.fmt(totalPaid)}</span>
     </div></div>`;
   } else {
-    html+=`<div class="farm-header">💳 ${t('payHistory')}</div>
-      <div class="card" style="text-align:center;color:var(--muted);padding:16px">${t('noPayments')}</div>`;
+    html+=`<div class="farm-header">💳 ${window.t('payHistory')}</div>
+      <div class="card" style="text-align:center;color:var(--muted);padding:16px">${window.t('noPayments')}</div>`;
   }
-  if((r.pending||0)>0)html+=`<button class="pay-btn" onclick="openPaySheet('${r.id}')">${t('payNow')}</button>`;
+  if((r.pending||0)>0)html+=`<button class="pay-btn" onclick="window.openPaySheet('${r.id}')">${window.t('payNow')}</button>`;
   else html+=`<div style="background:var(--green-light);border:1px solid #a8dbbf;border-radius:10px;padding:12px;text-align:center;color:var(--green);font-weight:600;margin-bottom:8px">✅ पूर्ण पेमेंट झाले</div>`;
-  html+=`<button class="danger-btn" onclick="deleteRecord('${r.id}')">${t('delete')}</button>`;
+  html+=`<button class="danger-btn" onclick="window.deleteRecordFromDetail('${r.id}')">${window.t('delete')}</button>`;
   document.getElementById('detailBody').innerHTML=html;
 }
-document.getElementById('detailBack').addEventListener('click',()=>{ hideOverlay('detailOverlay');});
+document.getElementById('detailBack').addEventListener('click',()=>{ window.hideOverlay('detailOverlay');});
 
-function openPaySheet(id){
-  const today2=today();
-  document.getElementById('sheetTitle').textContent=t('payNow');
+window.openPaySheet = function(id){
+  const today2=window.today();
+  document.getElementById('sheetTitle').textContent=window.t('payNow');
   document.getElementById('sheetContent').innerHTML=`
-    <div class="form-group">
-      <label class="form-label">${t('payAmount')}</label>
-      <input type="number" class="form-input" id="payInput" placeholder="0" style="font-size:20px;font-weight:700;color:var(--green)">
-    </div>
-    <div class="form-group">
-      <label class="form-label">${t('payDate')}</label>
-      <input type="date" class="form-input" id="payDate" value="${today2}">
-    </div>
-    <div class="form-group">
-      <label class="form-label">${t('payMode')}</label>
+    <div class="form-group"><label class="form-label">${window.t('payAmount')}</label><input type="number" class="form-input" id="payInput" placeholder="0" style="font-size:20px;font-weight:700;color:var(--green)"></div>
+    <div class="form-group"><label class="form-label">${window.t('payDate')}</label><input type="date" class="form-input" id="payDate" value="${today2}"></div>
+    <div class="form-group"><label class="form-label">${window.t('payMode')}</label>
       <select class="form-input form-select" id="payMode">
-        <option value="cash">💵 ${t('modeCash')}</option>
-        <option value="cheque">🏦 ${t('modeCheque')}</option>
-        <option value="rtgs">🔁 ${t('modeRTGS')}</option>
-        <option value="phonepay">📱 ${t('modePhonePe')}</option>
-        <option value="gpay">📱 ${t('modeGPay')}</option>
-        <option value="upi">📲 ${t('modeUPI')}</option>
+        <option value="cash">💵 ${window.t('modeCash')}</option>
+        <option value="cheque">🏦 ${window.t('modeCheque')}</option>
+        <option value="rtgs">🔁 ${window.t('modeRTGS')}</option>
+        <option value="phonepay">📱 ${window.t('modePhonePe')}</option>
+        <option value="gpay">📱 ${window.t('modeGPay')}</option>
+        <option value="upi">📲 ${window.t('modeUPI')}</option>
       </select>
     </div>
-    <div class="form-group">
-      <label class="form-label">${t('payRef')} <span style="color:var(--muted);font-size:11px">(${t('optional')})</span></label>
-      <input type="text" class="form-input" id="payRef" placeholder="${t('payRefHint')}">
-    </div>
-    <button class="pay-btn" onclick="savePayment('${id}')">${t('payNow')}</button>`;
+    <div class="form-group"><label class="form-label">${window.t('payRef')} <span style="color:var(--muted);font-size:11px">(${window.t('optional')})</span></label><input type="text" class="form-input" id="payRef" placeholder="${window.t('payRefHint')}"></div>
+    <button class="pay-btn" onclick="window.savePayment('${id}')">${window.t('payNow')}</button>`;
   document.getElementById('sheetOverlay').classList.add('open');
 }
-function savePayment(id){
+
+// FIREBASE UPDATE PAYMENT
+window.savePayment = async function(id){
   const amt=Number(document.getElementById('payInput')?.value||0);
-  if(!amt){showToast(t('valPayAmt'));return;}
-  const payDate=document.getElementById('payDate')?.value||today();
+  if(!amt){window.showToast(window.t('valPayAmt'));return;}
+  const payDate=document.getElementById('payDate')?.value||window.today();
   const payMode=document.getElementById('payMode')?.value||'cash';
   const payRef=document.getElementById('payRef')?.value||'';
-  const recs=getRecords();
+  
+  const recs=window.getRecords();
   const r=recs.find(x=>x.id===id);if(!r)return;
+  
   r.received=(r.received||0)+amt;
   r.pending=Math.max(0,r.combinedNetIncome-r.received);
   if(!r.payments) r.payments=[];
   r.payments.push({amt, date:payDate, mode:payMode, ref:payRef, addedAt:Date.now()});
-  saveRecords(recs);closeSheet();openDetail(id);
-  showToast(t('paymentSaved'));renderAll();
-  syncToDriveIfConnected();
+  
+  if(!window.currentUserUid) return;
+  try {
+    const recordRef = doc(db, "users", window.currentUserUid, "records", r.id);
+    await setDoc(recordRef, r);
+    window.closeSheet();
+    window.openDetail(id);
+    window.showToast(window.t('paymentSaved'));
+    await fetchCloudData();
+  } catch(error) {
+    console.error("Payment Error:", error);
+    alert("पेमेंट जतन करता आले नाही.");
+  }
 }
 
-function deleteRecord(id){
-  if(!confirm(t('confirmDelete')))return;
-  const recs = getRecords().filter(r=>r.id!==id);
-  saveRecords(recs);
-  hideOverlay('detailOverlay');
-  showToast(t('deleted'));renderAll();
-  syncToDriveIfConnected();
+window.deleteRecordFromDetail = async function(id){
+  if(!confirm(window.t('confirmDelete')))return;
+  if(!window.currentUserUid) return;
+  try {
+    const recordRef = doc(db, "users", window.currentUserUid, "records", id);
+    await deleteDoc(recordRef);
+    window.hideOverlay('detailOverlay');
+    window.showToast(window.t('deleted'));
+    await fetchCloudData(); 
+  } catch(error) {
+    console.error("Delete Error:", error);
+    alert("इंटरनेट कनेक्शन तपासा.");
+  }
 }
 
 document.getElementById('addTraderBtn').addEventListener('click',()=>{
-  editingTrader=null;
+  window.editingTrader=null;
   ['tf_name','tf_phone','tf_village','tf_note'].forEach(id=>document.getElementById(id).value='');
-  showOverlay('traderFormOverlay');
+  window.showOverlay('traderFormOverlay');
 });
-document.getElementById('traderFormBack').addEventListener('click',()=>{ hideOverlay('traderFormOverlay');});
-document.getElementById('saveTraderBtn').addEventListener('click',()=>{
+document.getElementById('traderFormBack').addEventListener('click',()=>{ window.hideOverlay('traderFormOverlay');});
+
+// FIREBASE SAVE TRADER
+document.getElementById('saveTraderBtn').addEventListener('click', async ()=>{
   const name=document.getElementById('tf_name').value.trim();
-  if(!name){showToast('नाव आवश्यकীয় आहे');return;}
-  const traders=getTraders();
-  const tr={id:editingTrader||genId(),name,phone:document.getElementById('tf_phone').value,village:document.getElementById('tf_village').value,note:document.getElementById('tf_note').value};
-  if(editingTrader){const i=traders.findIndex(t=>t.id===editingTrader);if(i>=0)traders[i]=tr;}
-  else traders.push(tr);
-  saveTraders(traders);
-  hideOverlay('traderFormOverlay');
-  showToast(t('traderSaved'));renderTraders();
+  if(!name){window.showToast('नाव आवश्यक आहे');return;}
+  if(!window.currentUserUid) return;
+
+  const trId = window.editingTrader || window.genId();
+  const tr={id:trId, name, phone:document.getElementById('tf_phone').value, village:document.getElementById('tf_village').value, note:document.getElementById('tf_note').value};
+  
+  try {
+    const traderRef = doc(db, "users", window.currentUserUid, "traders", trId);
+    await setDoc(traderRef, tr);
+    window.hideOverlay('traderFormOverlay');
+    window.showToast(window.t('traderSaved'));
+    await fetchCloudData();
+  } catch(error) {
+    console.error("Trader Error:", error);
+    alert("व्यापारी जतन करता आला नाही.");
+  }
 });
 
-function openLedger(traderId){
-  const trader=getTraders().find(x=>x.id===traderId);if(!trader)return;
-  const recs=getRecords().filter(r=>r.traderId===traderId).sort((a,b)=>(b.date||'').localeCompare(a.date||''));
+window.openLedger = function(traderId){
+  const trader=window.getTraders().find(x=>x.id===traderId);if(!trader)return;
+  const recs=window.getRecords().filter(r=>r.traderId===traderId).sort((a,b)=>(b.date||'').localeCompare(a.date||''));
   const totInc=recs.reduce((s,r)=>s+(r.combinedNetIncome||0),0);
   const totRec=recs.reduce((s,r)=>s+(r.received||0),0);
   const totPend=recs.reduce((s,r)=>s+(r.pending||0),0);
   const totWQ=recs.reduce((s,r)=>s+(r.combinedNetWeightQ||0),0);
   document.getElementById('ledgerTitle').textContent=trader.name;
   let html=`<div class="stat-grid" style="margin-bottom:12px">
-    <div class="stat-card"><div class="stat-label">${t('totalIncome')}</div><div class="stat-val">₹${fmt(totInc)}</div></div>
-    <div class="stat-card"><div class="stat-label">${t('pending')}</div><div class="stat-val red">₹${fmt(totPend)}</div></div>
-    <div class="stat-card"><div class="stat-label">${t('received')}</div><div class="stat-val">₹${fmt(totRec)}</div></div>
-    <div class="stat-card"><div class="stat-label">${t('totalWeight')} Q</div><div class="stat-val blue">${fmtQ(totWQ)}</div></div>
+    <div class="stat-card"><div class="stat-label">${window.t('totalIncome')}</div><div class="stat-val">₹${window.fmt(totInc)}</div></div>
+    <div class="stat-card"><div class="stat-label">${window.t('pending')}</div><div class="stat-val red">₹${window.fmt(totPend)}</div></div>
+    <div class="stat-card"><div class="stat-label">${window.t('received')}</div><div class="stat-val">₹${window.fmt(totRec)}</div></div>
+    <div class="stat-card"><div class="stat-label">${window.t('totalWeight')} Q</div><div class="stat-val blue">${window.fmtQ(totWQ)}</div></div>
   </div>`;
-  html+=recs.map(r=>recCardHTML(r)).join('')||`<div class="empty-state"><span class="emoji">📋</span>${t('noRecords')}</div>`;
-  html+=`<button class="danger-btn" onclick="deleteTrader('${traderId}')" style="margin-top:12px">व्यापारी हटवा</button>`;
+  html+=recs.map(r=>window.recCardHTML(r)).join('')||`<div class="empty-state"><span class="emoji">📋</span>${window.t('noRecords')}</div>`;
+  html+=`<button class="danger-btn" onclick="window.deleteTrader('${traderId}')" style="margin-top:12px">व्यापारी हटवा</button>`;
   document.getElementById('ledgerBody').innerHTML=html;
-  showOverlay('ledgerOverlay');
+  window.showOverlay('ledgerOverlay');
 }
-function deleteTrader(id){
+
+// FIREBASE DELETE TRADER
+window.deleteTrader = async function(id){
   if(!confirm('व्यापारी हटवायचा आहे का?'))return;
-  const tr = getTraders().filter(t=>t.id!==id);
-  saveTraders(tr);
-  hideOverlay('ledgerOverlay');
-  showToast(t('traderDeleted'));renderTraders();
+  if(!window.currentUserUid) return;
+  try {
+    const traderRef = doc(db, "users", window.currentUserUid, "traders", id);
+    await deleteDoc(traderRef);
+    window.hideOverlay('ledgerOverlay');
+    window.showToast(window.t('traderDeleted'));
+    await fetchCloudData();
+  } catch(error) {
+    console.error("Trader Delete Error:", error);
+    alert("हटवता आले नाही.");
+  }
 }
-document.getElementById('ledgerBack').addEventListener('click',()=>{ hideOverlay('ledgerOverlay');});
-document.getElementById('editConfirmBack').addEventListener('click',()=>{ hideOverlay('editConfirmOverlay');});
+document.getElementById('ledgerBack').addEventListener('click',()=>{ window.hideOverlay('ledgerOverlay');});
+document.getElementById('editConfirmBack').addEventListener('click',()=>{ window.hideOverlay('editConfirmOverlay');});
 
 document.getElementById('profileIconBtn').addEventListener('click',()=>{
   const p = getProfile();
   document.getElementById('profile_name').value = p.name||'';
   document.getElementById('profile_defaultLabRate').value = p.defaultLabRate||10;
   document.getElementById('profile_overdueDays').value = p.overdueDays||15;
-  renderGoogleAccountArea();
-  showOverlay('profileOverlay');
+  window.showOverlay('profileOverlay');
 });
-document.getElementById('profileBack').addEventListener('click',()=>hideOverlay('profileOverlay'));
+document.getElementById('profileBack').addEventListener('click',()=>window.hideOverlay('profileOverlay'));
 
 document.getElementById('saveProfileBtn').addEventListener('click',()=>{
   saveProfile({
@@ -2424,17 +1734,15 @@ document.getElementById('saveProfileBtn').addEventListener('click',()=>{
     defaultLabRate: Number(document.getElementById('profile_defaultLabRate').value||10),
     overdueDays: Number(document.getElementById('profile_overdueDays').value||15)
   });
-  showToast('प्रोफाइल जतन झाली ✓');
-  hideOverlay('profileOverlay');
+  window.showToast('प्रोफाइल जतन झाली ✓');
+  window.hideOverlay('profileOverlay');
 });
 
-document.getElementById('reconnectBtn').addEventListener('click', connectGoogleManually);
+window.closeSheet = function(){document.getElementById('sheetOverlay').classList.remove('open')}
+window.openLightbox = function(src){document.getElementById('lightboxImg').src=src;document.getElementById('lightbox').classList.add('open')}
+window.closeLightbox = function(){document.getElementById('lightbox').classList.remove('open');setTimeout(()=>{document.getElementById('lightboxImg').src=''},300)}
 
-function closeSheet(){document.getElementById('sheetOverlay').classList.remove('open')}
-function openLightbox(src){document.getElementById('lightboxImg').src=src;document.getElementById('lightbox').classList.add('open')}
-function closeLightbox(){document.getElementById('lightbox').classList.remove('open');setTimeout(()=>{document.getElementById('lightboxImg').src=''},300)}
-
-function getPhotosHtmlForPDF(r, prefix) {
+window.getPhotosHtmlForPDF = function(r, prefix) {
   let html = '';
   const arr = [];
   if(r[`${prefix}photoTollBefore`]) arr.push({src: r[`${prefix}photoTollBefore`], label: 'टोल आधी'});
@@ -2450,7 +1758,7 @@ function getPhotosHtmlForPDF(r, prefix) {
   return html;
 }
 
-function getCombinedPhotosHtmlForPDF(r) {
+window.getCombinedPhotosHtmlForPDF = function(r) {
   let html = '';
   const arr = [];
   if(r.c_photoTollBefore) arr.push({src: r.c_photoTollBefore, label: 'टोल आधी'});
@@ -2466,22 +1774,22 @@ function getCombinedPhotosHtmlForPDF(r) {
   return html;
 }
 
-function generatePDF() {
-  const allRecs = getRecords();
+window.generatePDF = function() {
+  const allRecs = window.getRecords();
   if (!allRecs.length) {
-    showToast('नोंदी नाहीत');
+    window.showToast('नोंदी नाहीत');
     return;
   }
   
   const recs = allRecs.slice().sort((a, b) => (b.date||'').localeCompare(a.date||''));
-  const stats = computeStats(recs, null);
-  const statsM = computeStats(recs.filter(r => (r.farmType||'M') === 'M' || (r.farmType||'M') === 'MP'), 'M');
-  const statsP = computeStats(recs.filter(r => (r.farmType||'M') === 'P' || (r.farmType||'M') === 'MP'), 'P');
+  const stats = window.computeStats(recs, null);
+  const statsM = window.computeStats(recs.filter(r => (r.farmType||'M') === 'M' || (r.farmType||'M') === 'MP'), 'M');
+  const statsP = window.computeStats(recs.filter(r => (r.farmType||'M') === 'P' || (r.farmType||'M') === 'MP'), 'P');
   
   const datesSorted = recs.map(r => r.date||'').filter(d=>d).sort();
-  const fromDate = datesSorted.length ? fmtDate(datesSorted[0]) : '—';
-  const toDate = datesSorted.length ? fmtDate(datesSorted[datesSorted.length - 1]) : '—';
-  const today2 = fmtDate(new Date().toISOString().split('T')[0]);
+  const fromDate = datesSorted.length ? window.fmtDate(datesSorted[0]) : '—';
+  const toDate = datesSorted.length ? window.fmtDate(datesSorted[datesSorted.length - 1]) : '—';
+  const today2 = window.fmtDate(new Date().toISOString().split('T')[0]);
   
   const modeL = { 'cash': 'रोख', 'cheque': 'चेक', 'rtgs': 'आरटीजीएस/एनईएफटी', 'phonepay': 'फोनपे', 'gpay': 'गुगल पे', 'upi': 'युपीआय' };
   const harvestL = { 'ghad': 'केळीचे घड', 'box': 'बॉक्स पॅकिंग', 'fanaya': 'फणाया' };
@@ -2507,14 +1815,14 @@ function generatePDF() {
       </div>
       <div class="entry-trader-banner">
         <div class="etb-name">${r.traderName || '?'}</div>
-        <div class="etb-date">📅 ${fmtDate(r.date)}</div>
+        <div class="etb-date">📅 ${window.fmtDate(r.date)}</div>
         <div class="etb-farm">🌿 ${farmLabel}</div>
       </div>`;
       
     html += `<div class="entry-card">
       <div class="entry-card-title">मूलभूत माहिती</div>
       <div class="entry-field-row"><span class="efl">काढणी प्रकार</span><span class="efv">${harvestL[harvestType] || harvestType}</span></div>
-      <div class="entry-field-row"><span class="efl">दर</span><span class="efv">₹${fmt(r.rate)} / क्विंटल</span></div>
+      <div class="entry-field-row"><span class="efl">दर</span><span class="efv">₹${window.fmt(r.rate)} / क्विंटल</span></div>
       ${r.vehicle ? `<div class="entry-field-row"><span class="efl">वाहन क्रमांक</span><span class="efv">${r.vehicle}</span></div>` : ''}
     </div>`;
     
@@ -2523,24 +1831,23 @@ function generatePDF() {
         <div class="entry-card-title">वजन (एकत्रित — गाडी एकदाच वजन झाली)</div>
         <div class="entry-field-row"><span class="efl">एकूण वजन</span><span class="efv">${r.c_totalWQ || 0} क्विं + ${r.c_totalWKg || 0} किलो</span></div>
         ${harvestType !== 'box' ? `<div class="entry-field-row"><span class="efl">कपात/तारा</span><span class="efv">${r.c_dedQ || 0} क्विं + ${r.c_dedKg || 0} किलो</span></div>` : ''}
-        ${r.c_is3Pct ? `<div class="entry-field-row"><span class="efl">3% अतिरिक्त कपात</span><span class="efv">${fmtQ(r.c_threePctDed || 0)} क्विं</span></div>` : ''}
-        <div class="entry-field-row"><span class="efl">निव्वळ वजन</span><span class="efv">${fmtQ(r.c_netWeightQ || 0)} क्विंटल</span></div>
+        ${r.c_is3Pct ? `<div class="entry-field-row"><span class="efl">3% अतिरिक्त कपात</span><span class="efv">${window.fmtQ(r.c_threePctDed || 0)} क्विं</span></div>` : ''}
+        <div class="entry-field-row"><span class="efl">निव्वळ वजन</span><span class="efv">${window.fmtQ(r.c_netWeightQ || 0)} क्विंटल</span></div>
       </div>`;
       
       html += `<div class="entry-hero-box">
         <span class="ehl">एकत्रित Gross उत्पन्न</span>
-        <span class="ehv">₹${fmt(r.c_grossIncome || 0)}</span>
+        <span class="ehv">₹${window.fmt(r.c_grossIncome || 0)}</span>
       </div>`;
       
       html += `<div class="entry-card">
         <div class="entry-card-title">मजुरी खर्च (शेतनिहाय)</div>
-        <div class="entry-field-row"><span class="efl">शेत म — घड संख्या × दर</span><span class="efv">${r.m_ghads || 0} × ₹${fmt(r.m_labourRate || 10)} = ₹${fmt(r.m_totalLabour || 0)}</span></div>
-        <div class="entry-field-row"><span class="efl">शेत प — घड संख्या × दर</span><span class="efv">${r.p_ghads || 0} × ₹${fmt(r.p_labourRate || 10)} = ₹${fmt(r.p_totalLabour || 0)}</span></div>
-        <div class="entry-field-row"><span class="efl" style="font-weight:700">एकूण मजुरी</span><span class="efv">₹${fmt(r.combinedLabour || 0)}</span></div>
+        <div class="entry-field-row"><span class="efl">शेत म — घड संख्या × दर</span><span class="efv">${r.m_ghads || 0} × ₹${window.fmt(r.m_labourRate || 10)} = ₹${window.fmt(r.m_totalLabour || 0)}</span></div>
+        <div class="entry-field-row"><span class="efl">शेत प — घड संख्या × दर</span><span class="efv">${r.p_ghads || 0} × ₹${window.fmt(r.p_labourRate || 10)} = ₹${window.fmt(r.p_totalLabour || 0)}</span></div>
+        <div class="entry-field-row"><span class="efl" style="font-weight:700">एकूण मजुरी</span><span class="efv">₹${window.fmt(r.combinedLabour || 0)}</span></div>
       </div>`;
       
-      // ADD PDF PHOTOS (COMBINED)
-      html += getCombinedPhotosHtmlForPDF(r);
+      html += window.getCombinedPhotosHtmlForPDF(r);
       
     } else {
       const p = farmType.toLowerCase();
@@ -2548,40 +1855,39 @@ function generatePDF() {
         <div class="entry-card-title">वजन</div>
         <div class="entry-field-row"><span class="efl">एकूण वजन</span><span class="efv">${r[`${p}_totalWQ`] || 0} क्विं + ${r[`${p}_totalWKg`] || 0} किलो</span></div>
         ${harvestType !== 'box' ? `<div class="entry-field-row"><span class="efl">कपात/तारा</span><span class="efv">${r[`${p}_dedQ`] || 0} क्विं + ${r[`${p}_dedKg`] || 0} किलो</span></div>` : ''}
-        ${r[`${p}_is3Pct`] ? `<div class="entry-field-row"><span class="efl">3% अतिरिक्त कपात</span><span class="efv">${fmtQ(r[`${p}_threePctDed`] || 0)} क्विं</span></div>` : ''}
-        <div class="entry-field-row"><span class="efl">निव्वळ वजन</span><span class="efv">${fmtQ(r[`${p}_netWeightQ`] || 0)} क्विंटल</span></div>
+        ${r[`${p}_is3Pct`] ? `<div class="entry-field-row"><span class="efl">3% अतिरिक्त कपात</span><span class="efv">${window.fmtQ(r[`${p}_threePctDed`] || 0)} क्विं</span></div>` : ''}
+        <div class="entry-field-row"><span class="efl">निव्वळ वजन</span><span class="efv">${window.fmtQ(r[`${p}_netWeightQ`] || 0)} क्विंटल</span></div>
       </div>`;
       
       html += `<div class="entry-hero-box">
         <span class="ehl">Gross उत्पन्न</span>
-        <span class="ehv">₹${fmt(r[`${p}_grossIncome`] || 0)}</span>
+        <span class="ehv">₹${window.fmt(r[`${p}_grossIncome`] || 0)}</span>
       </div>`;
       
       html += `<div class="entry-card">
         <div class="entry-card-title">मजुरी खर्च</div>
-        <div class="entry-field-row"><span class="efl">घड संख्या × दर</span><span class="efv">${r[`${p}_ghads`] || 0} × ₹${fmt(r[`${p}_labourRate`] || 10)} = ₹${fmt(r[`${p}_totalLabour`] || 0)}</span></div>
+        <div class="entry-field-row"><span class="efl">घड संख्या × दर</span><span class="efv">${r[`${p}_ghads`] || 0} × ₹${window.fmt(r[`${p}_labourRate`] || 10)} = ₹${window.fmt(r[`${p}_totalLabour`] || 0)}</span></div>
       </div>`;
       
-      // ADD PDF PHOTOS (SINGLE FARM)
-      html += getPhotosHtmlForPDF(r, p + '_');
+      html += window.getPhotosHtmlForPDF(r, p + '_');
     }
     
     html += `<div class="entry-hero-box">
       <span class="ehl">या नोंदीचे निव्वळ उत्पन्न</span>
-      <span class="ehv">₹${fmt(r.combinedNetIncome || 0)}</span>
+      <span class="ehv">₹${window.fmt(r.combinedNetIncome || 0)}</span>
     </div>`;
     
     html += `<div class="entry-card">
       <div class="entry-card-title">देयक स्थिती</div>
-      <div class="entry-field-row"><span class="efl">मिळालेली रक्कम</span><span class="efv">₹${fmt(r.received || 0)}</span></div>
-      <div class="entry-field-row"><span class="efl">थकबाकी</span><span class="efv" style="color:${(r.pending || 0) > 0 ? '#dc2626' : '#1a6b3c'}">₹${fmt(r.pending || 0)}</span></div>
+      <div class="entry-field-row"><span class="efl">मिळालेली रक्कम</span><span class="efv">₹${window.fmt(r.received || 0)}</span></div>
+      <div class="entry-field-row"><span class="efl">थकबाकी</span><span class="efv" style="color:${(r.pending || 0) > 0 ? '#dc2626' : '#1a6b3c'}">₹${window.fmt(r.pending || 0)}</span></div>
     </div>`;
     
     if (r.payments && r.payments.length) {
       html += `<div class="entry-card">
         <div class="entry-card-title">पेमेंट इतिहास</div>`;
       r.payments.forEach(p => {
-        html += `<div class="entry-field-row"><span class="efl">${fmtDate(p.date)} · ${modeL[p.mode] || p.mode}${p.ref ? ' · ' + p.ref : ''}</span><span class="efv">₹${fmt(p.amt)}</span></div>`;
+        html += `<div class="entry-field-row"><span class="efl">${window.fmtDate(p.date)} · ${modeL[p.mode] || p.mode}${p.ref ? ' · ' + p.ref : ''}</span><span class="efv">₹${window.fmt(p.amt)}</span></div>`;
       });
       html += '</div>';
     }
@@ -2598,32 +1904,32 @@ function generatePDF() {
   html += `<div class="print-page summary-final-page">
     <div class="sfp-title">🌿 शेत म — मोरगाव काढचं शेत — एकूण</div>
     <div class="summary-final-row"><span>एकूण काढणी</span><span>${recs.filter(r => (r.farmType||'M') === 'M' || (r.farmType||'M') === 'MP').length}</span></div>
-    <div class="summary-final-row"><span>एकूण निव्वळ वजन (फक्त एकल नोंदी)</span><span>${fmtQ(statsM.weightQ)} क्विंटल</span></div>
-    <div class="summary-final-row"><span>एकूण निव्वळ उत्पन्न (फक्त एकल नोंदी)</span><span>₹${fmt(statsM.income)}</span></div>
-    <div class="summary-final-row"><span>एकूण मजुरी</span><span>₹${fmt(statsM.labour)}</span></div>
+    <div class="summary-final-row"><span>एकूण निव्वळ वजन (फक्त एकल नोंदी)</span><span>${window.fmtQ(statsM.weightQ)} क्विंटल</span></div>
+    <div class="summary-final-row"><span>एकूण निव्वळ उत्पन्न (फक्त एकल नोंदी)</span><span>₹${window.fmt(statsM.income)}</span></div>
+    <div class="summary-final-row"><span>एकूण मजुरी</span><span>₹${window.fmt(statsM.labour)}</span></div>
     <div class="summary-final-row"><span>एकूण घड (एकटे + एकत्रित मिळून)</span><span>${statsM.ghads}</span></div>
-    <div class="summary-final-row"><span>एकूण मिळालेली रक्कम</span><span>₹${fmt(statsM.received)}</span></div>
-    <div class="summary-final-row grand"><span>एकूण थकबाकी</span><span>₹${fmt(statsM.pending)}</span></div>
+    <div class="summary-final-row"><span>एकूण मिळालेली रक्कम</span><span>₹${window.fmt(statsM.received)}</span></div>
+    <div class="summary-final-row grand"><span>एकूण थकबाकी</span><span>₹${window.fmt(statsM.pending)}</span></div>
   </div>`;
   
   html += `<div class="print-page summary-final-page">
     <div class="sfp-title">🌿 शेत प — पाटोंदी काढचं शेत — एकूण</div>
     <div class="summary-final-row"><span>एकूण काढणी</span><span>${recs.filter(r => (r.farmType||'M') === 'P' || (r.farmType||'M') === 'MP').length}</span></div>
-    <div class="summary-final-row"><span>एकूण निव्वळ वजन (फक्त एकल नोंदी)</span><span>${fmtQ(statsP.weightQ)} क्विंटल</span></div>
-    <div class="summary-final-row"><span>एकूण निव्वळ उत्पन्न (फक्त एकल नोंदी)</span><span>₹${fmt(statsP.income)}</span></div>
-    <div class="summary-final-row"><span>एकूण मजुरी</span><span>₹${fmt(statsP.labour)}</span></div>
+    <div class="summary-final-row"><span>एकूण निव्वळ वजन (फक्त एकल नोंदी)</span><span>${window.fmtQ(statsP.weightQ)} क्विंटल</span></div>
+    <div class="summary-final-row"><span>एकूण निव्वळ उत्पन्न (फक्त एकल नोंदी)</span><span>₹${window.fmt(statsP.income)}</span></div>
+    <div class="summary-final-row"><span>एकूण मजुरी</span><span>₹${window.fmt(statsP.labour)}</span></div>
     <div class="summary-final-row"><span>एकूण घड (एकटे + एकत्रित मिळून)</span><span>${statsP.ghads}</span></div>
-    <div class="summary-final-row"><span>एकूण मिळालेली रक्कम</span><span>₹${fmt(statsP.received)}</span></div>
-    <div class="summary-final-row grand"><span>एकूण थकबाकी</span><span>₹${fmt(statsP.pending)}</span></div>
+    <div class="summary-final-row"><span>एकूण मिळालेली रक्कम</span><span>₹${window.fmt(statsP.received)}</span></div>
+    <div class="summary-final-row grand"><span>एकूण थकबाकी</span><span>₹${window.fmt(statsP.pending)}</span></div>
   </div>`;
   
   html += `<div class="print-page summary-final-page">
     <div class="sfp-title">📊 सर्व मिळून एकूण (शेत म + शेत प)</div>
     <div class="summary-final-row"><span>एकूण नोंदी</span><span>${recs.length}</span></div>
-    <div class="summary-final-row"><span>एकूण निव्वळ वजन</span><span>${fmtQ(stats.weightQ)} क्विंटल</span></div>
-    <div class="summary-final-row"><span>एकूण मिळालेली रक्कम</span><span>₹${fmt(stats.received)}</span></div>
-    <div class="summary-final-row"><span>एकूण थकबाकी</span><span>₹${fmt(stats.pending)}</span></div>
-    <div class="summary-final-row grand"><span>एकूण निव्वळ उत्पन्न</span><span>₹${fmt(stats.income)}</span></div>
+    <div class="summary-final-row"><span>एकूण निव्वळ वजन</span><span>${window.fmtQ(stats.weightQ)} क्विंटल</span></div>
+    <div class="summary-final-row"><span>एकूण मिळालेली रक्कम</span><span>₹${window.fmt(stats.received)}</span></div>
+    <div class="summary-final-row"><span>एकूण थकबाकी</span><span>₹${window.fmt(stats.pending)}</span></div>
+    <div class="summary-final-row grand"><span>एकूण निव्वळ उत्पन्न</span><span>₹${window.fmt(stats.income)}</span></div>
   </div>`;
   
   const printArea = document.getElementById('printArea');
@@ -2631,23 +1937,13 @@ function generatePDF() {
   window.print();
 }
 
-applyLang();
-document.getElementById('f_date').value=today();
-renderAll();
+window.applyLang();
+document.getElementById('f_date').value=window.today();
+
 if(!localStorage.getItem('editHintShown')){
-  setTimeout(showEditHint,1200);
+  setTimeout(window.showEditHint,1200);
   localStorage.setItem('editHintShown','1');
 }
-
-// Wait for Google's script to finish loading, then attempt auto-connect
-function waitForGoogleAndInit(){
-  if(window.google && window.google.accounts){
-    initGoogleAuth();
-  } else {
-    setTimeout(waitForGoogleAndInit, 200);
-  }
-}
-waitForGoogleAndInit();
 </script>
 <script>
 if ('serviceWorker' in navigator) {
