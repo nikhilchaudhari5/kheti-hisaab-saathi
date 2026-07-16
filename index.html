@@ -132,8 +132,8 @@ body {
 .lightbox img{ max-width:95vw; max-height:90vh; object-fit:contain; }
 .lightbox-close{ position:absolute; top:16px; right:16px; background:rgba(255,255,255,.2); border:none; color:#fff; width:44px; height:44px; border-radius:50%; font-size:20px; cursor:pointer; min-width: 44px; }
 
-#formOverlay, #detailOverlay, #traderFormOverlay, #ledgerOverlay, #editConfirmOverlay, #profileOverlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; width: 100%; height: 100%; max-width: none; left: 0; transform: none; background: #fff; z-index: 150; overflow-y: auto; -webkit-overflow-scrolling: touch; display: none; }
-#formOverlay.open, #detailOverlay.open, #traderFormOverlay.open, #ledgerOverlay.open, #editConfirmOverlay.open, #profileOverlay.open { display: block; padding-top: max(0px, env(safe-area-inset-top)); }
+#formOverlay, #detailOverlay, #traderFormOverlay, #ledgerOverlay, #editConfirmOverlay, #profileOverlay, #distFormOverlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; width: 100%; height: 100%; max-width: none; left: 0; transform: none; background: #fff; z-index: 150; overflow-y: auto; -webkit-overflow-scrolling: touch; display: none; }
+#formOverlay.open, #detailOverlay.open, #traderFormOverlay.open, #ledgerOverlay.open, #editConfirmOverlay.open, #profileOverlay.open, #distFormOverlay.open { display: block; padding-top: max(0px, env(safe-area-inset-top)); }
 .detail-header{ background:var(--green); color:#fff; padding:12px 16px; padding-top: max(12px, env(safe-area-inset-top)); display:flex; align-items:center; gap:10px; position: sticky; top: 0; z-index: 101; }
 .detail-header h2{ font-size:16px; font-weight:700; }
 .back-btn{ background:none; border:none; color:#fff; font-size:22px; cursor:pointer; padding:8px; min-width: 44px; min-height: 44px; display: flex; align-items: center; justify-content: center; }
@@ -318,9 +318,9 @@ body {
 <header class="app-header">
 <h1 id="appName">केळी हिशोब साथी</h1>
 <div class="header-actions">
-<button class="icon-btn" id="pdfBtn" title="PDF / Share" style="display:none">📤</button>
+<button class="icon-btn" id="pdfBtn" title="PDF / शेअर करा" style="display:none">📤</button>
 <button class="lang-btn" id="langBtn">EN</button>
-<button class="profile-icon-btn" id="profileIconBtn" title="Profile">👤</button>
+<button class="profile-icon-btn" id="profileIconBtn" title="प्रोफाइल">👤</button>
 </div>
 </header>
 
@@ -359,6 +359,15 @@ body {
 <div id="traders-list"></div>
 </div>
 
+<div class="screen" id="screen-partners">
+<div class="stat-grid" id="partners-stats"></div>
+<button class="pay-btn" id="addDistBtn" style="margin:12px 0">+ <span data-t="addDistribution">वाटप नोंदवा</span></button>
+<div class="sec-title" data-t="distributions">पैसे वाटप</div>
+<div id="partners-distlist"></div>
+<div class="sec-title" data-t="partners">भागीदार</div>
+<div id="partners-list"></div>
+</div>
+
 <button class="fab" id="fabBtn">+</button>
 
 <nav class="bottom-nav">
@@ -367,6 +376,7 @@ body {
 <button class="nav-tab" data-tab="farmP"><span class="nav-icon">🌿</span><span data-t="farmP">शेत प</span></button>
 <button class="nav-tab" data-tab="records"><span class="nav-icon">📋</span><span data-t="records">नोंदी</span></button>
 <button class="nav-tab" data-tab="traders"><span class="nav-icon">🤝</span><span data-t="traders">व्यापारी</span></button>
+<button class="nav-tab" data-tab="partners"><span class="nav-icon">🤲</span><span data-t="partners">भागीदार</span></button>
 </nav>
 </div>
 
@@ -387,7 +397,7 @@ body {
 <div class="sec-title" data-t="harvestType">काढणी प्रकार</div>
 <div class="toggle-group" id="harvestToggle">
 <button class="toggle-btn active" data-harvest="ghad">केळीचे घड</button>
-<button class="toggle-btn" data-harvest="box">Box Packing</button>
+<button class="toggle-btn" data-harvest="box">बॉक्स पॅकिंग</button>
 <button class="toggle-btn" data-harvest="fanaya">फणाया 🍌</button>
 </div>
 <div id="farmFields"></div>
@@ -426,6 +436,26 @@ body {
 
 <div id="editConfirmOverlay"><div class="detail-header"><button class="back-btn" id="editConfirmBack">←</button><h2>बदल तपासा</h2></div><div style="padding:12px 12px 80px" id="editConfirmBody"></div></div>
 
+<div id="distFormOverlay">
+<div class="detail-header"><button class="back-btn" id="distFormBack">←</button><h2 data-t="addDistribution">वाटप नोंदवा</h2></div>
+<div style="padding:12px">
+<input type="hidden" id="df_recordId" value="">
+<div id="df_recordHint" style="display:none;background:var(--green-light);border-radius:8px;padding:10px;margin-bottom:12px;font-size:13px;color:var(--green);font-weight:600"></div>
+<div class="form-group"><label class="form-label" data-t="distDate">तारीख</label><input type="date" class="form-input" id="df_date"></div>
+<div class="form-group"><label class="form-label" data-t="distAmount">रक्कम ₹</label><input type="number" class="form-input" id="df_amount" placeholder="0" min="0"></div>
+<div class="form-group"><label class="form-label" data-t="distRecipient">कोणाला दिले</label>
+<select class="form-input form-select" id="df_recipient">
+<option value="partner1" id="df_opt_p1"></option>
+<option value="partner2" id="df_opt_p2"></option>
+<option value="both" data-t="distBoth">दोघांना समान</option>
+<option value="farm" data-t="distFarm">शेतीच्या कामासाठी</option>
+</select></div>
+<div class="form-group"><label class="form-label" data-t="distNote">टीप (ऐच्छिक)</label><textarea class="form-input" id="df_note" rows="2"></textarea></div>
+<div id="distFormError" style="display:none;color:var(--red);font-size:13px;margin-bottom:10px"></div>
+<button class="pay-btn" id="saveDistBtn" data-t="saveDistribution">वाटप जतन करा</button>
+</div>
+</div>
+
 <div id="profileOverlay">
 <div class="detail-header"><button class="back-btn" id="profileBack">←</button><h2>प्रोफाइल</h2></div>
 <div style="padding:12px 12px 80px">
@@ -433,7 +463,11 @@ body {
   <div class="form-group"><label class="form-label">शेतकऱ्याचे नाव</label><input type="text" class="form-input" id="profile_name" placeholder="तुमचे नाव"></div>
   <div class="profile-section-title">डीफॉल्ट सेटिंग्स</div>
   <div class="form-group"><label class="form-label">डीफॉल्ट मजुरी दर (प्रति घड)</label><input type="number" class="form-input" id="profile_defaultLabRate" placeholder="10"></div>
+  <div class="form-group"><label class="form-label" data-t="fanayaPctLabel">फणाया % (वजनात वाढ)</label><input type="number" step="0.1" class="form-input" id="profile_fanayaPct" placeholder="6"></div>
   <div class="form-group"><label class="form-label">थकबाकी इशारा (किती दिवसांनी)</label><input type="number" class="form-input" id="profile_overdueDays" placeholder="15"></div>
+  <div class="profile-section-title" data-t="partnerNames">भागीदारांची नावे</div>
+  <div class="form-group"><label class="form-label" data-t="partner1">भागीदार १</label><input type="text" class="form-input" id="profile_partner1" placeholder="भागीदार १"></div>
+  <div class="form-group"><label class="form-label" data-t="partner2">भागीदार २</label><input type="text" class="form-input" id="profile_partner2" placeholder="भागीदार २"></div>
   <button class="pay-btn" id="saveProfileBtn" style="margin-top:18px">जतन करा</button>
   <button class="danger-btn" onclick="window.logoutFirebase()" style="margin-top:18px">लॉग आउट (Log Out)</button>
 </div>
@@ -484,6 +518,7 @@ const db = getFirestore(app);
 window.currentUserUid = null;
 window.appRecords = [];
 window.appTraders = [];
+window.appDistributions = [];
 
 // FIREBASE AUTH LISTENER
 onAuthStateChanged(auth, async (user) => {
@@ -502,7 +537,7 @@ onAuthStateChanged(auth, async (user) => {
     if(mainAppView) mainAppView.style.display = 'block';
     
     connPill.className = 'connection-pill show connected';
-    connPillText.textContent = 'जोडले ✓ (Online)';
+    connPillText.textContent = 'जोडले ✓ (ऑनलाइन)';
     setTimeout(() => { connPill.classList.remove('show'); }, 2500);
     
     await fetchCloudData(); 
@@ -510,6 +545,7 @@ onAuthStateChanged(auth, async (user) => {
     window.currentUserUid = null;
     window.appRecords = [];
     window.appTraders = [];
+    window.appDistributions = [];
     if(loginView) loginView.style.display = 'flex';
     if(mainAppView) mainAppView.style.display = 'none';
     
@@ -522,7 +558,7 @@ window.connectGoogleManually = () => {
   const provider = new GoogleAuthProvider();
   signInWithPopup(auth, provider).catch(error => {
     console.error("Login failed:", error);
-    alert("Login failed. Please try again.");
+    alert("लॉगिन अयशस्वी झाले. कृपया पुन्हा प्रयत्न करा.");
   });
 };
 
@@ -539,23 +575,37 @@ async function fetchCloudData() {
   try {
     const recordsSnap = await getDocs(collection(db, "users", window.currentUserUid, "records"));
     const tradersSnap = await getDocs(collection(db, "users", window.currentUserUid, "traders"));
-    
+
     window.appRecords = [];
     window.appTraders = [];
-    
+
     recordsSnap.forEach(doc => window.appRecords.push(doc.data()));
     tradersSnap.forEach(doc => window.appTraders.push(doc.data()));
-    
-    renderAll(); 
   } catch (error) {
-    console.error("Data fetch error:", error);
-    showToast("इंटरनेट कनेक्शन तपासा");
+    console.error("Records/Traders fetch error:", error);
+    showToast(error?.code === 'permission-denied' ? "डेटा अ‍ॅक्सेस नाकारला (Firestore rules तपासा)" : "इंटरनेट कनेक्शन तपासा");
   }
+
+  // Fetched separately: a rules/permission issue on this newer collection should never block records/traders from loading
+  try {
+    const distSnap = await getDocs(collection(db, "users", window.currentUserUid, "distributions"));
+    window.appDistributions = [];
+    distSnap.forEach(doc => window.appDistributions.push(doc.data()));
+  } catch (error) {
+    console.error("Distributions fetch error:", error);
+    window.appDistributions = window.appDistributions || [];
+    if (error?.code === 'permission-denied') {
+      showToast("वाटप डेटा अ‍ॅक्सेस नाकारला — Firestore rules अपडेट करा");
+    }
+  }
+
+  renderAll();
 }
 
 // Override Local Storage Functions to read from Memory (Fetched from Cloud)
 window.getRecords = function() { return window.appRecords || []; }
 window.getTraders = function() { return window.appTraders || []; }
+window.getDistributions = function() { return window.appDistributions || []; }
 
 // Helper variables & logic for the app
 const LANG={
@@ -582,10 +632,18 @@ ledger:'खातेवही',records_count:'नोंदी',totalWeight:'ए�
 addTraderFirst:'प्रथम व्यापारी जोडा!',
 valWeight:'वजन टाका!',valRate:'दर टाका!',valTrader:'व्यापारी निवडा!',
 valPayAmt:'रक्कम टाका!',payDate:'पेमेंट तारीख',payMode:'पेमेंट प्रकार',
-payRef:'संदर्भ / नोट',payRefHint:'चेक नं. / UTR / Transaction ID',
+payRef:'संदर्भ / नोट',payRefHint:'चेक नं. / UTR / व्यवहार क्रमांक',
 optional:'ऐच्छिक',modeCash:'रोख',modeCheque:'चेक',modeRTGS:'RTGS / NEFT',
 modePhonePe:'PhonePe',modeGPay:'Google Pay',modeUPI:'UPI',
-payHistory:'Payment History',noPayments:'पेमेंट नाही'},
+payHistory:'पेमेंट इतिहास',noPayments:'पेमेंट नाही',
+kattar:'कटार (तोडणी मजुरांना जास्तीचे पैसे)',fanayaAddLbl:'फणाया वाढ',fanayaPctLabel:'फणाया % (वजनात वाढ)',
+partners:'भागीदार',partnerShare:'वाटा (50%)',totalShare:'एकूण वाटा',partner1:'मधुकर गोविंदा चौधरी',partner2:'पद्माकर पाटील',partnerNames:'भागीदारांची नावे',
+distributions:'पैसे वाटप',addDistribution:'वाटप नोंदवा',distDate:'तारीख',distAmount:'रक्कम ₹',
+distRecipient:'कोणाला दिले',distFarm:'शेतीच्या कामासाठी',distBoth:'दोघांना समान',distNote:'टीप (ऐच्छिक)',
+saveDistribution:'वाटप जतन करा',totalPool:'एकूण निव्वळ उत्पन्न',farmExpense:'शेती खर्च',
+distributable:'वाटणीयोग्य रक्कम',entitlement:'हक्काचा वाटा',givenSoFar:'आतापर्यंत दिलेले',balanceLeft:'शिल्लक',
+noDistributions:'अजून कोणतेही वाटप नाही',deleteDistribution:'वाटप हटवा',confirmDeleteDist:'हे वाटप हटवायचे आहे का?',
+distSaved:'वाटप जतन झाले ✓',distDeleted:'वाटप हटवले',valDistAmt:'रक्कम टाका!',valDistRecipient:'कोणाला दिले ते निवडा!'},
 en:{appName:'Kheti Hisaab Saathi',dashboard:'Dashboard',farmM:'Farm M',farmP:'Farm P',
 records:'Records',traders:'Traders',addRecord:'New Record',totalIncome:'Total Income',
 pending:'Pending',received:'Received',weight:'Total Weight',ghads:'Ghads',labour:'Labour',
@@ -612,7 +670,15 @@ valPayAmt:'Enter amount!',payDate:'Payment Date',payMode:'Payment Mode',
 payRef:'Reference / Note',payRefHint:'Cheque no. / UTR / Transaction ID',
 optional:'optional',modeCash:'Cash',modeCheque:'Cheque',modeRTGS:'RTGS / NEFT',
 modePhonePe:'PhonePe',modeGPay:'Google Pay',modeUPI:'UPI',
-payHistory:'Payment History',noPayments:'No payments yet'}
+payHistory:'Payment History',noPayments:'No payments yet',
+kattar:'Kattar (Extra Cutting Labour Payment)',fanayaAddLbl:'Fanaya Addition',fanayaPctLabel:'Fanaya % (Weight Addition)',
+partners:'Partners',partnerShare:'Share (50%)',totalShare:'Total Share',partner1:'Madhukar Govinda Chaudhari',partner2:'Padmakar Patil',partnerNames:'Partner Names',
+distributions:'Money Given',addDistribution:'Add Distribution',distDate:'Date',distAmount:'Amount ₹',
+distRecipient:'Given To',distFarm:'Farm Expenses',distBoth:'Both Equally',distNote:'Note (optional)',
+saveDistribution:'Save Distribution',totalPool:'Total Net Income',farmExpense:'Farm Expense',
+distributable:'Distributable Amount',entitlement:'Entitled Share',givenSoFar:'Given So Far',balanceLeft:'Balance Left',
+noDistributions:'No distributions yet',deleteDistribution:'Delete Distribution',confirmDeleteDist:'Delete this distribution?',
+distSaved:'Distribution Saved ✓',distDeleted:'Distribution Deleted',valDistAmt:'Enter amount!',valDistRecipient:'Select who it was given to!'}
 };
 
 let curLang=localStorage.getItem('lang')||'mr';
@@ -638,16 +704,26 @@ window.today = function(){return new Date().toISOString().split('T')[0]}
 window.fmtDate = function(d){if(!d)return'';const[y,m,dd]=d.split('-');return`${dd}/${m}/${y}`}
 window.showToast = function(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2500)}
 
-window.calcFarm = function(Q,kg,dQ,dKg,is3pct,ghads,labourRate,rate){
+window.getFanayaPct = function(){
+  const p=Number(getProfile().fanayaPct);
+  return isNaN(p) ? 6 : p;
+}
+
+window.calcFarm = function(Q,kg,dQ,dKg,is3pct,ghads,labourRate,rate,harvestType,kattar){
   const totalWQ=Number(Q||0)+Number(kg||0)/100;
   const dedQ=Number(dQ||0)+Number(dKg||0)/100;
-  const after=totalWQ-dedQ;
+  const afterDed=totalWQ-dedQ;
+  // फणाया harvests get an extra weight addition (देठ) — default 6%, editable in profile — applied after पत्ती deduction
+  const fanayaPct=window.getFanayaPct();
+  const fanayaAdd=(harvestType==='fanaya')?afterDed*(fanayaPct/100):0;
+  const after=afterDed+fanayaAdd;
   const threePct=is3pct?after*0.03:0;
   const netWQ=Math.max(0,after-threePct);
   const gross=netWQ*Number(rate||0);
   const labCost=Number(ghads||0)*Number(labourRate||10);
-  const net=gross-labCost;
-  return{totalWQ,dedQ,threePct,netWQ,gross,labCost,net};
+  const kattarCost=Number(kattar||0);
+  const net=gross-labCost-kattarCost;
+  return{totalWQ,dedQ,fanayaAdd,fanayaPct,threePct,netWQ,gross,labCost,kattarCost,net};
 }
 
 window.applyLang = function(){
@@ -813,6 +889,7 @@ window.openEditForm = function(recordId){
         if(chk)chk.checked=!!r[`${p}_is3Pct`];
         window.setVal(`f_${fm}_ghads`, r[`${p}_ghads`]);
         window.setVal(`f_${fm}_labRate`, r[`${p}_labourRate`]);
+        window.setVal(`f_${fm}_kattar`, r[`${p}_kattar`]);
         
         if(r[`${p}_photoTollBefore`]){window.photoTargets[(farms.length>1?fm+'_':'')+'tollBefore']=r[`${p}_photoTollBefore`];window.updatePhotoSlot((farms.length>1?fm+'_':'')+'tollBefore',r[`${p}_photoTollBefore`]);}
         if(r[`${p}_photoTollAfter`]){window.photoTargets[(farms.length>1?fm+'_':'')+'tollAfter']=r[`${p}_photoTollAfter`];window.updatePhotoSlot((farms.length>1?fm+'_':'')+'tollAfter',r[`${p}_photoTollAfter`]);}
@@ -874,7 +951,7 @@ document.getElementById('actionMenuDelete').addEventListener('click', async ()=>
     await fetchCloudData(); 
   } catch (error) {
     console.error("Error deleting:", error);
-    alert("Could not delete. Check your internet connection.");
+    alert("हटवता आले नाही. इंटरनेट कनेक्शन तपासा.");
   }
 });
 
@@ -964,9 +1041,44 @@ window.performUpdate = async function(){
   if(idx<0)return;
 
   const rec={...recs[idx],date,traderId,traderName,vehicle,harvestType:window.curHarvest,farmType:window.curFarm,rate,note,received};
-  let totalNet=0,totalWQ=0,totalLabour=0,totalGross=0;
+  let totalNet=0,totalWQ=0,totalLabour=0,totalGross=0,totalKattar=0;
 
-  farms.forEach(fm=>{
+  if(window.curFarm==='MP'){
+    // Combined weight is entered ONCE (f_C_*), not per farm — read it from the combined fields
+    const Q=Number(document.getElementById('f_C_wQ')?.value||0);
+    const kg=Number(document.getElementById('f_C_wKg')?.value||0);
+    const dQ=window.curHarvest!=='box'?Number(document.getElementById('f_C_dQ')?.value||0):0;
+    const dKg=window.curHarvest!=='box'?Number(document.getElementById('f_C_dKg')?.value||0):0;
+    const is3=window.curHarvest!=='box'?(document.getElementById('f_C_3pct')?.checked||false):false;
+    const c=window.calcFarm(Q,kg,dQ,dKg,is3,0,0,rate,window.curHarvest,0);
+    totalWQ=c.netWQ; totalGross=c.gross;
+
+    rec.c_totalWQ=Q; rec.c_totalWKg=kg; rec.c_totalWeightQ=c.totalWQ;
+    rec.c_dedQ=dQ; rec.c_dedKg=dKg; rec.c_deductionQ=c.dedQ;
+    rec.c_fanayaAdd=c.fanayaAdd;
+    rec.c_is3Pct=is3; rec.c_threePctDed=c.threePct; rec.c_netWeightQ=c.netWQ;
+    rec.c_grossIncome=c.gross;
+    rec.c_photoTollBefore=window.photoTargets['tollBefore']||rec.c_photoTollBefore||null;
+    rec.c_photoTollAfter=window.photoTargets['tollAfter']||rec.c_photoTollAfter||null;
+    const newCPatti=[0,1,2].map(i=>window.photoTargets[`patti_${i}`]||null).filter(Boolean);
+    rec.c_photoPatti=newCPatti.length?newCPatti:(rec.c_photoPatti||[]);
+
+    ['M','P'].forEach(fm=>{
+      const ghads=Number(document.getElementById(`f_${fm}_ghads`)?.value||0);
+      const labRate=Number(document.getElementById(`f_${fm}_labRate`)?.value||10)||10;
+      const kattar=Number(document.getElementById(`f_${fm}_kattar`)?.value||0);
+      const labCost=ghads*labRate;
+      const p=fm.toLowerCase();
+      rec[`${p}_ghads`]=ghads; rec[`${p}_labourRate`]=labRate; rec[`${p}_totalLabour`]=labCost;
+      rec[`${p}_kattar`]=kattar;
+      totalLabour+=labCost; totalKattar+=kattar;
+    });
+    totalNet=totalGross-totalLabour-totalKattar;
+    rec.m_totalWQ=0;rec.m_netWeightQ=0;rec.m_netIncome=0;rec.m_grossIncome=0;rec.m_fanayaAdd=0;
+    rec.p_totalWQ=0;rec.p_netWeightQ=0;rec.p_netIncome=0;rec.p_grossIncome=0;rec.p_fanayaAdd=0;
+
+  } else {
+    const fm=window.curFarm;
     const Q=Number(document.getElementById(`f_${fm}_wQ`)?.value||0);
     const kg=Number(document.getElementById(`f_${fm}_wKg`)?.value||0);
     const dQ=window.curHarvest!=='box'?Number(document.getElementById(`f_${fm}_dQ`)?.value||0):0;
@@ -974,24 +1086,27 @@ window.performUpdate = async function(){
     const is3=window.curHarvest!=='box'?(document.getElementById(`f_${fm}_3pct`)?.checked||false):false;
     const ghads=Number(document.getElementById(`f_${fm}_ghads`)?.value||0);
     const labRate=Number(document.getElementById(`f_${fm}_labRate`)?.value||10)||10;
-    const c=window.calcFarm(Q,kg,dQ,dKg,is3,ghads,labRate,rate);
+    const kattar=Number(document.getElementById(`f_${fm}_kattar`)?.value||0);
+    const c=window.calcFarm(Q,kg,dQ,dKg,is3,ghads,labRate,rate,window.curHarvest,kattar);
     const p=fm.toLowerCase();
     rec[`${p}_totalWQ`]=Q;rec[`${p}_totalWKg`]=kg;rec[`${p}_totalWeightQ`]=c.totalWQ;
     rec[`${p}_dedQ`]=dQ;rec[`${p}_dedKg`]=dKg;rec[`${p}_deductionQ`]=c.dedQ;
+    rec[`${p}_fanayaAdd`]=c.fanayaAdd;
     rec[`${p}_is3Pct`]=is3;rec[`${p}_threePctDed`]=c.threePct;rec[`${p}_netWeightQ`]=c.netWQ;
     rec[`${p}_ghads`]=ghads;rec[`${p}_labourRate`]=labRate;rec[`${p}_totalLabour`]=c.labCost;
+    rec[`${p}_kattar`]=kattar;
     rec[`${p}_grossIncome`]=c.gross;rec[`${p}_netIncome`]=c.net;
-    totalNet+=c.net;totalWQ+=c.netWQ;totalLabour+=c.labCost;totalGross+=c.gross;
-    const prefix=farms.length>1?`${fm}_`:'';
-    rec[`${p}_photoTollBefore`]=window.photoTargets[prefix+'tollBefore']||rec[`${p}_photoTollBefore`]||null;
-    rec[`${p}_photoTollAfter`]=window.photoTargets[prefix+'tollAfter']||rec[`${p}_photoTollAfter`]||null;
-    const newPatti=[0,1,2].map(i=>window.photoTargets[`${prefix}patti_${i}`]||null).filter(Boolean);
+    rec[`${p}_photoTollBefore`]=window.photoTargets['tollBefore']||rec[`${p}_photoTollBefore`]||null;
+    rec[`${p}_photoTollAfter`]=window.photoTargets['tollAfter']||rec[`${p}_photoTollAfter`]||null;
+    const newPatti=[0,1,2].map(i=>window.photoTargets[`patti_${i}`]||null).filter(Boolean);
     rec[`${p}_photoPatti`]=newPatti.length?newPatti:(rec[`${p}_photoPatti`]||[]);
-  });
-  if(window.curFarm==='P'){rec.m_totalWQ=0;rec.m_netWeightQ=0;rec.m_netIncome=0;rec.m_totalLabour=0;rec.m_grossIncome=0;rec.m_ghads=0;}
-  if(window.curFarm==='M'){rec.p_totalWQ=0;rec.p_netWeightQ=0;rec.p_netIncome=0;rec.p_totalLabour=0;rec.p_grossIncome=0;rec.p_ghads=0;}
+    totalNet=c.net; totalWQ=c.netWQ; totalLabour=c.labCost; totalKattar=kattar; totalGross=c.gross;
+    if(fm==='P'){rec.m_totalWQ=0;rec.m_netWeightQ=0;rec.m_netIncome=0;rec.m_totalLabour=0;rec.m_grossIncome=0;rec.m_ghads=0;rec.m_kattar=0;rec.m_fanayaAdd=0;}
+    if(fm==='M'){rec.p_totalWQ=0;rec.p_netWeightQ=0;rec.p_netIncome=0;rec.p_totalLabour=0;rec.p_grossIncome=0;rec.p_ghads=0;rec.p_kattar=0;rec.p_fanayaAdd=0;}
+  }
+
   rec.combinedNetWeightQ=totalWQ;rec.combinedGrossIncome=totalGross;
-  rec.combinedLabour=totalLabour;rec.combinedNetIncome=totalNet;
+  rec.combinedLabour=totalLabour;rec.combinedKattar=totalKattar;rec.combinedNetIncome=totalNet;
   rec.pending=Math.max(0,totalNet-received);
 
   if(!window.currentUserUid) return;
@@ -1070,6 +1185,181 @@ window.renderTraders = function(){
   }).join('');
 }
 
+window.renderPartners = function(){
+  const p=getProfile();
+  const p1name=p.partner1||window.t('partner1');
+  const p2name=p.partner2||window.t('partner2');
+  const recs=[...window.getRecords()].sort((a,b)=>(b.date||'').localeCompare(a.date||''));
+  const dists=window.getDistributions();
+
+  // ---- Per-harvest breakdown: each harvest's own 50/50 split, independent of other harvests ----
+  const rows=recs.map(r=>{
+    const linked=dists.filter(d=>d.recordId===r.id);
+    const pool=r.combinedNetIncome||0;
+    const farmExp=linked.filter(d=>d.recipient==='farm').reduce((s,d)=>s+(d.amount||0),0);
+    const distributable=pool-farmExp;
+    const entitlement=distributable/2;
+    const givenP1=linked.filter(d=>d.recipient==='partner1').reduce((s,d)=>s+(d.amount||0),0)
+      + linked.filter(d=>d.recipient==='both').reduce((s,d)=>s+(d.amount||0)/2,0);
+    const givenP2=linked.filter(d=>d.recipient==='partner2').reduce((s,d)=>s+(d.amount||0),0)
+      + linked.filter(d=>d.recipient==='both').reduce((s,d)=>s+(d.amount||0)/2,0);
+    return {r,linked,pool,farmExp,entitlement,givenP1,givenP2,balP1:entitlement-givenP1,balP2:entitlement-givenP2};
+  });
+
+  const totalPool=rows.reduce((s,x)=>s+x.pool,0);
+  const totalFarmExp=rows.reduce((s,x)=>s+x.farmExp,0);
+  const totalBalP1=rows.reduce((s,x)=>s+x.balP1,0);
+  const totalBalP2=rows.reduce((s,x)=>s+x.balP2,0);
+
+  const statsEl=document.getElementById('partners-stats');
+  if(statsEl){
+    statsEl.innerHTML=`
+      <div class="stat-card"><div class="stat-label">${window.t('totalPool')}</div><div class="stat-val">₹${window.fmt(totalPool)}</div></div>
+      <div class="stat-card"><div class="stat-label">${window.t('farmExpense')}</div><div class="stat-val red">₹${window.fmt(totalFarmExp)}</div></div>
+      <div class="stat-card"><div class="stat-label">${p1name} — ${window.t('balanceLeft')}</div><div class="stat-val ${totalBalP1<0?'red':''}">₹${window.fmt(totalBalP1)}</div></div>
+      <div class="stat-card"><div class="stat-label">${p2name} — ${window.t('balanceLeft')}</div><div class="stat-val ${totalBalP2<0?'red':''}">₹${window.fmt(totalBalP2)}</div></div>`;
+  }
+
+  const listEl=document.getElementById('partners-list');
+  if(listEl){
+    if(!rows.length){
+      listEl.innerHTML=`<div class="empty-state"><span class="emoji">🤲</span>${window.t('noRecords')}</div>`;
+    } else {
+      listEl.innerHTML=rows.map(({r,pool,farmExp,entitlement,givenP1,givenP2,balP1,balP2})=>`
+      <div class="card" style="cursor:pointer" onclick="window.openDistFormForRecord('${r.id}','partners')">
+        <div class="rec-top"><span class="rec-trader">${r.traderName||'?'}</span><span class="rec-income">₹${window.fmt(pool)}</span></div>
+        <div class="rec-meta">${window.fmtDate(r.date)}${farmExp?` · ${window.t('farmExpense')}: ₹${window.fmt(farmExp)}`:''}</div>
+        <div class="detail-row" style="margin-top:8px;padding-top:8px;border-top:1px solid var(--border)">
+          <span class="label" style="font-weight:600">${p1name}</span>
+          <span class="val">${window.t('entitlement')} ₹${window.fmt(entitlement)} · ${window.t('received')} ₹${window.fmt(givenP1)}</span>
+        </div>
+        <div class="detail-row"><span class="label"></span><span class="val" style="font-weight:700;color:${balP1<0?'var(--red)':'var(--green)'}">${window.t('balanceLeft')}: ₹${window.fmt(balP1)}</span></div>
+        <div class="detail-row" style="margin-top:6px"><span class="label" style="font-weight:600">${p2name}</span>
+          <span class="val">${window.t('entitlement')} ₹${window.fmt(entitlement)} · ${window.t('received')} ₹${window.fmt(givenP2)}</span>
+        </div>
+        <div class="detail-row"><span class="label"></span><span class="val" style="font-weight:700;color:${balP2<0?'var(--red)':'var(--green)'}">${window.t('balanceLeft')}: ₹${window.fmt(balP2)}</span></div>
+        <div style="text-align:center;margin-top:10px;color:var(--blue);font-size:12px;font-weight:600">👆 ${window.t('addDistribution')}</div>
+      </div>`).join('');
+    }
+  }
+
+  // ---- Full distribution history (audit trail, all entries across all harvests) ----
+  const distListEl=document.getElementById('partners-distlist');
+  if(distListEl){
+    const allDists=[...dists].sort((a,b)=>(b.date||'').localeCompare(a.date||''));
+    if(!allDists.length){
+      distListEl.innerHTML=`<div class="empty-state"><span class="emoji">💸</span>${window.t('noDistributions')}</div>`;
+    } else {
+      const recipLabel=(rec)=>rec==='partner1'?p1name:rec==='partner2'?p2name:rec==='both'?window.t('distBoth'):window.t('distFarm');
+      distListEl.innerHTML=allDists.map(d=>{
+        const rec=recs.find(x=>x.id===d.recordId);
+        return `<div class="card">
+        <div class="rec-top"><span class="rec-trader">${recipLabel(d.recipient)}</span><span class="rec-income">₹${window.fmt(d.amount||0)}</span></div>
+        <div class="rec-meta">${window.fmtDate(d.date)}${rec?' · '+(rec.traderName||''):''} ${d.note?'· '+d.note:''}</div>
+        <button class="danger-btn" style="margin-top:8px;padding:6px 10px;font-size:12px" onclick="event.stopPropagation();window.deleteDistribution('${d.id}','${d.recordId||''}','partners')">🗑️ ${window.t('deleteDistribution')}</button>
+      </div>`;}).join('');
+    }
+  }
+}
+
+document.getElementById('addDistBtn').addEventListener('click',()=>{
+  document.getElementById('df_recordId').value='';
+  window._distFormOrigin='partners';
+  document.getElementById('df_recordHint').style.display='none';
+  document.getElementById('df_date').value=window.today();
+  document.getElementById('df_amount').value='';
+  document.getElementById('df_note').value='';
+  const p=getProfile();
+  const opt1=document.getElementById('df_opt_p1'); if(opt1) opt1.textContent=p.partner1||window.t('partner1');
+  const opt2=document.getElementById('df_opt_p2'); if(opt2) opt2.textContent=p.partner2||window.t('partner2');
+  document.getElementById('df_recipient').value='partner1';
+  document.getElementById('distFormError').style.display='none';
+  window.showOverlay('distFormOverlay');
+});
+
+// Open the distribution form pre-linked to one specific harvest record.
+// origin tells us which screen to return to after saving: 'partners' (stay on Partners tab, default) or 'detail' (reopen the record's detail view).
+window.openDistFormForRecord = function(recordId, origin){
+  const r=window.getRecords().find(x=>x.id===recordId);
+  if(!r)return;
+  window._distFormOrigin=origin||'detail';
+  const linked=window.getDistributions().filter(d=>d.recordId===recordId);
+  const givenAlready=linked.reduce((s,d)=>s+(d.amount||0),0);
+  const remaining=Math.max(0,((r.combinedNetIncome||0))-givenAlready);
+
+  document.getElementById('df_recordId').value=recordId;
+  const hint=document.getElementById('df_recordHint');
+  hint.style.display='block';
+  hint.textContent=`${r.traderName||''} — ${window.fmtDate(r.date)} · ${window.t('netIncome')}: ₹${window.fmt(r.combinedNetIncome||0)} · ${window.t('balanceLeft')}: ₹${window.fmt(remaining)}`;
+
+  document.getElementById('df_date').value=window.today();
+  document.getElementById('df_amount').value=remaining>0?remaining:'';
+  document.getElementById('df_note').value='';
+  const p=getProfile();
+  const opt1=document.getElementById('df_opt_p1'); if(opt1) opt1.textContent=p.partner1||window.t('partner1');
+  const opt2=document.getElementById('df_opt_p2'); if(opt2) opt2.textContent=p.partner2||window.t('partner2');
+  document.getElementById('df_recipient').value='partner1';
+  document.getElementById('distFormError').style.display='none';
+  window.showOverlay('distFormOverlay');
+};
+document.getElementById('distFormBack').addEventListener('click',()=>{ window.hideOverlay('distFormOverlay'); });
+
+// FIREBASE SAVE DISTRIBUTION
+document.getElementById('saveDistBtn').addEventListener('click', async ()=>{
+  const errEl=document.getElementById('distFormError');
+  errEl.style.display='none';
+  const amount=Number(document.getElementById('df_amount').value||0);
+  if(!amount){errEl.textContent=window.t('valDistAmt');errEl.style.display='block';return;}
+  const recipient=document.getElementById('df_recipient').value;
+  if(!recipient){errEl.textContent=window.t('valDistRecipient');errEl.style.display='block';return;}
+  if(!window.currentUserUid) return;
+  const recordId=document.getElementById('df_recordId').value||null;
+  const origin=window._distFormOrigin||'partners';
+  const dist={
+    id:window.genId(),
+    date:document.getElementById('df_date').value||window.today(),
+    amount, recipient,
+    recordId,
+    note:document.getElementById('df_note').value||'',
+    createdAt:Date.now()
+  };
+  try {
+    const distRef = doc(db, "users", window.currentUserUid, "distributions", dist.id);
+    await setDoc(distRef, dist);
+    window.hideOverlay('distFormOverlay');
+    window.showToast(window.t('distSaved'));
+    await fetchCloudData();
+    if(recordId && origin==='detail') window.openDetail(recordId);
+  } catch(error) {
+    console.error("Distribution Save Error:", error);
+    if(error?.code === 'permission-denied'){
+      alert("वाटप जतन करता आले नाही: Firestore Rules मध्ये 'distributions' कलेक्शनला परवानगी नाही. Firebase Console → Firestore → Rules मध्ये तो नियम जोडा.");
+    } else {
+      alert("वाटप जतन करता आले नाही. इंटरनेट कनेक्शन तपासा. (त्रुटी: "+(error?.message||error)+")");
+    }
+  }
+});
+
+// FIREBASE DELETE DISTRIBUTION
+window.deleteDistribution = async function(id, recordId, origin){
+  if(!confirm(window.t('confirmDeleteDist')))return;
+  if(!window.currentUserUid) return;
+  try {
+    const distRef = doc(db, "users", window.currentUserUid, "distributions", id);
+    await deleteDoc(distRef);
+    window.showToast(window.t('distDeleted'));
+    await fetchCloudData();
+    if(recordId && origin==='detail') window.openDetail(recordId);
+  } catch(error) {
+    console.error("Distribution Delete Error:", error);
+    if(error?.code === 'permission-denied'){
+      alert("हटवता आले नाही: Firestore Rules मध्ये 'distributions' कलेक्शनला परवानगी नाही.");
+    } else {
+      alert("हटवता आले नाही. इंटरनेट तपासा. (त्रुटी: "+(error?.message||error)+")");
+    }
+  }
+}
+
 document.querySelectorAll('.nav-tab').forEach(btn=>{
   btn.addEventListener('click',()=>{
     window.curTab=btn.dataset.tab;
@@ -1143,6 +1433,7 @@ window.renderAll = function(){
   window.renderFarmScreen('P');
   window.renderAllRecords();
   window.renderTraders();
+  window.renderPartners();
   const hasRecs=window.getRecords().length>0;
   document.getElementById('pdfBtn').style.display=(window.curTab==='dash'&&hasRecs)?'block':'none';
   ['dash-recent','farmM-records','farmP-records','all-records','dash-combined'].forEach(id=>{
@@ -1163,10 +1454,11 @@ window.openAddForm = function(){
     window.showOverlay('traderFormOverlay');
     return;
   }
+  const isEdit=window._skipResetEdit; // true when opened from openEditForm — must preserve curFarm/curHarvest set there
   if(!window._skipResetEdit) window.editingRecord=null;
   window._skipResetEdit=false;
   window.photoTargets={};
-  window.curFarm='M'; window.curHarvest='ghad';
+  if(!isEdit){ window.curFarm='M'; window.curHarvest='ghad'; }
   document.getElementById('f_date').value=window.today();
   document.getElementById('f_vehicle').value='';
   document.getElementById('f_received').value='';
@@ -1175,8 +1467,8 @@ window.openAddForm = function(){
   document.getElementById('saveError').style.display='none';
   const tSel=document.getElementById('f_trader');
   tSel.innerHTML=traders.map(tr=>`<option value="${tr.id}">${tr.name}</option>`).join('');
-  document.querySelectorAll('#farmToggle .toggle-btn').forEach(b=>b.classList.toggle('active',b.dataset.farm==='M'));
-  document.querySelectorAll('#harvestToggle .toggle-btn').forEach(b=>b.classList.toggle('active',b.dataset.harvest==='ghad'));
+  document.querySelectorAll('#farmToggle .toggle-btn').forEach(b=>b.classList.toggle('active',b.dataset.farm===window.curFarm));
+  document.querySelectorAll('#harvestToggle .toggle-btn').forEach(b=>b.classList.toggle('active',b.dataset.harvest===window.curHarvest));
   window.buildFarmFields();
   window.showOverlay('formOverlay');
   document.getElementById('formTitle').textContent=window.t('addRecord');
@@ -1234,7 +1526,8 @@ window.buildFarmFields = function(){
         <div><label class="form-label">${window.t('ghadsCount')}</label><input type="number" class="form-input" id="f_${fm}_ghads" placeholder="0" min="0" oninput="window.recalcAll()"></div>
         <div><label class="form-label">${window.t('labourRate')}</label><input type="number" class="form-input" id="f_${fm}_labRate" placeholder="10" min="0" oninput="window.recalcAll()"></div>
       </div>
-      <div class="auto-box blue" style="margin-top:6px;font-size:13px" id="f_${fm}_labFormula">0 × ₹10 = ₹0</div></div>`;
+      <div class="auto-box blue" style="margin-top:6px;font-size:13px" id="f_${fm}_labFormula">0 × ₹10 = ₹0</div>
+      <div style="margin-top:8px"><label class="form-label">${window.t('kattar')}</label><input type="number" class="form-input" id="f_${fm}_kattar" placeholder="0" min="0" oninput="window.recalcAll()"></div></div>`;
     });
 
   } else {
@@ -1260,7 +1553,8 @@ window.buildFarmFields = function(){
       <div><label class="form-label">${window.t('ghadsCount')}</label><input type="number" class="form-input" id="f_${fm}_ghads" placeholder="0" min="0" oninput="window.recalcAll()"></div>
       <div><label class="form-label">${window.t('labourRate')}</label><input type="number" class="form-input" id="f_${fm}_labRate" placeholder="10" min="0" oninput="window.recalcAll()"></div>
     </div>
-    <div class="auto-box blue" style="margin-top:6px;font-size:13px" id="f_${fm}_labFormula">0 × ₹10 = ₹0</div></div>
+    <div class="auto-box blue" style="margin-top:6px;font-size:13px" id="f_${fm}_labFormula">0 × ₹10 = ₹0</div>
+    <div style="margin-top:8px"><label class="form-label">${window.t('kattar')}</label><input type="number" class="form-input" id="f_${fm}_kattar" placeholder="0" min="0" oninput="window.recalcAll()"></div></div>
     <div class="auto-box green" id="f_${fm}_netInc" style="margin-bottom:8px">${window.t('netIncome')}: ₹0</div>`;
     html+=`<div class="sec-title">पावत्या</div>`;
     html+=window.photoSectionHTML('tollBefore','टोल आधी',1);
@@ -1291,29 +1585,31 @@ window.recalcAll = function(){
     const dKg=window.curHarvest!=='box'?Number(document.getElementById('f_C_dKg')?.value||0):0;
     const is3=window.curHarvest!=='box'?(document.getElementById('f_C_3pct')?.checked||false):false;
 
-    const c=window.calcFarm(Q,kg,dQ,dKg,is3,0,0,rate);
+    const c=window.calcFarm(Q,kg,dQ,dKg,is3,0,0,rate,window.curHarvest,0);
     netWQ=c.netWQ; totalGross=c.gross;
 
     const netWEl=document.getElementById('f_C_netW');
-    if(netWEl)netWEl.textContent=`${window.t('netWeight')}: ${window.fmtQ(c.netWQ)} Q`;
+    if(netWEl)netWEl.textContent=`${window.t('netWeight')}: ${window.fmtQ(c.netWQ)} Q${c.fanayaAdd>0?` (+${window.fmtQ(c.fanayaAdd)} Q ${window.t('fanayaAddLbl')} ${c.fanayaPct}%)`:''}`;
     const grossEl=document.getElementById('f_C_grossInc');
     if(grossEl)grossEl.textContent=`एकत्रित उत्पन्न (Gross): ₹${window.fmt(c.gross)}`;
     const amt3El=document.getElementById('f_C_3pctAmt');
     if(amt3El)amt3El.textContent=is3?`(-${window.fmtQ(c.threePct)} Q)`:'';
 
-    let summaryRows='';
+    let summaryRows='', totalKattar=0;
     ['M','P'].forEach(fm=>{
       const ghads=Number(document.getElementById(`f_${fm}_ghads`)?.value||0);
       const labRate=Number(document.getElementById(`f_${fm}_labRate`)?.value||10)||10;
+      const kattar=Number(document.getElementById(`f_${fm}_kattar`)?.value||0);
       const labCost=ghads*labRate;
-      totalLabour+=labCost;
+      totalLabour+=labCost; totalKattar+=kattar;
       const labEl=document.getElementById(`f_${fm}_labFormula`);
       if(labEl)labEl.textContent=`${ghads} × ₹${labRate} = ₹${window.fmt(labCost)}`;
       const lbl=fm==='M'?window.t('farmMLong'):window.t('farmPLong');
       summaryRows+=`<div class="summary-row"><span>${lbl} मजुरी: ${ghads} घड × ₹${labRate}</span><span style="font-weight:700">₹${window.fmt(labCost)}</span></div>`;
+      if(kattar>0) summaryRows+=`<div class="summary-row"><span>${lbl} ${window.t('kattar')}</span><span style="font-weight:700">₹${window.fmt(kattar)}</span></div>`;
     });
 
-    totalNet=totalGross-totalLabour;
+    totalNet=totalGross-totalLabour-totalKattar;
 
     document.getElementById('combinedSummary').style.display='block';
     document.getElementById('combinedBox').innerHTML=
@@ -1329,10 +1625,11 @@ window.recalcAll = function(){
     const is3=window.curHarvest!=='box'?(document.getElementById(`f_${fm}_3pct`)?.checked||false):false;
     const ghads=Number(document.getElementById(`f_${fm}_ghads`)?.value||0);
     const labRate=Number(document.getElementById(`f_${fm}_labRate`)?.value||10)||10;
-    const c=window.calcFarm(Q,kg,dQ,dKg,is3,ghads,labRate,rate);
+    const kattar=Number(document.getElementById(`f_${fm}_kattar`)?.value||0);
+    const c=window.calcFarm(Q,kg,dQ,dKg,is3,ghads,labRate,rate,window.curHarvest,kattar);
 
     const netWEl=document.getElementById(`f_${fm}_netW`);
-    if(netWEl)netWEl.textContent=`${window.t('netWeight')}: ${window.fmtQ(c.netWQ)} Q`;
+    if(netWEl)netWEl.textContent=`${window.t('netWeight')}: ${window.fmtQ(c.netWQ)} Q${c.fanayaAdd>0?` (+${window.fmtQ(c.fanayaAdd)} Q ${window.t('fanayaAddLbl')} ${c.fanayaPct}%)`:''}`;
     const labEl=document.getElementById(`f_${fm}_labFormula`);
     if(labEl)labEl.textContent=`${ghads} × ₹${labRate} = ₹${window.fmt(c.labCost)}`;
     const netEl=document.getElementById(`f_${fm}_netInc`);
@@ -1340,7 +1637,7 @@ window.recalcAll = function(){
     const amt3El=document.getElementById(`f_${fm}_3pctAmt`);
     if(amt3El)amt3El.textContent=is3?`(-${window.fmtQ(c.threePct)} Q)`:'';
 
-    totalNet=c.net; totalGross=c.gross; totalLabour=c.labCost; netWQ=c.netWQ;
+    totalNet=c.net; totalGross=c.gross; totalLabour=c.labCost+kattar; netWQ=c.netWQ;
     document.getElementById('combinedSummary').style.display='none';
   }
   const rec=Number(document.getElementById('f_received')?.value||0);
@@ -1375,7 +1672,7 @@ window.saveRecord = async function(){
   const recId = window.genId();
   const rec={id:recId,createdAt:Date.now(),date,traderId,traderName:trader.name,vehicle,harvestType:window.curHarvest,farmType:window.curFarm,rate,note,received};
 
-  let totalNet=0, totalGross=0, totalLabour=0, netWQ=0;
+  let totalNet=0, totalGross=0, totalLabour=0, totalKattar=0, netWQ=0;
 
   if(window.curFarm==='MP'){
     const Q=Number(document.getElementById('f_C_wQ')?.value||0);
@@ -1384,11 +1681,12 @@ window.saveRecord = async function(){
     const dQ=window.curHarvest!=='box'?Number(document.getElementById('f_C_dQ')?.value||0):0;
     const dKg=window.curHarvest!=='box'?Number(document.getElementById('f_C_dKg')?.value||0):0;
     const is3=window.curHarvest!=='box'?(document.getElementById('f_C_3pct')?.checked||false):false;
-    const c=window.calcFarm(Q,kg,dQ,dKg,is3,0,0,rate);
+    const c=window.calcFarm(Q,kg,dQ,dKg,is3,0,0,rate,window.curHarvest,0);
     netWQ=c.netWQ; totalGross=c.gross;
 
     rec.c_totalWQ=Q; rec.c_totalWKg=kg; rec.c_totalWeightQ=c.totalWQ;
     rec.c_dedQ=dQ; rec.c_dedKg=dKg; rec.c_deductionQ=c.dedQ;
+    rec.c_fanayaAdd=c.fanayaAdd;
     rec.c_is3Pct=is3; rec.c_threePctDed=c.threePct; rec.c_netWeightQ=c.netWQ;
     rec.c_grossIncome=c.gross;
     rec.c_photoTollBefore=window.photoTargets['tollBefore']||null;
@@ -1398,12 +1696,14 @@ window.saveRecord = async function(){
     ['M','P'].forEach(fm=>{
       const ghads=Number(document.getElementById(`f_${fm}_ghads`)?.value||0);
       const labRate=Number(document.getElementById(`f_${fm}_labRate`)?.value||10)||10;
+      const kattar=Number(document.getElementById(`f_${fm}_kattar`)?.value||0);
       const labCost=ghads*labRate;
       const p=fm.toLowerCase();
       rec[`${p}_ghads`]=ghads; rec[`${p}_labourRate`]=labRate; rec[`${p}_totalLabour`]=labCost;
-      totalLabour+=labCost;
+      rec[`${p}_kattar`]=kattar;
+      totalLabour+=labCost; totalKattar+=kattar;
     });
-    totalNet=totalGross-totalLabour;
+    totalNet=totalGross-totalLabour-totalKattar;
 
   } else {
     const fm=window.curFarm;
@@ -1415,24 +1715,28 @@ window.saveRecord = async function(){
     const is3=window.curHarvest!=='box'?(document.getElementById(`f_${fm}_3pct`)?.checked||false):false;
     const ghads=Number(document.getElementById(`f_${fm}_ghads`)?.value||0);
     const labRate=Number(document.getElementById(`f_${fm}_labRate`)?.value||10)||10;
-    const c=window.calcFarm(Q,kg,dQ,dKg,is3,ghads,labRate,rate);
+    const kattar=Number(document.getElementById(`f_${fm}_kattar`)?.value||0);
+    const c=window.calcFarm(Q,kg,dQ,dKg,is3,ghads,labRate,rate,window.curHarvest,kattar);
     const p=fm.toLowerCase();
 
     rec[`${p}_totalWQ`]=Q;rec[`${p}_totalWKg`]=kg;rec[`${p}_totalWeightQ`]=c.totalWQ;
     rec[`${p}_dedQ`]=dQ;rec[`${p}_dedKg`]=dKg;rec[`${p}_deductionQ`]=c.dedQ;
+    rec[`${p}_fanayaAdd`]=c.fanayaAdd;
     rec[`${p}_is3Pct`]=is3;rec[`${p}_threePctDed`]=c.threePct;rec[`${p}_netWeightQ`]=c.netWQ;
     rec[`${p}_ghads`]=ghads;rec[`${p}_labourRate`]=labRate;rec[`${p}_totalLabour`]=c.labCost;
+    rec[`${p}_kattar`]=kattar;
     rec[`${p}_grossIncome`]=c.gross;rec[`${p}_netIncome`]=c.net;
     rec[`${p}_photoTollBefore`]=window.photoTargets['tollBefore']||null;
     rec[`${p}_photoTollAfter`]=window.photoTargets['tollAfter']||null;
     rec[`${p}_photoPatti`]=[0,1,2].map(i=>window.photoTargets[`patti_${i}`]||null).filter(Boolean);
 
-    totalNet=c.net; totalGross=c.gross; totalLabour=c.labCost; netWQ=c.netWQ;
+    totalNet=c.net; totalGross=c.gross; totalLabour=c.labCost; totalKattar=kattar; netWQ=c.netWQ;
   }
 
   rec.combinedNetWeightQ=netWQ;
   rec.combinedGrossIncome=totalGross;
   rec.combinedLabour=totalLabour;
+  rec.combinedKattar=totalKattar;
   rec.combinedNetIncome=totalNet;
   rec.pending=Math.max(0,totalNet-received);
 
@@ -1494,7 +1798,7 @@ window.openDetail = function(id){
   if(!r)return;
   window.showOverlay('detailOverlay');
   document.getElementById('detailTitle').textContent=window.t('recordDetail');
-  const htLabel=r.harvestType==='ghad'?'केळीचे घड':r.harvestType==='box'?'Box Packing':'फणाया';
+  const htLabel=r.harvestType==='ghad'?'केळीचे घड':r.harvestType==='box'?'बॉक्स पॅकिंग':'फणाया';
   const farmType = r.farmType || 'M';
   const farmBadge=farmType==='M'?`<span class="badge badge-m">शेत म</span>`:farmType==='P'?`<span class="badge badge-p">शेत प</span>`:`<span class="badge badge-mp">म+प</span>`;
   let html=`<div class="card">
@@ -1509,12 +1813,14 @@ window.openDetail = function(id){
     h+=`<div class="detail-row"><span class="label">${window.t('weight')}</span><span class="val">${r[`${prefix}totalWQ`]||0} Q + ${r[`${prefix}totalWKg`]||0} kg = ${window.fmtQ(r[`${prefix}totalWeightQ`]||0)} Q</span></div>`;
     if((r.harvestType||'ghad')!=='box'){
       h+=`<div class="detail-row"><span class="label">${window.t('deduction')}</span><span class="val">${window.fmtQ(r[`${prefix}deductionQ`]||0)} Q</span></div>`;
+      if(r[`${prefix}fanayaAdd`])h+=`<div class="detail-row"><span class="label">${window.t('fanayaAddLbl')}</span><span class="val" style="color:var(--green)">+${window.fmtQ(r[`${prefix}fanayaAdd`]||0)} Q</span></div>`;
       if(r[`${prefix}is3Pct`])h+=`<div class="detail-row"><span class="label">${window.t('threePct')}</span><span class="val">-${window.fmtQ(r[`${prefix}threePctDed`]||0)} Q</span></div>`;
     }
     h+=`<div class="detail-row"><span class="label">${window.t('netWeight')}</span><span class="val" style="color:var(--blue)">${window.fmtQ(r[`${prefix}netWeightQ`]||0)} Q</span></div>`;
     h+=`<div class="detail-row"><span class="label">${window.t('rate')}</span><span class="val">₹${window.fmt(r.rate)}/Q</span></div>`;
     h+=`<div class="detail-row"><span class="label">${window.t('grossIncome')}</span><span class="val">₹${window.fmt(r[`${prefix}grossIncome`]||0)}</span></div>`;
     h+=`<div class="detail-row"><span class="label">${window.t('ghadsCount')}</span><span class="val">${r[`${prefix}ghads`]||0} × ₹${r[`${prefix}labourRate`]||10} = ₹${window.fmt(r[`${prefix}totalLabour`]||0)}</span></div>`;
+    if(r[`${prefix}kattar`])h+=`<div class="detail-row"><span class="label">${window.t('kattar')}</span><span class="val" style="color:var(--red)">-₹${window.fmt(r[`${prefix}kattar`]||0)}</span></div>`;
     h+=`<div class="detail-row"><span class="label">${window.t('netIncome')}</span><span class="val" style="color:var(--green);font-size:16px">₹${window.fmt(r[`${prefix}netIncome`]||0)}</span></div>`;
     h+='</div>';
     const photos=[];
@@ -1533,6 +1839,7 @@ window.openDetail = function(id){
     html+=`<div class="detail-row"><span class="label">${window.t('weight')}</span><span class="val">${r.c_totalWQ||0} Q + ${r.c_totalWKg||0} kg = ${window.fmtQ(r.c_totalWeightQ||0)} Q</span></div>`;
     if((r.harvestType||'ghad')!=='box'){
       html+=`<div class="detail-row"><span class="label">${window.t('deduction')}</span><span class="val">${window.fmtQ(r.c_deductionQ||0)} Q</span></div>`;
+      if(r.c_fanayaAdd)html+=`<div class="detail-row"><span class="label">${window.t('fanayaAddLbl')}</span><span class="val" style="color:var(--green)">+${window.fmtQ(r.c_fanayaAdd||0)} Q</span></div>`;
       if(r.c_is3Pct)html+=`<div class="detail-row"><span class="label">${window.t('threePct')}</span><span class="val">-${window.fmtQ(r.c_threePctDed||0)} Q</span></div>`;
     }
     html+=`<div class="detail-row"><span class="label">${window.t('netWeight')}</span><span class="val" style="color:var(--blue)">${window.fmtQ(r.c_netWeightQ||0)} Q</span></div>`;
@@ -1555,13 +1862,16 @@ window.openDetail = function(id){
       const label=fm==='M'?window.t('farmMLong'):window.t('farmPLong');
       const p=fm.toLowerCase();
       html+=`<div class="detail-row"><span class="label">${label}</span><span class="val">${r[`${p}_ghads`]||0} घड × ₹${r[`${p}_labourRate`]||10} = ₹${window.fmt(r[`${p}_totalLabour`]||0)}</span></div>`;
+      if(r[`${p}_kattar`])html+=`<div class="detail-row"><span class="label">${label} — ${window.t('kattar')}</span><span class="val" style="color:var(--red)">-₹${window.fmt(r[`${p}_kattar`]||0)}</span></div>`;
     });
     html+=`<div class="detail-row" style="border-top:2px solid var(--border);margin-top:6px;padding-top:8px"><span class="label" style="font-weight:700">एकूण मजुरी</span><span class="val">₹${window.fmt(r.combinedLabour||0)}</span></div>`;
+    if(r.combinedKattar)html+=`<div class="detail-row"><span class="label" style="font-weight:700">${window.t('kattar')}</span><span class="val" style="color:var(--red)">-₹${window.fmt(r.combinedKattar||0)}</span></div>`;
     html+='</div>';
 
     html+=`<div class="farm-header">📊 अंतिम निव्वळ उत्पन्न</div><div class="card">
       <div class="detail-row"><span class="label">एकत्रित Gross</span><span class="val">₹${window.fmt(r.combinedGrossIncome||0)}</span></div>
       <div class="detail-row"><span class="label">वजा एकूण मजुरी</span><span class="val" style="color:var(--red)">-₹${window.fmt(r.combinedLabour||0)}</span></div>
+      ${r.combinedKattar?`<div class="detail-row"><span class="label">वजा ${window.t('kattar')}</span><span class="val" style="color:var(--red)">-₹${window.fmt(r.combinedKattar||0)}</span></div>`:''}
       <div class="detail-row"><span class="label" style="font-weight:700">निव्वळ उत्पन्न</span><span class="val" style="color:var(--green);font-size:16px">₹${window.fmt(r.combinedNetIncome)}</span></div>
     </div>`;
   } else {
@@ -1599,6 +1909,30 @@ window.openDetail = function(id){
   }
   if((r.pending||0)>0)html+=`<button class="pay-btn" onclick="window.openPaySheet('${r.id}')">${window.t('payNow')}</button>`;
   else html+=`<div style="background:var(--green-light);border:1px solid #a8dbbf;border-radius:10px;padding:12px;text-align:center;color:var(--green);font-weight:600;margin-bottom:8px">✅ पूर्ण पेमेंट झाले</div>`;
+
+  const linkedDists=window.getDistributions().filter(d=>d.recordId===r.id).sort((a,b)=>(b.date||'').localeCompare(a.date||''));
+  const farmExpForRecord=linkedDists.filter(d=>d.recipient==='farm').reduce((s,d)=>s+(d.amount||0),0);
+  const givenForRecord=linkedDists.reduce((s,d)=>s+(d.amount||0),0)-farmExpForRecord;
+  const distributableForRecord=(r.combinedNetIncome||0)-farmExpForRecord;
+  const remainForRecord=distributableForRecord-givenForRecord;
+  const pf=getProfile();
+  const p1n=pf.partner1||window.t('partner1'), p2n=pf.partner2||window.t('partner2');
+  const recipLabel=(rec)=>rec==='partner1'?p1n:rec==='partner2'?p2n:rec==='both'?window.t('distBoth'):window.t('distFarm');
+  html+=`<div class="farm-header">🤲 ${window.t('partners')} — ${window.t('distributions')}</div><div class="card">
+    <div class="detail-row"><span class="label">${window.t('netIncome')}</span><span class="val">₹${window.fmt(r.combinedNetIncome||0)}</span></div>
+    ${farmExpForRecord?`<div class="detail-row"><span class="label">${window.t('farmExpense')}</span><span class="val" style="color:var(--red)">-₹${window.fmt(farmExpForRecord)}</span></div>`:''}
+    <div class="detail-row"><span class="label">${window.t('givenSoFar')}</span><span class="val">₹${window.fmt(givenForRecord)}</span></div>
+    <div class="detail-row"><span class="label" style="font-weight:700">${window.t('balanceLeft')}</span><span class="val" style="color:${remainForRecord<0?'var(--red)':'var(--green)'};font-weight:700">₹${window.fmt(remainForRecord)}</span></div>
+  </div>`;
+  if(linkedDists.length){
+    html+=linkedDists.map(d=>`<div class="card" style="margin-top:8px">
+      <div class="detail-row"><span class="label">${recipLabel(d.recipient)}</span><span class="val" style="font-weight:700">₹${window.fmt(d.amount||0)}</span></div>
+      <div class="detail-row"><span class="label" style="font-size:11px;color:var(--muted)">${window.fmtDate(d.date)}${d.note?' · '+d.note:''}</span>
+      <button class="danger-btn" style="padding:4px 8px;font-size:11px" onclick="window.deleteDistribution('${d.id}','${r.id}','detail')">🗑️</button></div>
+    </div>`).join('');
+  }
+  html+=`<button class="pay-btn" style="margin-top:8px" onclick="window.openDistFormForRecord('${r.id}','detail')">+ ${window.t('addDistribution')}</button>`;
+
   html+=`<button class="danger-btn" onclick="window.deleteRecordFromDetail('${r.id}')">${window.t('delete')}</button>`;
   document.getElementById('detailBody').innerHTML=html;
 }
@@ -1740,7 +2074,10 @@ document.getElementById('profileIconBtn').addEventListener('click',()=>{
   const p = getProfile();
   document.getElementById('profile_name').value = p.name||'';
   document.getElementById('profile_defaultLabRate').value = p.defaultLabRate||10;
+  document.getElementById('profile_fanayaPct').value = (p.fanayaPct!=null?p.fanayaPct:6);
   document.getElementById('profile_overdueDays').value = p.overdueDays||15;
+  document.getElementById('profile_partner1').value = p.partner1||window.t('partner1');
+  document.getElementById('profile_partner2').value = p.partner2||window.t('partner2');
   window.showOverlay('profileOverlay');
 });
 document.getElementById('profileBack').addEventListener('click',()=>window.hideOverlay('profileOverlay'));
@@ -1749,10 +2086,14 @@ document.getElementById('saveProfileBtn').addEventListener('click',()=>{
   saveProfile({
     name: document.getElementById('profile_name').value,
     defaultLabRate: Number(document.getElementById('profile_defaultLabRate').value||10),
-    overdueDays: Number(document.getElementById('profile_overdueDays').value||15)
+    fanayaPct: Number(document.getElementById('profile_fanayaPct').value!=='' ? document.getElementById('profile_fanayaPct').value : 6),
+    overdueDays: Number(document.getElementById('profile_overdueDays').value||15),
+    partner1: document.getElementById('profile_partner1').value || window.t('partner1'),
+    partner2: document.getElementById('profile_partner2').value || window.t('partner2')
   });
   window.showToast('प्रोफाइल जतन झाली ✓');
   window.hideOverlay('profileOverlay');
+  window.renderAll();
 });
 
 window.closeSheet = function(){document.getElementById('sheetOverlay').classList.remove('open')}
@@ -1797,7 +2138,14 @@ window.generatePDF = function() {
     window.showToast('नोंदी नाहीत');
     return;
   }
-  
+  // Show feedback immediately, then let the browser paint it before the heavy (synchronous) build+print work runs.
+  // This is why the button used to feel frozen/late — there was zero feedback while it worked.
+  window.showToast('📄 PDF तयार करत आहे... थांबा');
+  setTimeout(window._buildAndPrintPDF, 30);
+}
+
+window._buildAndPrintPDF = function() {
+  const allRecs = window.getRecords();
   const recs = allRecs.slice().sort((a, b) => (b.date||'').localeCompare(a.date||''));
   const stats = window.computeStats(recs, null);
   const statsM = window.computeStats(recs.filter(r => (r.farmType||'M') === 'M' || (r.farmType||'M') === 'MP'), 'M');
@@ -1848,6 +2196,7 @@ window.generatePDF = function() {
         <div class="entry-card-title">वजन (एकत्रित — गाडी एकदाच वजन झाली)</div>
         <div class="entry-field-row"><span class="efl">एकूण वजन</span><span class="efv">${r.c_totalWQ || 0} क्विं + ${r.c_totalWKg || 0} किलो</span></div>
         ${harvestType !== 'box' ? `<div class="entry-field-row"><span class="efl">कपात/तारा</span><span class="efv">${r.c_dedQ || 0} क्विं + ${r.c_dedKg || 0} किलो</span></div>` : ''}
+        ${r.c_fanayaAdd ? `<div class="entry-field-row"><span class="efl">${window.t('fanayaAddLbl')}</span><span class="efv">+${window.fmtQ(r.c_fanayaAdd || 0)} क्विं</span></div>` : ''}
         ${r.c_is3Pct ? `<div class="entry-field-row"><span class="efl">3% अतिरिक्त कपात</span><span class="efv">${window.fmtQ(r.c_threePctDed || 0)} क्विं</span></div>` : ''}
         <div class="entry-field-row"><span class="efl">निव्वळ वजन</span><span class="efv">${window.fmtQ(r.c_netWeightQ || 0)} क्विंटल</span></div>
       </div>`;
@@ -1861,7 +2210,10 @@ window.generatePDF = function() {
         <div class="entry-card-title">मजुरी खर्च (शेतनिहाय)</div>
         <div class="entry-field-row"><span class="efl">शेत म — घड संख्या × दर</span><span class="efv">${r.m_ghads || 0} × ₹${window.fmt(r.m_labourRate || 10)} = ₹${window.fmt(r.m_totalLabour || 0)}</span></div>
         <div class="entry-field-row"><span class="efl">शेत प — घड संख्या × दर</span><span class="efv">${r.p_ghads || 0} × ₹${window.fmt(r.p_labourRate || 10)} = ₹${window.fmt(r.p_totalLabour || 0)}</span></div>
+        ${r.m_kattar ? `<div class="entry-field-row"><span class="efl">शेत म — ${window.t('kattar')}</span><span class="efv">₹${window.fmt(r.m_kattar || 0)}</span></div>` : ''}
+        ${r.p_kattar ? `<div class="entry-field-row"><span class="efl">शेत प — ${window.t('kattar')}</span><span class="efv">₹${window.fmt(r.p_kattar || 0)}</span></div>` : ''}
         <div class="entry-field-row"><span class="efl" style="font-weight:700">एकूण मजुरी</span><span class="efv">₹${window.fmt(r.combinedLabour || 0)}</span></div>
+        ${r.combinedKattar ? `<div class="entry-field-row"><span class="efl" style="font-weight:700">${window.t('kattar')}</span><span class="efv">₹${window.fmt(r.combinedKattar || 0)}</span></div>` : ''}
       </div>`;
       
       html += window.getCombinedPhotosHtmlForPDF(r);
@@ -1872,6 +2224,7 @@ window.generatePDF = function() {
         <div class="entry-card-title">वजन</div>
         <div class="entry-field-row"><span class="efl">एकूण वजन</span><span class="efv">${r[`${p}_totalWQ`] || 0} क्विं + ${r[`${p}_totalWKg`] || 0} किलो</span></div>
         ${harvestType !== 'box' ? `<div class="entry-field-row"><span class="efl">कपात/तारा</span><span class="efv">${r[`${p}_dedQ`] || 0} क्विं + ${r[`${p}_dedKg`] || 0} किलो</span></div>` : ''}
+        ${r[`${p}_fanayaAdd`] ? `<div class="entry-field-row"><span class="efl">${window.t('fanayaAddLbl')}</span><span class="efv">+${window.fmtQ(r[`${p}_fanayaAdd`] || 0)} क्विं</span></div>` : ''}
         ${r[`${p}_is3Pct`] ? `<div class="entry-field-row"><span class="efl">3% अतिरिक्त कपात</span><span class="efv">${window.fmtQ(r[`${p}_threePctDed`] || 0)} क्विं</span></div>` : ''}
         <div class="entry-field-row"><span class="efl">निव्वळ वजन</span><span class="efv">${window.fmtQ(r[`${p}_netWeightQ`] || 0)} क्विंटल</span></div>
       </div>`;
@@ -1884,6 +2237,7 @@ window.generatePDF = function() {
       html += `<div class="entry-card">
         <div class="entry-card-title">मजुरी खर्च</div>
         <div class="entry-field-row"><span class="efl">घड संख्या × दर</span><span class="efv">${r[`${p}_ghads`] || 0} × ₹${window.fmt(r[`${p}_labourRate`] || 10)} = ₹${window.fmt(r[`${p}_totalLabour`] || 0)}</span></div>
+        ${r[`${p}_kattar`] ? `<div class="entry-field-row"><span class="efl">${window.t('kattar')}</span><span class="efv">₹${window.fmt(r[`${p}_kattar`] || 0)}</span></div>` : ''}
       </div>`;
       
       html += window.getPhotosHtmlForPDF(r, p + '_');
