@@ -43,23 +43,39 @@ body {
 .icon-btn { background: none; border: none; color: #fff; cursor: pointer; font-size: 20px; line-height: 1; }
 
 /* ========================================
-   🔴 BOTTOM NAVIGATION
+   🔴 SIDE DRAWER (replaces bottom nav)
    ======================================== */
-.bottom-nav {
-  position: fixed; bottom: 0; left: 0; right: 0; width: 100%; max-width: none; 
-  background: #fff; border-top: 1px solid var(--border); display: flex; z-index: 100;
-  padding-bottom: max(0px, env(safe-area-inset-bottom));
+.side-drawer {
+  position: fixed; top: 0; left: 0; bottom: 0; width: 270px; max-width: 82vw;
+  background: #fff; z-index: 300; transform: translateX(-100%);
+  transition: transform .25s ease; box-shadow: 2px 0 16px rgba(0,0,0,.18);
+  overflow-y: auto; -webkit-overflow-scrolling: touch;
+  padding-top: max(0px, env(safe-area-inset-top));
 }
-.nav-tab { flex: 1; padding: 8px 4px; border: none; background: none; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 4px; font-size: 11px; font-weight: 600; color: var(--muted); font-family: inherit; transition: color .2s; min-height: 60px; }
-.nav-tab.active { color: var(--green) }
-.nav-icon { font-size: 20px; line-height: 1; }
+.side-drawer.open { transform: translateX(0); }
+.drawer-backdrop {
+  position: fixed; inset: 0; background: rgba(0,0,0,.45); z-index: 299;
+  opacity: 0; pointer-events: none; transition: opacity .25s ease;
+}
+.drawer-backdrop.open { opacity: 1; pointer-events: auto; }
+.drawer-header { padding: 22px 18px; background: var(--green); color: #fff; }
+.drawer-header .dh-title { font-size: 17px; font-weight: 700; }
+.drawer-header .dh-sub { font-size: 12px; opacity: .85; margin-top: 2px; }
+.drawer-item {
+  display: flex; align-items: center; gap: 14px; padding: 15px 18px; border: none;
+  background: none; width: 100%; text-align: left; font-size: 15px; font-weight: 600;
+  color: var(--text); cursor: pointer; font-family: inherit; border-bottom: 1px solid #f1f5f9;
+}
+.drawer-item.active { background: var(--green-light); color: var(--green); }
+.drawer-item .drawer-icon { font-size: 20px; width: 26px; text-align: center; }
+.icon-btn#hamburgerBtn { font-size: 22px; }
 
 /* ========================================
    🔴 SCREEN CONTENT & FAB
    ======================================== */
-.screen { display: none; padding: 12px 12px 100px; width: 100%; padding-left: max(12px, env(safe-area-inset-left)); padding-right: max(12px, env(safe-area-inset-right)); }
+.screen { display: none; padding: 12px 12px 90px; width: 100%; padding-left: max(12px, env(safe-area-inset-left)); padding-right: max(12px, env(safe-area-inset-right)); }
 .screen.active { display: block; }
-.fab { position: fixed; bottom: 70px; right: 16px; right: max(16px, env(safe-area-inset-right)); width: 52px; height: 52px; min-width: 52px; min-height: 52px; background: var(--green); color: #fff; border: none; border-radius: 50%; font-size: 28px; cursor: pointer; box-shadow: 0 4px 12px rgba(26,107,60,.4); z-index: 99; display: flex; align-items: center; justify-content: center; line-height: 1; transition: transform 0.2s ease; }
+.fab { position: fixed; bottom: 16px; bottom: max(16px, env(safe-area-inset-bottom)); right: 16px; right: max(16px, env(safe-area-inset-right)); width: 52px; height: 52px; min-width: 52px; min-height: 52px; background: var(--green); color: #fff; border: none; border-radius: 50%; font-size: 28px; cursor: pointer; box-shadow: 0 4px 12px rgba(26,107,60,.4); z-index: 99; display: flex; align-items: center; justify-content: center; line-height: 1; transition: transform 0.2s ease; }
 .fab:active { transform: scale(0.95); }
 
 /* ========================================
@@ -132,8 +148,8 @@ body {
 .lightbox img{ max-width:95vw; max-height:90vh; object-fit:contain; }
 .lightbox-close{ position:absolute; top:16px; right:16px; background:rgba(255,255,255,.2); border:none; color:#fff; width:44px; height:44px; border-radius:50%; font-size:20px; cursor:pointer; min-width: 44px; }
 
-#formOverlay, #detailOverlay, #traderFormOverlay, #ledgerOverlay, #editConfirmOverlay, #profileOverlay, #distFormOverlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; width: 100%; height: 100%; max-width: none; left: 0; transform: none; background: #fff; z-index: 150; overflow-y: auto; -webkit-overflow-scrolling: touch; display: none; }
-#formOverlay.open, #detailOverlay.open, #traderFormOverlay.open, #ledgerOverlay.open, #editConfirmOverlay.open, #profileOverlay.open, #distFormOverlay.open { display: block; padding-top: max(0px, env(safe-area-inset-top)); }
+#formOverlay, #detailOverlay, #traderFormOverlay, #ledgerOverlay, #editConfirmOverlay, #profileOverlay, #distFormOverlay, #expenseFormOverlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; width: 100%; height: 100%; max-width: none; left: 0; transform: none; background: #fff; z-index: 150; overflow-y: auto; -webkit-overflow-scrolling: touch; display: none; }
+#formOverlay.open, #detailOverlay.open, #traderFormOverlay.open, #ledgerOverlay.open, #editConfirmOverlay.open, #profileOverlay.open, #distFormOverlay.open, #expenseFormOverlay.open { display: block; padding-top: max(0px, env(safe-area-inset-top)); }
 .detail-header{ background:var(--green); color:#fff; padding:12px 16px; padding-top: max(12px, env(safe-area-inset-top)); display:flex; align-items:center; gap:10px; position: sticky; top: 0; z-index: 101; }
 .detail-header h2{ font-size:16px; font-weight:700; }
 .back-btn{ background:none; border:none; color:#fff; font-size:22px; cursor:pointer; padding:8px; min-width: 44px; min-height: 44px; display: flex; align-items: center; justify-content: center; }
@@ -316,6 +332,7 @@ body {
 </div>
 
 <header class="app-header">
+<button class="icon-btn" id="hamburgerBtn" title="मेनू">☰</button>
 <h1 id="appName">केळी हिशोब साथी</h1>
 <div class="header-actions">
 <button class="icon-btn" id="pdfBtn" title="PDF / शेअर करा" style="display:none">📤</button>
@@ -368,15 +385,26 @@ body {
 <div id="partners-list"></div>
 </div>
 
+<div class="screen" id="screen-expenses">
+<button class="pay-btn" id="addExpenseBtn" style="margin-bottom:12px">+ <span data-t="addExpense">नोंद जोडा</span></button>
+<div id="expenses-list"></div>
+</div>
+
 <button class="fab" id="fabBtn">+</button>
 
-<nav class="bottom-nav">
-<button class="nav-tab active" data-tab="dash"><span class="nav-icon">🏠</span><span data-t="dashboard">डॅशबोर्ड</span></button>
-<button class="nav-tab" data-tab="farmM"><span class="nav-icon">🌿</span><span data-t="farmM">शेत म</span></button>
-<button class="nav-tab" data-tab="farmP"><span class="nav-icon">🌿</span><span data-t="farmP">शेत प</span></button>
-<button class="nav-tab" data-tab="records"><span class="nav-icon">📋</span><span data-t="records">नोंदी</span></button>
-<button class="nav-tab" data-tab="traders"><span class="nav-icon">🤝</span><span data-t="traders">व्यापारी</span></button>
-<button class="nav-tab" data-tab="partners"><span class="nav-icon">🤲</span><span data-t="partners">भागीदार</span></button>
+<div class="drawer-backdrop" id="drawerBackdrop"></div>
+<nav class="side-drawer" id="sideDrawer">
+<div class="drawer-header">
+<div class="dh-title">🌿 केळी हिशोब साथी</div>
+<div class="dh-sub" data-t="menu">मेनू</div>
+</div>
+<button class="drawer-item active" data-tab="dash"><span class="drawer-icon">🏠</span><span data-t="dashboard">डॅशबोर्ड</span></button>
+<button class="drawer-item" data-tab="farmM"><span class="drawer-icon">🌿</span><span data-t="farmM">शेत म</span></button>
+<button class="drawer-item" data-tab="farmP"><span class="drawer-icon">🌿</span><span data-t="farmP">शेत प</span></button>
+<button class="drawer-item" data-tab="records"><span class="drawer-icon">📋</span><span data-t="records">नोंदी</span></button>
+<button class="drawer-item" data-tab="traders"><span class="drawer-icon">🤝</span><span data-t="traders">व्यापारी</span></button>
+<button class="drawer-item" data-tab="partners"><span class="drawer-icon">🤲</span><span data-t="partners">भागीदार</span></button>
+<button class="drawer-item" data-tab="expenses"><span class="drawer-icon">🧾</span><span data-t="expenses">खर्च / नोंदी</span></button>
 </nav>
 </div>
 
@@ -407,9 +435,11 @@ body {
 <div class="sec-title" data-t="combinedSummary">एकत्रित सारांश</div>
 <div class="summary-box" id="combinedBox"></div>
 </div>
+<div class="sec-title" data-t="incomeBreakdown">उत्पन्न तपशील</div>
+<div class="summary-box" id="f_breakdownBox"></div>
 <div class="sec-title" data-t="payment">देयक</div>
 <div class="auto-box green" id="f_netDisplay">निव्वळ उत्पन्न: ₹0</div>
-<div class="form-group" style="margin-top:10px">
+<div class="form-group" style="margin-top:10px" id="receivedFieldWrap">
 <label class="form-label" data-t="received">मिळालेली रक्कम ₹</label>
 <input type="number" class="form-input" id="f_received" placeholder="0" oninput="recalcAll()">
 </div>
@@ -454,6 +484,18 @@ body {
 <div class="form-group"><label class="form-label" data-t="paymentScreenshot">पेमेंट स्क्रीनशॉट (ऐच्छिक)</label><div class="photo-slots" id="df_photos_grid" style="grid-template-columns:repeat(3,1fr)"></div></div>
 <div id="distFormError" style="display:none;color:var(--red);font-size:13px;margin-bottom:10px"></div>
 <button class="pay-btn" id="saveDistBtn" data-t="saveDistribution">वाटप जतन करा</button>
+</div>
+</div>
+
+<div id="expenseFormOverlay">
+<div class="detail-header"><button class="back-btn" id="expenseFormBack">←</button><h2 data-t="addExpense">नोंद जोडा</h2></div>
+<div style="padding:12px">
+<div class="form-group"><label class="form-label" data-t="distDate">तारीख</label><input type="date" class="form-input" id="ef_date"></div>
+<div class="form-group"><label class="form-label" data-t="expenseAmount">रक्कम ₹ (ऐच्छिक)</label><input type="number" class="form-input" id="ef_amount" placeholder="0" min="0"></div>
+<div class="form-group"><label class="form-label" data-t="distNote">टीप / वर्णन</label><textarea class="form-input" id="ef_note" rows="3"></textarea></div>
+<div class="form-group"><label class="form-label" data-t="paymentScreenshot">फोटो (ऐच्छिक)</label><div class="photo-slots" id="ef_photos_grid" style="grid-template-columns:repeat(3,1fr)"></div></div>
+<div id="expenseFormError" style="display:none;color:var(--red);font-size:13px;margin-bottom:10px"></div>
+<button class="pay-btn" id="saveExpenseBtn" data-t="saveExpense">नोंद जतन करा</button>
 </div>
 </div>
 
@@ -520,6 +562,7 @@ window.currentUserUid = null;
 window.appRecords = [];
 window.appTraders = [];
 window.appDistributions = [];
+window.appExpenses = [];
 
 // FIREBASE AUTH LISTENER
 onAuthStateChanged(auth, async (user) => {
@@ -547,6 +590,7 @@ onAuthStateChanged(auth, async (user) => {
     window.appRecords = [];
     window.appTraders = [];
     window.appDistributions = [];
+    window.appExpenses = [];
     if(loginView) loginView.style.display = 'flex';
     if(mainAppView) mainAppView.style.display = 'none';
     
@@ -600,6 +644,19 @@ async function fetchCloudData() {
     }
   }
 
+  // Fetched separately too, for the same reason
+  try {
+    const expSnap = await getDocs(collection(db, "users", window.currentUserUid, "expenses"));
+    window.appExpenses = [];
+    expSnap.forEach(doc => window.appExpenses.push(doc.data()));
+  } catch (error) {
+    console.error("Expenses fetch error:", error);
+    window.appExpenses = window.appExpenses || [];
+    if (error?.code === 'permission-denied') {
+      showToast("खर्च डेटा अ‍ॅक्सेस नाकारला — Firestore rules अपडेट करा");
+    }
+  }
+
   renderAll();
 }
 
@@ -607,6 +664,7 @@ async function fetchCloudData() {
 window.getRecords = function() { return window.appRecords || []; }
 window.getTraders = function() { return window.appTraders || []; }
 window.getDistributions = function() { return window.appDistributions || []; }
+window.getExpenses = function() { return window.appExpenses || []; }
 
 // Helper variables & logic for the app
 const LANG={
@@ -644,7 +702,12 @@ distRecipient:'कोणाला दिले',distFarm:'शेतीच्य�
 saveDistribution:'वाटप जतन करा',totalPool:'एकूण निव्वळ उत्पन्न',farmExpense:'शेती खर्च',
 distributable:'वाटणीयोग्य रक्कम',entitlement:'हक्काचा वाटा',givenSoFar:'आतापर्यंत दिलेले',balanceLeft:'शिल्लक',
 noDistributions:'अजून कोणतेही वाटप नाही',deleteDistribution:'वाटप हटवा',confirmDeleteDist:'हे वाटप हटवायचे आहे का?',
-distSaved:'वाटप जतन झाले ✓',distDeleted:'वाटप हटवले',valDistAmt:'रक्कम टाका!',valDistRecipient:'कोणाला दिले ते निवडा!',paymentScreenshot:'पेमेंट स्क्रीनशॉट (ऐच्छिक)'},
+distSaved:'वाटप जतन झाले ✓',distDeleted:'वाटप हटवले',valDistAmt:'रक्कम टाका!',valDistRecipient:'कोणाला दिले ते निवडा!',paymentScreenshot:'पेमेंट स्क्रीनशॉट (ऐच्छिक)',
+menu:'मेनू',expenses:'खर्च / नोंदी',addExpense:'नोंद जोडा',expenseAmount:'रक्कम ₹ (ऐच्छिक)',saveExpense:'नोंद जतन करा',
+noExpenses:'अजून कोणतीही नोंद नाही',deleteExpense:'नोंद हटवा',confirmDeleteExpense:'ही नोंद हटवायची आहे का?',
+expenseSaved:'नोंद जतन झाली ✓',expenseDeleted:'नोंद हटवली',valExpenseEmpty:'रक्कम, टीप किंवा फोटो यापैकी काहीतरी टाका!',
+fanayaPctInline:'फणाया %',incomeBreakdown:'उत्पन्न तपशील',totalIncomeBeforeAdd:'एकूण उत्पन्न (वाढीआधी)',
+fanayaAddition:'फणाया वाढ',grossAfterFanaya:'फणाया नंतर एकूण',labourDeduction:'मजुरी वजा',finalNetIncome:'अंतिम निव्वळ उत्पन्न'},
 en:{appName:'Kheti Hisaab Saathi',dashboard:'Dashboard',farmM:'Farm M',farmP:'Farm P',
 records:'Records',traders:'Traders',addRecord:'New Record',totalIncome:'Total Income',
 pending:'Pending',received:'Received',weight:'Total Weight',ghads:'Ghads',labour:'Labour',
@@ -679,7 +742,12 @@ distRecipient:'Given To',distFarm:'Farm Expenses',distBoth:'Both Equally',distNo
 saveDistribution:'Save Distribution',totalPool:'Total Net Income',farmExpense:'Farm Expense',
 distributable:'Distributable Amount',entitlement:'Entitled Share',givenSoFar:'Given So Far',balanceLeft:'Balance Left',
 noDistributions:'No distributions yet',deleteDistribution:'Delete Distribution',confirmDeleteDist:'Delete this distribution?',
-distSaved:'Distribution Saved ✓',distDeleted:'Distribution Deleted',valDistAmt:'Enter amount!',valDistRecipient:'Select who it was given to!',paymentScreenshot:'Payment Screenshot (optional)'}
+distSaved:'Distribution Saved ✓',distDeleted:'Distribution Deleted',valDistAmt:'Enter amount!',valDistRecipient:'Select who it was given to!',paymentScreenshot:'Payment Screenshot (optional)',
+menu:'Menu',expenses:'Expenses / Notes',addExpense:'Add Entry',expenseAmount:'Amount ₹ (optional)',saveExpense:'Save Entry',
+noExpenses:'No entries yet',deleteExpense:'Delete Entry',confirmDeleteExpense:'Delete this entry?',
+expenseSaved:'Entry Saved ✓',expenseDeleted:'Entry Deleted',valExpenseEmpty:'Enter an amount, note, or photo!',
+fanayaPctInline:'Fanaya %',incomeBreakdown:'Income Breakdown',totalIncomeBeforeAdd:'Total Income (before addition)',
+fanayaAddition:'Fanaya Addition',grossAfterFanaya:'Gross After Fanaya',labourDeduction:'Labour Deduction',finalNetIncome:'Final Net Income'}
 };
 
 let curLang=localStorage.getItem('lang')||'mr';
@@ -711,12 +779,12 @@ window.getFanayaPct = function(){
   return isNaN(p) ? 6 : p;
 }
 
-window.calcFarm = function(Q,kg,dQ,dKg,is3pct,ghads,labourRate,rate,harvestType,kattar){
+window.calcFarm = function(Q,kg,dQ,dKg,is3pct,ghads,labourRate,rate,harvestType,kattar,fanayaPctOverride){
   const totalWQ=Number(Q||0)+Number(kg||0)/100;
   const dedQ=Number(dQ||0)+Number(dKg||0)/100;
   const afterDed=totalWQ-dedQ;
-  // फणाया harvests get an extra weight addition (देठ) — default 6%, editable in profile — applied after पत्ती deduction
-  const fanayaPct=window.getFanayaPct();
+  // फणाया harvests get an extra weight addition (देठ) — default from profile, but editable per record — applied after कपात/तारा deduction
+  const fanayaPct=(fanayaPctOverride!==undefined && fanayaPctOverride!==null && fanayaPctOverride!=='')?Number(fanayaPctOverride):window.getFanayaPct();
   const fanayaAdd=(harvestType==='fanaya')?afterDed*(fanayaPct/100):0;
   const after=afterDed+fanayaAdd;
   const threePct=is3pct?after*0.03:0;
@@ -880,6 +948,7 @@ window.openEditForm = function(recordId){
     window.buildFarmFields();
 
     setTimeout(()=>{
+      window.setVal('f_C_fanayaPct', r.c_fanayaPct);
       const farms=window.curFarm==='MP'?['M','P']:[window.curFarm];
       farms.forEach(fm=>{
         const p=fm.toLowerCase();
@@ -887,6 +956,7 @@ window.openEditForm = function(recordId){
         window.setVal(`f_${fm}_wKg`, r[`${p}_totalWKg`]);
         window.setVal(`f_${fm}_dQ`, r[`${p}_dedQ`]);
         window.setVal(`f_${fm}_dKg`, r[`${p}_dedKg`]);
+        window.setVal(`f_${fm}_fanayaPct`, r[`${p}_fanayaPct`]);
         const chk=document.getElementById(`f_${fm}_3pct`);
         if(chk)chk.checked=!!r[`${p}_is3Pct`];
         window.setVal(`f_${fm}_ghads`, r[`${p}_ghads`]);
@@ -1052,12 +1122,13 @@ window.performUpdate = async function(){
     const dQ=window.curHarvest!=='box'?Number(document.getElementById('f_C_dQ')?.value||0):0;
     const dKg=window.curHarvest!=='box'?Number(document.getElementById('f_C_dKg')?.value||0):0;
     const is3=window.curHarvest!=='box'?(document.getElementById('f_C_3pct')?.checked||false):false;
-    const c=window.calcFarm(Q,kg,dQ,dKg,is3,0,0,rate,window.curHarvest,0);
+    const fanayaPctC=document.getElementById('f_C_fanayaPct')?.value;
+    const c=window.calcFarm(Q,kg,dQ,dKg,is3,0,0,rate,window.curHarvest,0,fanayaPctC);
     totalWQ=c.netWQ; totalGross=c.gross;
 
     rec.c_totalWQ=Q; rec.c_totalWKg=kg; rec.c_totalWeightQ=c.totalWQ;
     rec.c_dedQ=dQ; rec.c_dedKg=dKg; rec.c_deductionQ=c.dedQ;
-    rec.c_fanayaAdd=c.fanayaAdd;
+    rec.c_fanayaAdd=c.fanayaAdd;rec.c_fanayaPct=c.fanayaPct;
     rec.c_is3Pct=is3; rec.c_threePctDed=c.threePct; rec.c_netWeightQ=c.netWQ;
     rec.c_grossIncome=c.gross;
     rec.c_photoTollBefore=window.photoTargets['tollBefore']||rec.c_photoTollBefore||null;
@@ -1089,11 +1160,12 @@ window.performUpdate = async function(){
     const ghads=Number(document.getElementById(`f_${fm}_ghads`)?.value||0);
     const labRate=Number(document.getElementById(`f_${fm}_labRate`)?.value||10)||10;
     const kattar=Number(document.getElementById(`f_${fm}_kattar`)?.value||0);
-    const c=window.calcFarm(Q,kg,dQ,dKg,is3,ghads,labRate,rate,window.curHarvest,kattar);
+    const fanayaPctFm=document.getElementById(`f_${fm}_fanayaPct`)?.value;
+    const c=window.calcFarm(Q,kg,dQ,dKg,is3,ghads,labRate,rate,window.curHarvest,kattar,fanayaPctFm);
     const p=fm.toLowerCase();
     rec[`${p}_totalWQ`]=Q;rec[`${p}_totalWKg`]=kg;rec[`${p}_totalWeightQ`]=c.totalWQ;
     rec[`${p}_dedQ`]=dQ;rec[`${p}_dedKg`]=dKg;rec[`${p}_deductionQ`]=c.dedQ;
-    rec[`${p}_fanayaAdd`]=c.fanayaAdd;
+    rec[`${p}_fanayaAdd`]=c.fanayaAdd;rec[`${p}_fanayaPct`]=c.fanayaPct;
     rec[`${p}_is3Pct`]=is3;rec[`${p}_threePctDed`]=c.threePct;rec[`${p}_netWeightQ`]=c.netWQ;
     rec[`${p}_ghads`]=ghads;rec[`${p}_labourRate`]=labRate;rec[`${p}_totalLabour`]=c.labCost;
     rec[`${p}_kattar`]=kattar;
@@ -1219,6 +1291,118 @@ window.addDistPhoto = function(e){
 window.removeDistPhoto = function(idx){
   window.distPhotos.splice(idx,1);
   window.renderDistPhotosGrid();
+}
+
+// ---- Expense photo grid (same dynamic add-more pattern as distribution photos) ----
+window.expensePhotos=[];
+window.renderExpensePhotosGrid = function(){
+  const grid=document.getElementById('ef_photos_grid');
+  if(!grid)return;
+  let html='';
+  window.expensePhotos.forEach((b64,i)=>{
+    html+=`<div class="photo-slot"><img src="${b64}" alt="" onclick="window.openLightbox('${b64}')"><button class="del-photo" onclick="window.removeExpensePhoto(${i})">✕</button></div>`;
+  });
+  html+=`<label class="photo-slot" style="cursor:pointer"><input type="file" accept="image/*" style="display:none" onchange="window.addExpensePhoto(event)">➕<span>${window.t('addPhoto')}</span></label>`;
+  grid.innerHTML=html;
+}
+window.addExpensePhoto = function(e){
+  const file=e.target.files[0]; if(!file)return;
+  const reader=new FileReader();
+  reader.onload=ev=>{
+    const img=new Image();
+    img.onload=()=>{
+      const canvas=document.createElement('canvas');
+      let w=img.width,h=img.height,max=800;
+      if(w>max||h>max){if(w>h){h=Math.round(h*max/w);w=max;}else{w=Math.round(w*max/h);h=max;}}
+      canvas.width=w;canvas.height=h;
+      canvas.getContext('2d').drawImage(img,0,0,w,h);
+      const b64=canvas.toDataURL('image/jpeg',0.6);
+      window.expensePhotos.push(b64);
+      window.renderExpensePhotosGrid();
+    };
+    img.src=ev.target.result;
+  };
+  reader.readAsDataURL(file);
+}
+window.removeExpensePhoto = function(idx){
+  window.expensePhotos.splice(idx,1);
+  window.renderExpensePhotosGrid();
+}
+
+window.renderExpenses = function(){
+  const listEl=document.getElementById('expenses-list');
+  if(!listEl)return;
+  const exps=[...window.getExpenses()].sort((a,b)=>(b.date||'').localeCompare(a.date||''));
+  if(!exps.length){
+    listEl.innerHTML=`<div class="empty-state"><span class="emoji">🧾</span>${window.t('noExpenses')}</div>`;
+    return;
+  }
+  listEl.innerHTML=exps.map(x=>{
+    const photosHtml=(x.photos&&x.photos.length)?`<div style="display:flex;gap:6px;margin-top:8px;flex-wrap:wrap">${x.photos.map(ph=>`<img src="${ph}" style="width:48px;height:48px;object-fit:cover;border-radius:6px;cursor:pointer" onclick="window.openLightbox('${ph}')">`).join('')}</div>`:'';
+    return `<div class="card">
+      <div class="rec-top"><span class="rec-trader">${window.fmtDate(x.date)}</span>${x.amount?`<span class="rec-income">₹${window.fmt(x.amount)}</span>`:''}</div>
+      ${x.note?`<div class="rec-meta">${x.note}</div>`:''}
+      ${photosHtml}
+      <button class="danger-btn" style="margin-top:8px;padding:6px 10px;font-size:12px" onclick="window.deleteExpense('${x.id}')">🗑️ ${window.t('deleteExpense')}</button>
+    </div>`;
+  }).join('');
+}
+
+document.getElementById('addExpenseBtn').addEventListener('click',()=>{
+  document.getElementById('ef_date').value=window.today();
+  document.getElementById('ef_amount').value='';
+  document.getElementById('ef_note').value='';
+  window.expensePhotos=[];
+  window.renderExpensePhotosGrid();
+  document.getElementById('expenseFormError').style.display='none';
+  window.showOverlay('expenseFormOverlay');
+});
+document.getElementById('expenseFormBack').addEventListener('click',()=>{ window.hideOverlay('expenseFormOverlay'); });
+
+document.getElementById('saveExpenseBtn').addEventListener('click', async ()=>{
+  const errEl=document.getElementById('expenseFormError');
+  errEl.style.display='none';
+  const note=document.getElementById('ef_note').value||'';
+  const amount=Number(document.getElementById('ef_amount').value||0);
+  if(!note && !amount && !window.expensePhotos.length){
+    errEl.textContent=window.t('valExpenseEmpty');errEl.style.display='block';return;
+  }
+  if(!window.currentUserUid) return;
+  const exp={
+    id:window.genId(),
+    date:document.getElementById('ef_date').value||window.today(),
+    amount, note,
+    photos:window.expensePhotos.slice(),
+    createdAt:Date.now()
+  };
+  try {
+    const expRef = doc(db, "users", window.currentUserUid, "expenses", exp.id);
+    await setDoc(expRef, exp);
+    window.hideOverlay('expenseFormOverlay');
+    window.showToast(window.t('expenseSaved'));
+    await fetchCloudData();
+  } catch(error) {
+    console.error("Expense Save Error:", error);
+    if(error?.code === 'permission-denied'){
+      alert("नोंद जतन करता आली नाही: Firestore Rules मध्ये 'expenses' कलेक्शनला परवानगी नाही.");
+    } else {
+      alert("नोंद जतन करता आली नाही. इंटरनेट तपासा. (त्रुटी: "+(error?.message||error)+")");
+    }
+  }
+});
+
+window.deleteExpense = async function(id){
+  if(!confirm(window.t('confirmDeleteExpense')))return;
+  if(!window.currentUserUid) return;
+  try {
+    const expRef = doc(db, "users", window.currentUserUid, "expenses", id);
+    await deleteDoc(expRef);
+    window.showToast(window.t('expenseDeleted'));
+    await fetchCloudData();
+  } catch(error) {
+    console.error("Expense Delete Error:", error);
+    alert("हटवता आले नाही. इंटरनेट तपासा.");
+  }
 }
 
 window.renderPartners = function(){
@@ -1403,10 +1587,10 @@ window.deleteDistribution = async function(id, recordId, origin){
   }
 }
 
-document.querySelectorAll('.nav-tab').forEach(btn=>{
+document.querySelectorAll('.drawer-item').forEach(btn=>{
   btn.addEventListener('click',()=>{
     window.curTab=btn.dataset.tab;
-    document.querySelectorAll('.nav-tab').forEach(b=>b.classList.remove('active'));
+    document.querySelectorAll('.drawer-item').forEach(b=>b.classList.remove('active'));
     btn.classList.add('active');
     document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
     document.getElementById('screen-'+window.curTab).classList.add('active');
@@ -1415,8 +1599,20 @@ document.querySelectorAll('.nav-tab').forEach(btn=>{
     const hasRecs=window.getRecords().length>0;
     document.getElementById('pdfBtn').style.display=(window.curTab==='dash'&&hasRecs)?'block':'none';
     window.renderAll();
+    window.closeDrawer();
   });
 });
+
+window.openDrawer = function(){
+  document.getElementById('sideDrawer').classList.add('open');
+  document.getElementById('drawerBackdrop').classList.add('open');
+}
+window.closeDrawer = function(){
+  document.getElementById('sideDrawer').classList.remove('open');
+  document.getElementById('drawerBackdrop').classList.remove('open');
+}
+document.getElementById('hamburgerBtn').addEventListener('click', window.openDrawer);
+document.getElementById('drawerBackdrop').addEventListener('click', window.closeDrawer);
 
 document.getElementById('fabBtn').addEventListener('click', () => window.openAddForm());
 
@@ -1477,6 +1673,7 @@ window.renderAll = function(){
   window.renderAllRecords();
   window.renderTraders();
   window.renderPartners();
+  window.renderExpenses();
   const hasRecs=window.getRecords().length>0;
   document.getElementById('pdfBtn').style.display=(window.curTab==='dash'&&hasRecs)?'block':'none';
   ['dash-recent','farmM-records','farmP-records','all-records','dash-combined'].forEach(id=>{
@@ -1508,6 +1705,8 @@ window.openAddForm = function(){
   document.getElementById('f_note').value='';
   document.getElementById('f_rate').value='';
   document.getElementById('saveError').style.display='none';
+  const receivedWrap=document.getElementById('receivedFieldWrap');
+  if(receivedWrap) receivedWrap.style.display=isEdit?'block':'none';
   const tSel=document.getElementById('f_trader');
   tSel.innerHTML=traders.map(tr=>`<option value="${tr.id}">${tr.name}</option>`).join('');
   document.querySelectorAll('#farmToggle .toggle-btn').forEach(b=>b.classList.toggle('active',b.dataset.farm===window.curFarm));
@@ -1547,6 +1746,9 @@ window.buildFarmFields = function(){
         <div><label class="form-label">kg</label><input type="number" class="form-input" id="f_C_dKg" placeholder="0" min="0" max="99" oninput="window.recalcAll()"></div>
       </div></div>`;
     }
+    if(window.curHarvest==='fanaya'){
+      html+=`<div class="form-group"><label class="form-label">🍌 ${window.t('fanayaPctInline')}</label><input type="number" step="0.1" class="form-input" id="f_C_fanayaPct" placeholder="${window.getFanayaPct()}" value="${window.getFanayaPct()}" oninput="window.recalcAll()"></div>`;
+    }
 
     html+=`<div class="auto-box blue" id="f_C_netW" style="margin-bottom:8px">${window.t('netWeight')}: 0.00 Q</div>`;
     html+=`<div class="auto-box green" id="f_C_grossInc" style="margin-bottom:12px">एकत्रित उत्पन्न (Gross): ₹0</div>`;
@@ -1583,6 +1785,9 @@ window.buildFarmFields = function(){
         <div><label class="form-label">kg</label><input type="number" class="form-input" id="f_${fm}_dKg" placeholder="0" min="0" max="99" oninput="window.recalcAll()"></div>
       </div></div>`;
     }
+    if(window.curHarvest==='fanaya'){
+      html+=`<div class="form-group"><label class="form-label">🍌 ${window.t('fanayaPctInline')}</label><input type="number" step="0.1" class="form-input" id="f_${fm}_fanayaPct" placeholder="${window.getFanayaPct()}" value="${window.getFanayaPct()}" oninput="window.recalcAll()"></div>`;
+    }
     html+=`<div class="auto-box blue" id="f_${fm}_netW" style="margin-bottom:8px">${window.t('netWeight')}: 0.00 Q</div>`;
     html+=`<div class="form-group"><div class="sec-title" style="margin-top:8px">${window.t('labour')}</div><div class="row2">
       <div><label class="form-label">${window.t('ghadsCount')}</label><input type="number" class="form-input" id="f_${fm}_ghads" placeholder="0" min="0" oninput="window.recalcAll()"></div>
@@ -1612,6 +1817,7 @@ window.photoSectionHTML = function(key,label,max){
 window.recalcAll = function(){
   const rate=Number(document.getElementById('f_rate')?.value||0);
   let totalNet=0, totalGross=0, totalLabour=0, netWQ=0;
+  let breakdownC=null, breakdownLabourTotal=0;
 
   if(window.curFarm==='MP'){
     const Q=Number(document.getElementById('f_C_wQ')?.value||0);
@@ -1620,7 +1826,8 @@ window.recalcAll = function(){
     const dKg=window.curHarvest!=='box'?Number(document.getElementById('f_C_dKg')?.value||0):0;
     const is3=window.curHarvest!=='box'?(document.getElementById('f_C_3pct')?.checked||false):false;
 
-    const c=window.calcFarm(Q,kg,dQ,dKg,is3,0,0,rate,window.curHarvest,0);
+    const fanayaPctC=document.getElementById('f_C_fanayaPct')?.value;
+    const c=window.calcFarm(Q,kg,dQ,dKg,is3,0,0,rate,window.curHarvest,0,fanayaPctC);
     netWQ=c.netWQ; totalGross=c.gross;
 
     const netWEl=document.getElementById('f_C_netW');
@@ -1645,6 +1852,7 @@ window.recalcAll = function(){
     });
 
     totalNet=totalGross-totalLabour-totalKattar;
+    breakdownC=c; breakdownLabourTotal=totalLabour+totalKattar;
 
     document.getElementById('combinedSummary').style.display='block';
     document.getElementById('combinedBox').innerHTML=
@@ -1661,7 +1869,8 @@ window.recalcAll = function(){
     const ghads=Number(document.getElementById(`f_${fm}_ghads`)?.value||0);
     const labRate=Number(document.getElementById(`f_${fm}_labRate`)?.value||10)||10;
     const kattar=Number(document.getElementById(`f_${fm}_kattar`)?.value||0);
-    const c=window.calcFarm(Q,kg,dQ,dKg,is3,ghads,labRate,rate,window.curHarvest,kattar);
+    const fanayaPctFm=document.getElementById(`f_${fm}_fanayaPct`)?.value;
+    const c=window.calcFarm(Q,kg,dQ,dKg,is3,ghads,labRate,rate,window.curHarvest,kattar,fanayaPctFm);
 
     const netWEl=document.getElementById(`f_${fm}_netW`);
     if(netWEl)netWEl.textContent=`${window.t('netWeight')}: ${window.fmtQ(c.netWQ)} Q${c.fanayaAdd>0?` (+${window.fmtQ(c.fanayaAdd)} Q ${window.t('fanayaAddLbl')} ${c.fanayaPct}%)`:''}`;
@@ -1673,7 +1882,21 @@ window.recalcAll = function(){
     if(amt3El)amt3El.textContent=is3?`(-${window.fmtQ(c.threePct)} Q)`:'';
 
     totalNet=c.net; totalGross=c.gross; totalLabour=c.labCost+kattar; netWQ=c.netWQ;
+    breakdownC=c; breakdownLabourTotal=c.labCost+kattar;
     document.getElementById('combinedSummary').style.display='none';
+  }
+  const breakdownEl=document.getElementById('f_breakdownBox');
+  if(breakdownEl && breakdownC){
+    const preFanayaIncome=(breakdownC.totalWQ-breakdownC.dedQ)*rate;
+    const fanayaIncomeAdd=breakdownC.fanayaAdd*rate;
+    let bHtml=`<div class="summary-row"><span>${window.t('totalIncomeBeforeAdd')}</span><span style="font-weight:700">₹${window.fmt(preFanayaIncome)}</span></div>`;
+    if(window.curHarvest==='fanaya'){
+      bHtml+=`<div class="summary-row"><span>${window.t('fanayaAddition')} (+${breakdownC.fanayaPct}%)</span><span style="font-weight:700;color:var(--green)">+₹${window.fmt(fanayaIncomeAdd)}</span></div>`;
+      bHtml+=`<div class="summary-row"><span>${window.t('grossAfterFanaya')}</span><span style="font-weight:700">₹${window.fmt(breakdownC.gross)}</span></div>`;
+    }
+    bHtml+=`<div class="summary-row"><span>${window.t('labourDeduction')}</span><span style="font-weight:700;color:var(--red)">-₹${window.fmt(breakdownLabourTotal)}</span></div>`;
+    bHtml+=`<hr class="summary-divider"><div class="summary-row summary-total"><span>${window.t('finalNetIncome')}</span><span>₹${window.fmt(totalNet)}</span></div>`;
+    breakdownEl.innerHTML=bHtml;
   }
   const rec=Number(document.getElementById('f_received')?.value||0);
   const pend=Math.max(0,totalNet-rec);
@@ -1716,12 +1939,13 @@ window.saveRecord = async function(){
     const dQ=window.curHarvest!=='box'?Number(document.getElementById('f_C_dQ')?.value||0):0;
     const dKg=window.curHarvest!=='box'?Number(document.getElementById('f_C_dKg')?.value||0):0;
     const is3=window.curHarvest!=='box'?(document.getElementById('f_C_3pct')?.checked||false):false;
-    const c=window.calcFarm(Q,kg,dQ,dKg,is3,0,0,rate,window.curHarvest,0);
+    const fanayaPctC=document.getElementById('f_C_fanayaPct')?.value;
+    const c=window.calcFarm(Q,kg,dQ,dKg,is3,0,0,rate,window.curHarvest,0,fanayaPctC);
     netWQ=c.netWQ; totalGross=c.gross;
 
     rec.c_totalWQ=Q; rec.c_totalWKg=kg; rec.c_totalWeightQ=c.totalWQ;
     rec.c_dedQ=dQ; rec.c_dedKg=dKg; rec.c_deductionQ=c.dedQ;
-    rec.c_fanayaAdd=c.fanayaAdd;
+    rec.c_fanayaAdd=c.fanayaAdd;rec.c_fanayaPct=c.fanayaPct;
     rec.c_is3Pct=is3; rec.c_threePctDed=c.threePct; rec.c_netWeightQ=c.netWQ;
     rec.c_grossIncome=c.gross;
     rec.c_photoTollBefore=window.photoTargets['tollBefore']||null;
@@ -1751,12 +1975,13 @@ window.saveRecord = async function(){
     const ghads=Number(document.getElementById(`f_${fm}_ghads`)?.value||0);
     const labRate=Number(document.getElementById(`f_${fm}_labRate`)?.value||10)||10;
     const kattar=Number(document.getElementById(`f_${fm}_kattar`)?.value||0);
-    const c=window.calcFarm(Q,kg,dQ,dKg,is3,ghads,labRate,rate,window.curHarvest,kattar);
+    const fanayaPctFm=document.getElementById(`f_${fm}_fanayaPct`)?.value;
+    const c=window.calcFarm(Q,kg,dQ,dKg,is3,ghads,labRate,rate,window.curHarvest,kattar,fanayaPctFm);
     const p=fm.toLowerCase();
 
     rec[`${p}_totalWQ`]=Q;rec[`${p}_totalWKg`]=kg;rec[`${p}_totalWeightQ`]=c.totalWQ;
     rec[`${p}_dedQ`]=dQ;rec[`${p}_dedKg`]=dKg;rec[`${p}_deductionQ`]=c.dedQ;
-    rec[`${p}_fanayaAdd`]=c.fanayaAdd;
+    rec[`${p}_fanayaAdd`]=c.fanayaAdd;rec[`${p}_fanayaPct`]=c.fanayaPct;
     rec[`${p}_is3Pct`]=is3;rec[`${p}_threePctDed`]=c.threePct;rec[`${p}_netWeightQ`]=c.netWQ;
     rec[`${p}_ghads`]=ghads;rec[`${p}_labourRate`]=labRate;rec[`${p}_totalLabour`]=c.labCost;
     rec[`${p}_kattar`]=kattar;
