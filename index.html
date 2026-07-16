@@ -451,6 +451,7 @@ body {
 <option value="farm" data-t="distFarm">शेतीच्या कामासाठी</option>
 </select></div>
 <div class="form-group"><label class="form-label" data-t="distNote">टीप (ऐच्छिक)</label><textarea class="form-input" id="df_note" rows="2"></textarea></div>
+<div class="form-group"><label class="form-label" data-t="paymentScreenshot">पेमेंट स्क्रीनशॉट (ऐच्छिक)</label><div class="photo-slots" id="df_photos_grid" style="grid-template-columns:repeat(3,1fr)"></div></div>
 <div id="distFormError" style="display:none;color:var(--red);font-size:13px;margin-bottom:10px"></div>
 <button class="pay-btn" id="saveDistBtn" data-t="saveDistribution">वाटप जतन करा</button>
 </div>
@@ -643,7 +644,7 @@ distRecipient:'कोणाला दिले',distFarm:'शेतीच्य�
 saveDistribution:'वाटप जतन करा',totalPool:'एकूण निव्वळ उत्पन्न',farmExpense:'शेती खर्च',
 distributable:'वाटणीयोग्य रक्कम',entitlement:'हक्काचा वाटा',givenSoFar:'आतापर्यंत दिलेले',balanceLeft:'शिल्लक',
 noDistributions:'अजून कोणतेही वाटप नाही',deleteDistribution:'वाटप हटवा',confirmDeleteDist:'हे वाटप हटवायचे आहे का?',
-distSaved:'वाटप जतन झाले ✓',distDeleted:'वाटप हटवले',valDistAmt:'रक्कम टाका!',valDistRecipient:'कोणाला दिले ते निवडा!'},
+distSaved:'वाटप जतन झाले ✓',distDeleted:'वाटप हटवले',valDistAmt:'रक्कम टाका!',valDistRecipient:'कोणाला दिले ते निवडा!',paymentScreenshot:'पेमेंट स्क्रीनशॉट (ऐच्छिक)'},
 en:{appName:'Kheti Hisaab Saathi',dashboard:'Dashboard',farmM:'Farm M',farmP:'Farm P',
 records:'Records',traders:'Traders',addRecord:'New Record',totalIncome:'Total Income',
 pending:'Pending',received:'Received',weight:'Total Weight',ghads:'Ghads',labour:'Labour',
@@ -678,7 +679,7 @@ distRecipient:'Given To',distFarm:'Farm Expenses',distBoth:'Both Equally',distNo
 saveDistribution:'Save Distribution',totalPool:'Total Net Income',farmExpense:'Farm Expense',
 distributable:'Distributable Amount',entitlement:'Entitled Share',givenSoFar:'Given So Far',balanceLeft:'Balance Left',
 noDistributions:'No distributions yet',deleteDistribution:'Delete Distribution',confirmDeleteDist:'Delete this distribution?',
-distSaved:'Distribution Saved ✓',distDeleted:'Distribution Deleted',valDistAmt:'Enter amount!',valDistRecipient:'Select who it was given to!'}
+distSaved:'Distribution Saved ✓',distDeleted:'Distribution Deleted',valDistAmt:'Enter amount!',valDistRecipient:'Select who it was given to!',paymentScreenshot:'Payment Screenshot (optional)'}
 };
 
 let curLang=localStorage.getItem('lang')||'mr';
@@ -695,6 +696,7 @@ window.editingRecord=null;
 window.curFarm='M';
 window.curHarvest='ghad';
 window.photoTargets={};
+window.distPhotos=[];
 window.editingTrader=null;
 
 window.fmt = function(n){return Number(n||0).toLocaleString('en-IN')}
@@ -1185,6 +1187,40 @@ window.renderTraders = function(){
   }).join('');
 }
 
+window.renderDistPhotosGrid = function(){
+  const grid=document.getElementById('df_photos_grid');
+  if(!grid)return;
+  let html='';
+  window.distPhotos.forEach((b64,i)=>{
+    html+=`<div class="photo-slot"><img src="${b64}" alt="" onclick="window.openLightbox('${b64}')"><button class="del-photo" onclick="window.removeDistPhoto(${i})">✕</button></div>`;
+  });
+  html+=`<label class="photo-slot" style="cursor:pointer"><input type="file" accept="image/*" style="display:none" onchange="window.addDistPhoto(event)">➕<span>${window.t('addPhoto')}</span></label>`;
+  grid.innerHTML=html;
+}
+window.addDistPhoto = function(e){
+  const file=e.target.files[0]; if(!file)return;
+  const reader=new FileReader();
+  reader.onload=ev=>{
+    const img=new Image();
+    img.onload=()=>{
+      const canvas=document.createElement('canvas');
+      let w=img.width,h=img.height,max=800;
+      if(w>max||h>max){if(w>h){h=Math.round(h*max/w);w=max;}else{w=Math.round(w*max/h);h=max;}}
+      canvas.width=w;canvas.height=h;
+      canvas.getContext('2d').drawImage(img,0,0,w,h);
+      const b64=canvas.toDataURL('image/jpeg',0.6);
+      window.distPhotos.push(b64);
+      window.renderDistPhotosGrid();
+    };
+    img.src=ev.target.result;
+  };
+  reader.readAsDataURL(file);
+}
+window.removeDistPhoto = function(idx){
+  window.distPhotos.splice(idx,1);
+  window.renderDistPhotosGrid();
+}
+
 window.renderPartners = function(){
   const p=getProfile();
   const p1name=p.partner1||window.t('partner1');
@@ -1253,9 +1289,11 @@ window.renderPartners = function(){
       const recipLabel=(rec)=>rec==='partner1'?p1name:rec==='partner2'?p2name:rec==='both'?window.t('distBoth'):window.t('distFarm');
       distListEl.innerHTML=allDists.map(d=>{
         const rec=recs.find(x=>x.id===d.recordId);
+        const photosHtml=(d.photos&&d.photos.length)?`<div style="display:flex;gap:6px;margin-top:8px;flex-wrap:wrap">${d.photos.map(ph=>`<img src="${ph}" style="width:48px;height:48px;object-fit:cover;border-radius:6px;cursor:pointer" onclick="window.openLightbox('${ph}')">`).join('')}</div>`:'';
         return `<div class="card">
         <div class="rec-top"><span class="rec-trader">${recipLabel(d.recipient)}</span><span class="rec-income">₹${window.fmt(d.amount||0)}</span></div>
         <div class="rec-meta">${window.fmtDate(d.date)}${rec?' · '+(rec.traderName||''):''} ${d.note?'· '+d.note:''}</div>
+        ${photosHtml}
         <button class="danger-btn" style="margin-top:8px;padding:6px 10px;font-size:12px" onclick="event.stopPropagation();window.deleteDistribution('${d.id}','${d.recordId||''}','partners')">🗑️ ${window.t('deleteDistribution')}</button>
       </div>`;}).join('');
     }
@@ -1269,6 +1307,8 @@ document.getElementById('addDistBtn').addEventListener('click',()=>{
   document.getElementById('df_date').value=window.today();
   document.getElementById('df_amount').value='';
   document.getElementById('df_note').value='';
+  window.distPhotos=[];
+  window.renderDistPhotosGrid();
   const p=getProfile();
   const opt1=document.getElementById('df_opt_p1'); if(opt1) opt1.textContent=p.partner1||window.t('partner1');
   const opt2=document.getElementById('df_opt_p2'); if(opt2) opt2.textContent=p.partner2||window.t('partner2');
@@ -1295,6 +1335,8 @@ window.openDistFormForRecord = function(recordId, origin){
   document.getElementById('df_date').value=window.today();
   document.getElementById('df_amount').value=remaining>0?remaining:'';
   document.getElementById('df_note').value='';
+  window.distPhotos=[];
+  window.renderDistPhotosGrid();
   const p=getProfile();
   const opt1=document.getElementById('df_opt_p1'); if(opt1) opt1.textContent=p.partner1||window.t('partner1');
   const opt2=document.getElementById('df_opt_p2'); if(opt2) opt2.textContent=p.partner2||window.t('partner2');
@@ -1321,6 +1363,7 @@ document.getElementById('saveDistBtn').addEventListener('click', async ()=>{
     amount, recipient,
     recordId,
     note:document.getElementById('df_note').value||'',
+    photos:window.distPhotos.slice(),
     createdAt:Date.now()
   };
   try {
@@ -1502,11 +1545,7 @@ window.buildFarmFields = function(){
       html+=`<div class="form-group"><div class="sec-title" style="margin-top:8px">${window.t('deduction')} (एकत्रित)</div><div class="row2">
         <div><label class="form-label">Q</label><input type="number" class="form-input" id="f_C_dQ" placeholder="0" min="0" oninput="window.recalcAll()"></div>
         <div><label class="form-label">kg</label><input type="number" class="form-input" id="f_C_dKg" placeholder="0" min="0" max="99" oninput="window.recalcAll()"></div>
-      </div></div>
-      <div class="form-group" style="display:flex;align-items:center;gap:10px">
-        <input type="checkbox" id="f_C_3pct" style="width:18px;height:18px;cursor:pointer" onchange="window.recalcAll()">
-        <label for="f_C_3pct" style="font-size:14px;margin:0;cursor:pointer">${window.t('threePct')} <span id="f_C_3pctAmt" style="color:var(--blue);font-size:12px"></span></label>
-      </div>`;
+      </div></div>`;
     }
 
     html+=`<div class="auto-box blue" id="f_C_netW" style="margin-bottom:8px">${window.t('netWeight')}: 0.00 Q</div>`;
@@ -1542,11 +1581,7 @@ window.buildFarmFields = function(){
       html+=`<div class="form-group"><div class="sec-title" style="margin-top:8px">${window.t('deduction')}</div><div class="row2">
         <div><label class="form-label">Q</label><input type="number" class="form-input" id="f_${fm}_dQ" placeholder="0" min="0" oninput="window.recalcAll()"></div>
         <div><label class="form-label">kg</label><input type="number" class="form-input" id="f_${fm}_dKg" placeholder="0" min="0" max="99" oninput="window.recalcAll()"></div>
-      </div></div>
-      <div class="form-group" style="display:flex;align-items:center;gap:10px">
-        <input type="checkbox" id="f_${fm}_3pct" style="width:18px;height:18px;cursor:pointer" onchange="window.recalcAll()">
-        <label for="f_${fm}_3pct" style="font-size:14px;margin:0;cursor:pointer">${window.t('threePct')} <span id="f_${fm}_3pctAmt" style="color:var(--blue);font-size:12px"></span></label>
-      </div>`;
+      </div></div>`;
     }
     html+=`<div class="auto-box blue" id="f_${fm}_netW" style="margin-bottom:8px">${window.t('netWeight')}: 0.00 Q</div>`;
     html+=`<div class="form-group"><div class="sec-title" style="margin-top:8px">${window.t('labour')}</div><div class="row2">
@@ -1925,11 +1960,14 @@ window.openDetail = function(id){
     <div class="detail-row"><span class="label" style="font-weight:700">${window.t('balanceLeft')}</span><span class="val" style="color:${remainForRecord<0?'var(--red)':'var(--green)'};font-weight:700">₹${window.fmt(remainForRecord)}</span></div>
   </div>`;
   if(linkedDists.length){
-    html+=linkedDists.map(d=>`<div class="card" style="margin-top:8px">
+    html+=linkedDists.map(d=>{
+      const photosHtml=(d.photos&&d.photos.length)?`<div style="display:flex;gap:6px;margin-top:6px;flex-wrap:wrap">${d.photos.map(ph=>`<img src="${ph}" style="width:44px;height:44px;object-fit:cover;border-radius:6px;cursor:pointer" onclick="window.openLightbox('${ph}')">`).join('')}</div>`:'';
+      return `<div class="card" style="margin-top:8px">
       <div class="detail-row"><span class="label">${recipLabel(d.recipient)}</span><span class="val" style="font-weight:700">₹${window.fmt(d.amount||0)}</span></div>
       <div class="detail-row"><span class="label" style="font-size:11px;color:var(--muted)">${window.fmtDate(d.date)}${d.note?' · '+d.note:''}</span>
       <button class="danger-btn" style="padding:4px 8px;font-size:11px" onclick="window.deleteDistribution('${d.id}','${r.id}','detail')">🗑️</button></div>
-    </div>`).join('');
+      ${photosHtml}
+    </div>`;}).join('');
   }
   html+=`<button class="pay-btn" style="margin-top:8px" onclick="window.openDistFormForRecord('${r.id}','detail')">+ ${window.t('addDistribution')}</button>`;
 
@@ -2305,6 +2343,16 @@ window._buildAndPrintPDF = function() {
   
   const printArea = document.getElementById('printArea');
   printArea.innerHTML = html;
+
+  // So "Save as PDF" suggests today's date in the filename (browsers use document.title as the default filename)
+  const origTitle = document.title;
+  const pad=n=>String(n).padStart(2,'0');
+  const now=new Date();
+  const fileDate=`${pad(now.getDate())}-${pad(now.getMonth()+1)}-${now.getFullYear()}`;
+  document.title = `Keli-Hisab-Report-${fileDate}`;
+  const restoreTitle=()=>{ document.title = origTitle; window.removeEventListener('afterprint', restoreTitle); };
+  window.addEventListener('afterprint', restoreTitle);
+
   window.print();
 }
 
