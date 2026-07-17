@@ -1,4 +1,4 @@
-const CACHE_NAME = 'keli-hisaab-v2';
+const CACHE_NAME = 'keli-hisaab-v3';
 const ASSETS_TO_CACHE = [
   './',
   './index.html',
@@ -7,7 +7,6 @@ const ASSETS_TO_CACHE = [
   './icon-512.png'
 ];
 
-// Install Event - caches the files, and activate immediately instead of waiting for all tabs to close
 self.addEventListener('install', (event) => {
   self.skipWaiting();
   event.waitUntil(
@@ -17,7 +16,6 @@ self.addEventListener('install', (event) => {
   );
 });
 
-// Activate Event - delete old caches from previous versions, and take control of open tabs right away
 self.addEventListener('activate', (event) => {
   event.waitUntil(
     caches.keys().then((names) => {
@@ -28,8 +26,6 @@ self.addEventListener('activate', (event) => {
   );
 });
 
-// Fetch Event - network-first for the HTML app shell (so updates show up as soon as they're published),
-// falling back to cache only when offline. Other assets (icons etc.) stay cache-first since they rarely change.
 self.addEventListener('fetch', (event) => {
   const isHTML = event.request.mode === 'navigate' || event.request.url.endsWith('index.html') || event.request.url.endsWith('/');
   if (isHTML) {
