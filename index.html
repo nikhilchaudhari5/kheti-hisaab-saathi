@@ -31,10 +31,10 @@ body {
    🔴 HEADER STYLES
    ======================================== */
 .app-header {
-  background: var(--green); color: #fff; padding: 12px 16px;
+  background: linear-gradient(135deg, #1a6b3c, #21804a); color: #fff; padding: 12px 16px;
   padding-top: max(12px, env(safe-area-inset-top));
-  display: flex; align-items: center; justify-content: space-between;
-  position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 8px rgba(0,0,0,.2); width: 100%;
+  display: flex; align-items: center; justify-content: space-between; gap: 10px;
+  position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 14px rgba(15,23,42,.18); width: 100%;
 }
 .app-header h1 { font-size: 18px; font-weight: 700; }
 .header-actions { display: flex; gap: 8px; align-items: center; }
@@ -75,29 +75,29 @@ body {
    ======================================== */
 .screen { display: none; padding: 12px 12px 90px; width: 100%; padding-left: max(12px, env(safe-area-inset-left)); padding-right: max(12px, env(safe-area-inset-right)); }
 .screen.active { display: block; }
-.fab { position: fixed; bottom: 16px; bottom: max(16px, env(safe-area-inset-bottom)); right: 16px; right: max(16px, env(safe-area-inset-right)); width: 52px; height: 52px; min-width: 52px; min-height: 52px; background: var(--green); color: #fff; border: none; border-radius: 50%; font-size: 28px; cursor: pointer; box-shadow: 0 4px 12px rgba(26,107,60,.4); z-index: 99; display: flex; align-items: center; justify-content: center; line-height: 1; transition: transform 0.2s ease; }
+.fab { position: fixed; bottom: 16px; bottom: max(16px, env(safe-area-inset-bottom)); right: 16px; right: max(16px, env(safe-area-inset-right)); width: 56px; height: 56px; min-width: 56px; min-height: 56px; background: linear-gradient(135deg, #1a6b3c, #21804a); color: #fff; border: none; border-radius: 50%; font-size: 28px; cursor: pointer; box-shadow: 0 6px 18px rgba(26,107,60,.45); z-index: 99; display: flex; align-items: center; justify-content: center; line-height: 1; transition: transform 0.15s ease; } .fab:active{transform:scale(0.92)}
 .fab:active { transform: scale(0.95); }
 
 /* ========================================
    🔴 CARDS, STATS, RECORDS
    ======================================== */
-.card { background: var(--card); border-radius: 12px; padding: 14px; margin-bottom: 10px; box-shadow: 0 1px 3px rgba(0,0,0,.08); width: 100%; }
+.card { background: var(--card); border-radius: 18px; padding: 16px; margin-bottom: 12px; box-shadow: 0 2px 10px rgba(15,23,42,.06); width: 100%; transition: transform .15s ease, box-shadow .15s ease; }
 .stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 12px; width: 100%; }
-.stat-card { background: var(--card); border-radius: 12px; padding: 12px; box-shadow: 0 1px 3px rgba(0,0,0,.08); }
+.stat-card { background: var(--card); border-radius: 16px; padding: 14px; box-shadow: 0 2px 10px rgba(15,23,42,.06); }
 .stat-label{font-size:11px;color:var(--muted);margin-bottom:4px}
 .stat-val{font-size:20px;font-weight:700;color:var(--green)}
 .stat-val.red{color:var(--red)}
 .stat-val.blue{color:var(--blue)}
 .sec-title{font-size:13px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin:16px 0 8px}
 
-.rec-card{ background:var(--card); border-radius:12px; padding:12px 14px; margin-bottom:8px; box-shadow:0 1px 3px rgba(0,0,0,.08); cursor:pointer; border-left:4px solid var(--green); width: 100%; min-height: 60px; }
+.rec-card{ background:var(--card); border-radius:16px; padding:14px 16px; margin-bottom:10px; box-shadow:0 2px 10px rgba(15,23,42,.06); cursor:pointer; border-left:4px solid var(--green); width: 100%; min-height: 60px; transition: transform .15s ease; } .rec-card:active{transform:scale(0.985)}
 .rec-card.pending{border-left-color:var(--red)}
 .rec-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:4px;flex-wrap:wrap;gap:8px}
 .rec-trader{font-weight:600;font-size:15px}
 .rec-income{font-weight:700;font-size:15px;color:var(--green)}
 .rec-income.pending{color:var(--red)}
 .rec-meta{font-size:12px;color:var(--muted);display:flex;gap:8px;flex-wrap:wrap}
-.badge{display:inline-block;padding:2px 8px;border-radius:10px;font-size:11px;font-weight:600}
+.badge{display:inline-block;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:700}
 .badge-m{background:#dcfce7;color:#166534}
 .badge-p{background:#dbeafe;color:#1e40af}
 .badge-mp{background:#fef9c3;color:#854d0e}
@@ -107,7 +107,7 @@ body {
    ======================================== */
 .form-group { margin-bottom: 14px; width: 100%; }
 .form-label { font-size: 13px; font-weight: 600; color: var(--text); margin-bottom: 5px; display: block; }
-.form-input { width: 100%; padding: 12px 12px; border: 1.5px solid var(--border); border-radius: 8px; font-size: 16px; font-family: inherit; background: #fff; color: var(--text); outline: none; transition: border .2s; -webkit-appearance: none; appearance: none; min-height: 44px; }
+.form-input { width: 100%; padding: 12px 14px; border: 1.5px solid var(--border); border-radius: 12px; font-size: 16px; font-family: inherit; background: #fff; color: var(--text); outline: none; transition: border .2s, box-shadow .2s; -webkit-appearance: none; appearance: none; min-height: 46px; }
 .form-input:focus { border-color: var(--green); box-shadow: 0 0 0 3px rgba(26, 107, 60, 0.1); }
 .form-input:disabled { background: #f5f5f5; cursor: not-allowed; }
 .form-select { appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%2364748b' stroke-width='1.5' fill='none'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 12px center; padding-right: 36px; }
@@ -115,10 +115,10 @@ body {
 .row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; width: 100%; }
 @media (max-width: 480px) { .row2 { grid-template-columns: 1fr; } }
 
-.toggle-group{ display:flex; background:var(--bg); border-radius:8px; padding:3px; gap:2px; width: 100%; flex-wrap: wrap; }
-.toggle-btn{ flex:1; padding:8px; border:none; background:none; border-radius:6px; font-size:13px; font-family:inherit; cursor:pointer; font-weight:500; color:var(--muted); transition:all .2s; min-height: 44px; }
+.toggle-group{ display:flex; background:var(--bg); border-radius:12px; padding:4px; gap:3px; width: 100%; flex-wrap: wrap; }
+.toggle-btn{ flex:1; padding:8px; border:none; background:none; border-radius:9px; font-size:13px; font-family:inherit; cursor:pointer; font-weight:600; color:var(--muted); transition:all .2s; min-height: 44px; }
 .toggle-btn.active{ background:#fff; color:var(--green); font-weight:600; box-shadow:0 1px 3px rgba(0,0,0,.1) }
-.auto-box{ padding:10px 12px; border-radius:8px; font-weight:600; font-size:15px; margin-top:4px; width: 100%; }
+.auto-box{ padding:12px 14px; border-radius:14px; font-weight:600; font-size:15px; margin-top:4px; width: 100%; }
 .auto-box.blue{background:var(--blue-light);color:var(--blue)}
 .auto-box.green{background:var(--green-light);color:var(--green)}
 .auto-box.red{background:var(--red-light);color:var(--red)}
@@ -128,7 +128,7 @@ body {
    ======================================== */
 .photo-slots{ display:grid; grid-template-columns:1fr 1fr 1fr; gap:8px; margin-top:8px; width: 100%; }
 @media (max-width: 480px) { .photo-slots { grid-template-columns: 1fr 1fr; gap: 6px; } }
-.photo-slot{ aspect-ratio:1; border:2px dashed var(--border); border-radius:10px; display:flex; flex-direction:column; align-items:center; justify-content:center; cursor:pointer; background:#fafafa; position:relative; overflow:hidden; font-size:11px; color:var(--muted); text-align:center; gap:4px; min-height: 80px; }
+.photo-slot{ aspect-ratio:1; border:2px dashed var(--border); border-radius:14px; display:flex; flex-direction:column; align-items:center; justify-content:center; cursor:pointer; background:#fafafa; position:relative; overflow:hidden; font-size:11px; color:var(--muted); text-align:center; gap:4px; min-height: 80px; transition: transform .15s ease; }
 .photo-slot img{ width:100%; height:100%; object-fit:cover; position:absolute; inset:0 }
 .photo-slot .del-photo{ position:absolute; top:2px; right:2px; width:24px; height:24px; background:rgba(220,38,38,.9); border:none; border-radius:50%; color:#fff; font-size:14px; cursor:pointer; display:flex; align-items:center; justify-content:center; z-index:2; min-width: 24px; }
 .photo-label{font-size:11px;color:var(--muted);margin-bottom:4px}
@@ -161,13 +161,13 @@ body {
 /* ========================================
    🔴 BUTTONS & MISC
    ======================================== */
-.danger-btn, .pay-btn { width: 100%; padding: 12px; border: none; border-radius: 10px; font-size: 15px; font-family: inherit; font-weight: 600; cursor: pointer; min-height: 44px; transition: all 0.2s ease; }
-.pay-btn{ background:var(--green); color:#fff; margin-bottom:8px; }
+.danger-btn, .pay-btn { width: 100%; padding: 13px; border: none; border-radius: 14px; font-size: 15px; font-family: inherit; font-weight: 700; cursor: pointer; min-height: 46px; transition: all 0.15s ease; letter-spacing: .2px; }
+.pay-btn{ background:var(--green); color:#fff; margin-bottom:8px; box-shadow: 0 3px 10px rgba(26,107,60,.28); }
 .pay-btn:active { background: #158638; transform: scale(0.98); }
 .danger-btn{ background:var(--red-light); color:var(--red); border:1.5px solid var(--red); margin-top:8px }
 .danger-btn:active { background: #fecaca; }
 
-.summary-box{background:#f8fafc;border:1px solid var(--border);border-radius:10px;padding:12px;margin:8px 0}
+.summary-box{background:#f8fafc;border:1px solid var(--border);border-radius:14px;padding:14px;margin:8px 0}
 .summary-row{display:flex;justify-content:space-between;padding:3px 0;font-size:14px}
 .summary-divider{border:none;border-top:1px dashed var(--border);margin:6px 0}
 .summary-total{font-weight:700;font-size:16px;color:var(--green)}
@@ -429,8 +429,6 @@ body {
 <button class="toggle-btn" data-harvest="fanaya">फणाया 🍌</button>
 </div>
 <div id="farmFields"></div>
-<div class="sec-title" data-t="rate">दर (प्रति क्विंटल)</div>
-<div class="form-group"><input type="number" class="form-input" id="f_rate" placeholder="₹ दर" oninput="recalcAll()"></div>
 <div id="combinedSummary" style="display:none">
 <div class="sec-title" data-t="combinedSummary">एकत्रित सारांश</div>
 <div class="summary-box" id="combinedBox"></div>
@@ -707,7 +705,8 @@ menu:'मेनू',expenses:'खर्च / नोंदी',addExpense:'नो
 noExpenses:'अजून कोणतीही नोंद नाही',deleteExpense:'नोंद हटवा',confirmDeleteExpense:'ही नोंद हटवायची आहे का?',
 expenseSaved:'नोंद जतन झाली ✓',expenseDeleted:'नोंद हटवली',valExpenseEmpty:'रक्कम, टीप किंवा फोटो यापैकी काहीतरी टाका!',
 fanayaPctInline:'फणाया %',incomeBreakdown:'उत्पन्न तपशील',totalIncomeBeforeAdd:'एकूण उत्पन्न (वाढीआधी)',
-fanayaAddition:'फणाया वाढ',grossAfterFanaya:'फणाया नंतर एकूण',labourDeduction:'मजुरी वजा',finalNetIncome:'अंतिम निव्वळ उत्पन्न'},
+fanayaAddition:'फणाया वाढ',grossAfterFanaya:'फणाया नंतर एकूण',labourDeduction:'मजुरी वजा',finalNetIncome:'अंतिम निव्वळ उत्पन्न',
+treesCut:'तोडलेली झाडे',raas:'राास',weightAfterDed:'वजन (कापत/तारा नंतर)',finalWeight:'अंतिम वजन',weightBreakdown:'वजन तपशील'},
 en:{appName:'Kheti Hisaab Saathi',dashboard:'Dashboard',farmM:'Farm M',farmP:'Farm P',
 records:'Records',traders:'Traders',addRecord:'New Record',totalIncome:'Total Income',
 pending:'Pending',received:'Received',weight:'Total Weight',ghads:'Ghads',labour:'Labour',
@@ -747,7 +746,8 @@ menu:'Menu',expenses:'Expenses / Notes',addExpense:'Add Entry',expenseAmount:'Am
 noExpenses:'No entries yet',deleteExpense:'Delete Entry',confirmDeleteExpense:'Delete this entry?',
 expenseSaved:'Entry Saved ✓',expenseDeleted:'Entry Deleted',valExpenseEmpty:'Enter an amount, note, or photo!',
 fanayaPctInline:'Fanaya %',incomeBreakdown:'Income Breakdown',totalIncomeBeforeAdd:'Total Income (before addition)',
-fanayaAddition:'Fanaya Addition',grossAfterFanaya:'Gross After Fanaya',labourDeduction:'Labour Deduction',finalNetIncome:'Final Net Income'}
+fanayaAddition:'Fanaya Addition',grossAfterFanaya:'Gross After Fanaya',labourDeduction:'Labour Deduction',finalNetIncome:'Final Net Income',
+treesCut:'Trees Cut',raas:'Raas',weightAfterDed:'Weight (after कापत/तारा)',finalWeight:'Final Weight',weightBreakdown:'Weight Breakdown'}
 };
 
 let curLang=localStorage.getItem('lang')||'mr';
@@ -949,6 +949,11 @@ window.openEditForm = function(recordId){
 
     setTimeout(()=>{
       window.setVal('f_C_fanayaPct', r.c_fanayaPct);
+      window.setVal('f_C_ghads', r.c_ghads);
+      window.setVal('f_C_labRate', r.c_labourRate);
+      window.setVal('f_C_kattar', r.c_kattar);
+      window.setVal('f_M_trees', r.m_trees);
+      window.setVal('f_P_trees', r.p_trees);
       const farms=window.curFarm==='MP'?['M','P']:[window.curFarm];
       farms.forEach(fm=>{
         const p=fm.toLowerCase();
@@ -957,6 +962,7 @@ window.openEditForm = function(recordId){
         window.setVal(`f_${fm}_dQ`, r[`${p}_dedQ`]);
         window.setVal(`f_${fm}_dKg`, r[`${p}_dedKg`]);
         window.setVal(`f_${fm}_fanayaPct`, r[`${p}_fanayaPct`]);
+        window.setVal(`f_${fm}_trees`, r[`${p}_trees`]);
         const chk=document.getElementById(`f_${fm}_3pct`);
         if(chk)chk.checked=!!r[`${p}_is3Pct`];
         window.setVal(`f_${fm}_ghads`, r[`${p}_ghads`]);
@@ -1136,19 +1142,25 @@ window.performUpdate = async function(){
     const newCPatti=[0,1,2].map(i=>window.photoTargets[`patti_${i}`]||null).filter(Boolean);
     rec.c_photoPatti=newCPatti.length?newCPatti:(rec.c_photoPatti||[]);
 
-    ['M','P'].forEach(fm=>{
-      const ghads=Number(document.getElementById(`f_${fm}_ghads`)?.value||0);
-      const labRate=Number(document.getElementById(`f_${fm}_labRate`)?.value||10)||10;
-      const kattar=Number(document.getElementById(`f_${fm}_kattar`)?.value||0);
-      const labCost=ghads*labRate;
-      const p=fm.toLowerCase();
-      rec[`${p}_ghads`]=ghads; rec[`${p}_labourRate`]=labRate; rec[`${p}_totalLabour`]=labCost;
-      rec[`${p}_kattar`]=kattar;
-      totalLabour+=labCost; totalKattar+=kattar;
-    });
+    const ghadsC=Number(document.getElementById('f_C_ghads')?.value||0);
+    const labRateC=Number(document.getElementById('f_C_labRate')?.value||10)||10;
+    const kattarC=Number(document.getElementById('f_C_kattar')?.value||0);
+    const labCostC=ghadsC*labRateC;
+    rec.c_ghads=ghadsC; rec.c_labourRate=labRateC; rec.c_totalLabour=labCostC; rec.c_kattar=kattarC;
+    totalLabour=labCostC; totalKattar=kattarC;
     totalNet=totalGross-totalLabour-totalKattar;
+
+    const treesM=Number(document.getElementById('f_M_trees')?.value||0);
+    const treesP=Number(document.getElementById('f_P_trees')?.value||0);
+    rec.m_trees=treesM; rec.p_trees=treesP;
+    const totalTrees=treesM+treesP;
+    rec.raas=totalTrees>0?Number((c.netWQ*100/totalTrees).toFixed(2)):null;
+
     rec.m_totalWQ=0;rec.m_netWeightQ=0;rec.m_netIncome=0;rec.m_grossIncome=0;rec.m_fanayaAdd=0;
     rec.p_totalWQ=0;rec.p_netWeightQ=0;rec.p_netIncome=0;rec.p_grossIncome=0;rec.p_fanayaAdd=0;
+    // Clear any old per-farm labour fields from a pre-update record format
+    rec.m_ghads=0;rec.m_labourRate=0;rec.m_totalLabour=0;rec.m_kattar=0;
+    rec.p_ghads=0;rec.p_labourRate=0;rec.p_totalLabour=0;rec.p_kattar=0;
 
   } else {
     const fm=window.curFarm;
@@ -1175,6 +1187,9 @@ window.performUpdate = async function(){
     const newPatti=[0,1,2].map(i=>window.photoTargets[`patti_${i}`]||null).filter(Boolean);
     rec[`${p}_photoPatti`]=newPatti.length?newPatti:(rec[`${p}_photoPatti`]||[]);
     totalNet=c.net; totalWQ=c.netWQ; totalLabour=c.labCost; totalKattar=kattar; totalGross=c.gross;
+    const trees=Number(document.getElementById(`f_${fm}_trees`)?.value||0);
+    rec[`${p}_trees`]=trees;
+    rec.raas=trees>0?Number((c.netWQ*100/trees).toFixed(2)):null;
     if(fm==='P'){rec.m_totalWQ=0;rec.m_netWeightQ=0;rec.m_netIncome=0;rec.m_totalLabour=0;rec.m_grossIncome=0;rec.m_ghads=0;rec.m_kattar=0;rec.m_fanayaAdd=0;}
     if(fm==='M'){rec.p_totalWQ=0;rec.p_netWeightQ=0;rec.p_netIncome=0;rec.p_totalLabour=0;rec.p_grossIncome=0;rec.p_ghads=0;rec.p_kattar=0;rec.p_fanayaAdd=0;}
   }
@@ -1731,6 +1746,7 @@ document.getElementById('harvestToggle').addEventListener('click',e=>{
 
 window.buildFarmFields = function(){
   const isCombined = window.curFarm==='MP';
+  const prevRate = document.getElementById('f_rate')?.value || '';
   let html='';
 
   if(isCombined){
@@ -1746,30 +1762,35 @@ window.buildFarmFields = function(){
         <div><label class="form-label">kg</label><input type="number" class="form-input" id="f_C_dKg" placeholder="0" min="0" max="99" oninput="window.recalcAll()"></div>
       </div></div>`;
     }
+
+    html+=`<div class="sec-title" style="margin-top:8px" data-t="rate">दर (प्रति क्विंटल)</div>
+    <div class="form-group"><input type="number" class="form-input" id="f_rate" placeholder="₹ दर" oninput="window.recalcAll()"></div>`;
+
     if(window.curHarvest==='fanaya'){
       html+=`<div class="form-group"><label class="form-label">🍌 ${window.t('fanayaPctInline')}</label><input type="number" step="0.1" class="form-input" id="f_C_fanayaPct" placeholder="${window.getFanayaPct()}" value="${window.getFanayaPct()}" oninput="window.recalcAll()"></div>`;
     }
 
-    html+=`<div class="auto-box blue" id="f_C_netW" style="margin-bottom:8px">${window.t('netWeight')}: 0.00 Q</div>`;
+    html+=`<div class="summary-box" id="f_C_weightBreakdown" style="margin-bottom:8px"></div>`;
     html+=`<div class="auto-box green" id="f_C_grossInc" style="margin-bottom:12px">एकत्रित उत्पन्न (Gross): ₹0</div>`;
+
+    html+=`<div class="form-group"><div class="sec-title" style="margin-top:8px">🌳 ${window.t('treesCut')}</div><div class="row2">
+      <div><label class="form-label">${window.t('farmM')}</label><input type="number" class="form-input" id="f_M_trees" placeholder="0" min="0" oninput="window.recalcAll()"></div>
+      <div><label class="form-label">${window.t('farmP')}</label><input type="number" class="form-input" id="f_P_trees" placeholder="0" min="0" oninput="window.recalcAll()"></div>
+    </div></div>`;
+    html+=`<div class="auto-box" style="margin-bottom:12px;background:#fff7e6;border:1px solid #ffe1a8;color:#a9631a;font-weight:700" id="f_C_raas">${window.t('raas')}: —</div>`;
 
     html+=`<div class="sec-title">पावत्या (एकत्रित — फक्त एकदाच अपलोड करा)</div>`;
     html+=window.photoSectionHTML('tollBefore','टोल आधी',1);
     html+=window.photoSectionHTML('tollAfter','टोल नंतर',1);
     html+=window.photoSectionHTML('patti','पट्टी',3);
 
-    html+=`<div class="sec-title" style="margin-top:18px">👷 प्रत्येक शेताची मजुरी (वेगवेगळी)</div>`;
-
-    ['M','P'].forEach(fm=>{
-      const label=fm==='M'?window.t('farmMFull'):window.t('farmPFull');
-      html+=`<div class="farm-header" style="margin-top:10px">🌿 ${label}</div>`;
-      html+=`<div class="form-group"><div class="row2">
-        <div><label class="form-label">${window.t('ghadsCount')}</label><input type="number" class="form-input" id="f_${fm}_ghads" placeholder="0" min="0" oninput="window.recalcAll()"></div>
-        <div><label class="form-label">${window.t('labourRate')}</label><input type="number" class="form-input" id="f_${fm}_labRate" placeholder="10" min="0" oninput="window.recalcAll()"></div>
-      </div>
-      <div class="auto-box blue" style="margin-top:6px;font-size:13px" id="f_${fm}_labFormula">0 × ₹10 = ₹0</div>
-      <div style="margin-top:8px"><label class="form-label">${window.t('kattar')}</label><input type="number" class="form-input" id="f_${fm}_kattar" placeholder="0" min="0" oninput="window.recalcAll()"></div></div>`;
-    });
+    html+=`<div class="sec-title" style="margin-top:18px">👷 ${window.t('labour')} (एकत्रित — एकदाच)</div>`;
+    html+=`<div class="form-group"><div class="row2">
+      <div><label class="form-label">${window.t('ghadsCount')}</label><input type="number" class="form-input" id="f_C_ghads" placeholder="0" min="0" oninput="window.recalcAll()"></div>
+      <div><label class="form-label">${window.t('labourRate')}</label><input type="number" class="form-input" id="f_C_labRate" placeholder="10" min="0" oninput="window.recalcAll()"></div>
+    </div>
+    <div class="auto-box blue" style="margin-top:6px;font-size:13px" id="f_C_labFormula">0 × ₹10 = ₹0</div>
+    <div style="margin-top:8px"><label class="form-label">${window.t('kattar')}</label><input type="number" class="form-input" id="f_C_kattar" placeholder="0" min="0" oninput="window.recalcAll()"></div></div>`;
 
   } else {
     const fm=window.curFarm;
@@ -1785,10 +1806,14 @@ window.buildFarmFields = function(){
         <div><label class="form-label">kg</label><input type="number" class="form-input" id="f_${fm}_dKg" placeholder="0" min="0" max="99" oninput="window.recalcAll()"></div>
       </div></div>`;
     }
+    html+=`<div class="sec-title" style="margin-top:8px" data-t="rate">दर (प्रति क्विंटल)</div>
+    <div class="form-group"><input type="number" class="form-input" id="f_rate" placeholder="₹ दर" oninput="window.recalcAll()"></div>`;
     if(window.curHarvest==='fanaya'){
       html+=`<div class="form-group"><label class="form-label">🍌 ${window.t('fanayaPctInline')}</label><input type="number" step="0.1" class="form-input" id="f_${fm}_fanayaPct" placeholder="${window.getFanayaPct()}" value="${window.getFanayaPct()}" oninput="window.recalcAll()"></div>`;
     }
-    html+=`<div class="auto-box blue" id="f_${fm}_netW" style="margin-bottom:8px">${window.t('netWeight')}: 0.00 Q</div>`;
+    html+=`<div class="summary-box" id="f_${fm}_weightBreakdown" style="margin-bottom:8px"></div>`;
+    html+=`<div class="form-group"><div class="sec-title" style="margin-top:8px">🌳 ${window.t('treesCut')}</div><input type="number" class="form-input" id="f_${fm}_trees" placeholder="0" min="0" oninput="window.recalcAll()"></div>`;
+    html+=`<div class="auto-box" style="margin-bottom:12px;background:#fff7e6;border:1px solid #ffe1a8;color:#a9631a;font-weight:700" id="f_${fm}_raas">${window.t('raas')}: —</div>`;
     html+=`<div class="form-group"><div class="sec-title" style="margin-top:8px">${window.t('labour')}</div><div class="row2">
       <div><label class="form-label">${window.t('ghadsCount')}</label><input type="number" class="form-input" id="f_${fm}_ghads" placeholder="0" min="0" oninput="window.recalcAll()"></div>
       <div><label class="form-label">${window.t('labourRate')}</label><input type="number" class="form-input" id="f_${fm}_labRate" placeholder="10" min="0" oninput="window.recalcAll()"></div>
@@ -1802,6 +1827,8 @@ window.buildFarmFields = function(){
     html+=window.photoSectionHTML('patti','पट्टी',3);
   }
   document.getElementById('farmFields').innerHTML=html;
+  const rateEl=document.getElementById('f_rate');
+  if(rateEl) rateEl.value=prevRate;
   window.recalcAll();
 }
 
@@ -1830,34 +1857,34 @@ window.recalcAll = function(){
     const c=window.calcFarm(Q,kg,dQ,dKg,is3,0,0,rate,window.curHarvest,0,fanayaPctC);
     netWQ=c.netWQ; totalGross=c.gross;
 
-    const netWEl=document.getElementById('f_C_netW');
-    if(netWEl)netWEl.textContent=`${window.t('netWeight')}: ${window.fmtQ(c.netWQ)} Q${c.fanayaAdd>0?` (+${window.fmtQ(c.fanayaAdd)} Q ${window.t('fanayaAddLbl')} ${c.fanayaPct}%)`:''}`;
+    window.renderWeightBreakdown('f_C_weightBreakdown', c);
     const grossEl=document.getElementById('f_C_grossInc');
     if(grossEl)grossEl.textContent=`एकत्रित उत्पन्न (Gross): ₹${window.fmt(c.gross)}`;
-    const amt3El=document.getElementById('f_C_3pctAmt');
-    if(amt3El)amt3El.textContent=is3?`(-${window.fmtQ(c.threePct)} Q)`:'';
 
-    let summaryRows='', totalKattar=0;
-    ['M','P'].forEach(fm=>{
-      const ghads=Number(document.getElementById(`f_${fm}_ghads`)?.value||0);
-      const labRate=Number(document.getElementById(`f_${fm}_labRate`)?.value||10)||10;
-      const kattar=Number(document.getElementById(`f_${fm}_kattar`)?.value||0);
-      const labCost=ghads*labRate;
-      totalLabour+=labCost; totalKattar+=kattar;
-      const labEl=document.getElementById(`f_${fm}_labFormula`);
-      if(labEl)labEl.textContent=`${ghads} × ₹${labRate} = ₹${window.fmt(labCost)}`;
-      const lbl=fm==='M'?window.t('farmMLong'):window.t('farmPLong');
-      summaryRows+=`<div class="summary-row"><span>${lbl} मजुरी: ${ghads} घड × ₹${labRate}</span><span style="font-weight:700">₹${window.fmt(labCost)}</span></div>`;
-      if(kattar>0) summaryRows+=`<div class="summary-row"><span>${lbl} ${window.t('kattar')}</span><span style="font-weight:700">₹${window.fmt(kattar)}</span></div>`;
-    });
+    // राास = final weight (kg) ÷ total trees cut across both farms
+    const treesM=Number(document.getElementById('f_M_trees')?.value||0);
+    const treesP=Number(document.getElementById('f_P_trees')?.value||0);
+    const totalTrees=treesM+treesP;
+    const raasEl=document.getElementById('f_C_raas');
+    if(raasEl)raasEl.textContent=totalTrees>0?`${window.t('raas')}: ${(c.netWQ*100/totalTrees).toFixed(2)} kg/झाड`:`${window.t('raas')}: —`;
 
-    totalNet=totalGross-totalLabour-totalKattar;
-    breakdownC=c; breakdownLabourTotal=totalLabour+totalKattar;
+    // Single combined labour entry (one cutting team for the whole combined harvest, not per-farm)
+    const ghads=Number(document.getElementById('f_C_ghads')?.value||0);
+    const labRate=Number(document.getElementById('f_C_labRate')?.value||10)||10;
+    const kattar=Number(document.getElementById('f_C_kattar')?.value||0);
+    const labCost=ghads*labRate;
+    totalLabour=labCost;
+    const labEl=document.getElementById('f_C_labFormula');
+    if(labEl)labEl.textContent=`${ghads} × ₹${labRate} = ₹${window.fmt(labCost)}`;
+
+    totalNet=totalGross-labCost-kattar;
+    breakdownC=c; breakdownLabourTotal=labCost+kattar;
 
     document.getElementById('combinedSummary').style.display='block';
     document.getElementById('combinedBox').innerHTML=
       `<div class="summary-row"><span>एकत्रित वजन: ${window.fmtQ(netWQ)}Q</span><span style="font-weight:700">₹${window.fmt(totalGross)}</span></div>`+
-      summaryRows+
+      `<div class="summary-row"><span>मजुरी: ${ghads} घड × ₹${labRate}</span><span style="font-weight:700">₹${window.fmt(labCost)}</span></div>`+
+      (kattar>0?`<div class="summary-row"><span>${window.t('kattar')}</span><span style="font-weight:700">₹${window.fmt(kattar)}</span></div>`:'')+
       `<hr class="summary-divider"><div class="summary-row summary-total"><span>निव्वळ उत्पन्न (Gross − मजुरी)</span><span>₹${window.fmt(totalNet)}</span></div>`;
   } else {
     const fm=window.curFarm;
@@ -1872,14 +1899,15 @@ window.recalcAll = function(){
     const fanayaPctFm=document.getElementById(`f_${fm}_fanayaPct`)?.value;
     const c=window.calcFarm(Q,kg,dQ,dKg,is3,ghads,labRate,rate,window.curHarvest,kattar,fanayaPctFm);
 
-    const netWEl=document.getElementById(`f_${fm}_netW`);
-    if(netWEl)netWEl.textContent=`${window.t('netWeight')}: ${window.fmtQ(c.netWQ)} Q${c.fanayaAdd>0?` (+${window.fmtQ(c.fanayaAdd)} Q ${window.t('fanayaAddLbl')} ${c.fanayaPct}%)`:''}`;
+    window.renderWeightBreakdown(`f_${fm}_weightBreakdown`, c);
     const labEl=document.getElementById(`f_${fm}_labFormula`);
     if(labEl)labEl.textContent=`${ghads} × ₹${labRate} = ₹${window.fmt(c.labCost)}`;
     const netEl=document.getElementById(`f_${fm}_netInc`);
     if(netEl)netEl.textContent=`${window.t('netIncome')}: ₹${window.fmt(c.net)}`;
-    const amt3El=document.getElementById(`f_${fm}_3pctAmt`);
-    if(amt3El)amt3El.textContent=is3?`(-${window.fmtQ(c.threePct)} Q)`:'';
+
+    const trees=Number(document.getElementById(`f_${fm}_trees`)?.value||0);
+    const raasEl=document.getElementById(`f_${fm}_raas`);
+    if(raasEl)raasEl.textContent=trees>0?`${window.t('raas')}: ${(c.netWQ*100/trees).toFixed(2)} kg/झाड`:`${window.t('raas')}: —`;
 
     totalNet=c.net; totalGross=c.gross; totalLabour=c.labCost+kattar; netWQ=c.netWQ;
     breakdownC=c; breakdownLabourTotal=c.labCost+kattar;
@@ -1902,6 +1930,19 @@ window.recalcAll = function(){
   const pend=Math.max(0,totalNet-rec);
   document.getElementById('f_netDisplay').textContent=`${window.t('netIncome')}: ₹${window.fmt(totalNet)}`;
   document.getElementById('f_pendingDisplay').textContent=`${window.t('pending')}: ₹${window.fmt(pend)}`;
+}
+
+// Shows weight after कापत/तारा → + फणाया addition (if applicable) → final weight, in both Q and kg
+window.renderWeightBreakdown = function(elId, c){
+  const el=document.getElementById(elId);
+  if(!el)return;
+  const afterDedKg=(c.totalWQ-c.dedQ)*100;
+  let html=`<div class="summary-row"><span>${window.t('weightAfterDed')}</span><span style="font-weight:700">${window.fmtQ(c.totalWQ-c.dedQ)} Q (${window.fmt(afterDedKg)} kg)</span></div>`;
+  if(c.fanayaAdd>0){
+    html+=`<div class="summary-row"><span>${window.t('fanayaAddLbl')} (+${c.fanayaPct}%)</span><span style="font-weight:700;color:var(--green)">+${window.fmtQ(c.fanayaAdd)} Q (+${window.fmt(c.fanayaAdd*100)} kg)</span></div>`;
+  }
+  html+=`<hr class="summary-divider"><div class="summary-row summary-total"><span>${window.t('finalWeight')}</span><span>${window.fmtQ(c.netWQ)} Q (${window.fmt(c.netWQ*100)} kg)</span></div>`;
+  el.innerHTML=html;
 }
 
 document.getElementById('saveRecordBtn').addEventListener('click',()=>{
@@ -1952,17 +1993,19 @@ window.saveRecord = async function(){
     rec.c_photoTollAfter=window.photoTargets['tollAfter']||null;
     rec.c_photoPatti=[0,1,2].map(i=>window.photoTargets[`patti_${i}`]||null).filter(Boolean);
 
-    ['M','P'].forEach(fm=>{
-      const ghads=Number(document.getElementById(`f_${fm}_ghads`)?.value||0);
-      const labRate=Number(document.getElementById(`f_${fm}_labRate`)?.value||10)||10;
-      const kattar=Number(document.getElementById(`f_${fm}_kattar`)?.value||0);
-      const labCost=ghads*labRate;
-      const p=fm.toLowerCase();
-      rec[`${p}_ghads`]=ghads; rec[`${p}_labourRate`]=labRate; rec[`${p}_totalLabour`]=labCost;
-      rec[`${p}_kattar`]=kattar;
-      totalLabour+=labCost; totalKattar+=kattar;
-    });
+    const ghads=Number(document.getElementById('f_C_ghads')?.value||0);
+    const labRate=Number(document.getElementById('f_C_labRate')?.value||10)||10;
+    const kattar=Number(document.getElementById('f_C_kattar')?.value||0);
+    const labCost=ghads*labRate;
+    rec.c_ghads=ghads; rec.c_labourRate=labRate; rec.c_totalLabour=labCost; rec.c_kattar=kattar;
+    totalLabour=labCost; totalKattar=kattar;
     totalNet=totalGross-totalLabour-totalKattar;
+
+    const treesM=Number(document.getElementById('f_M_trees')?.value||0);
+    const treesP=Number(document.getElementById('f_P_trees')?.value||0);
+    rec.m_trees=treesM; rec.p_trees=treesP;
+    const totalTrees=treesM+treesP;
+    rec.raas=totalTrees>0?Number((c.netWQ*100/totalTrees).toFixed(2)):null;
 
   } else {
     const fm=window.curFarm;
@@ -1991,6 +2034,10 @@ window.saveRecord = async function(){
     rec[`${p}_photoPatti`]=[0,1,2].map(i=>window.photoTargets[`patti_${i}`]||null).filter(Boolean);
 
     totalNet=c.net; totalGross=c.gross; totalLabour=c.labCost; totalKattar=kattar; netWQ=c.netWQ;
+
+    const trees=Number(document.getElementById(`f_${fm}_trees`)?.value||0);
+    rec[`${p}_trees`]=trees;
+    rec.raas=trees>0?Number((c.netWQ*100/trees).toFixed(2)):null;
   }
 
   rec.combinedNetWeightQ=netWQ;
@@ -2063,6 +2110,7 @@ window.openDetail = function(id){
   const farmBadge=farmType==='M'?`<span class="badge badge-m">शेत म</span>`:farmType==='P'?`<span class="badge badge-p">शेत प</span>`:`<span class="badge badge-mp">म+प</span>`;
   let html=`<div class="card">
     <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px">${farmBadge}<span class="badge" style="background:#f1f5f9;color:var(--muted)">${htLabel}</span></div>
+    ${r.raas?`<div style="font-weight:800;font-size:16px;color:#a9631a;margin-bottom:8px">🌳 ${window.t('raas')}: ${r.raas} kg/झाड</div>`:''}
     <div class="detail-row"><span class="label">${window.t('trader')}</span><span class="val">${r.traderName}</span></div>
     <div class="detail-row"><span class="label">${window.t('date')}</span><span class="val">${window.fmtDate(r.date)}</span></div>
     ${r.vehicle?`<div class="detail-row"><span class="label">${window.t('vehicle')}</span><span class="val">${r.vehicle}</span></div>`:''}
@@ -2077,6 +2125,7 @@ window.openDetail = function(id){
       if(r[`${prefix}is3Pct`])h+=`<div class="detail-row"><span class="label">${window.t('threePct')}</span><span class="val">-${window.fmtQ(r[`${prefix}threePctDed`]||0)} Q</span></div>`;
     }
     h+=`<div class="detail-row"><span class="label">${window.t('netWeight')}</span><span class="val" style="color:var(--blue)">${window.fmtQ(r[`${prefix}netWeightQ`]||0)} Q</span></div>`;
+    if(r[`${prefix}trees`])h+=`<div class="detail-row"><span class="label">${window.t('treesCut')}</span><span class="val">${r[`${prefix}trees`]}</span></div>`;
     h+=`<div class="detail-row"><span class="label">${window.t('rate')}</span><span class="val">₹${window.fmt(r.rate)}/Q</span></div>`;
     h+=`<div class="detail-row"><span class="label">${window.t('grossIncome')}</span><span class="val">₹${window.fmt(r[`${prefix}grossIncome`]||0)}</span></div>`;
     h+=`<div class="detail-row"><span class="label">${window.t('ghadsCount')}</span><span class="val">${r[`${prefix}ghads`]||0} × ₹${r[`${prefix}labourRate`]||10} = ₹${window.fmt(r[`${prefix}totalLabour`]||0)}</span></div>`;
@@ -2103,6 +2152,7 @@ window.openDetail = function(id){
       if(r.c_is3Pct)html+=`<div class="detail-row"><span class="label">${window.t('threePct')}</span><span class="val">-${window.fmtQ(r.c_threePctDed||0)} Q</span></div>`;
     }
     html+=`<div class="detail-row"><span class="label">${window.t('netWeight')}</span><span class="val" style="color:var(--blue)">${window.fmtQ(r.c_netWeightQ||0)} Q</span></div>`;
+    if((r.m_trees||r.p_trees))html+=`<div class="detail-row"><span class="label">${window.t('treesCut')}</span><span class="val">${window.t('farmM')} ${r.m_trees||0} + ${window.t('farmP')} ${r.p_trees||0} = ${(r.m_trees||0)+(r.p_trees||0)}</span></div>`;
     html+=`<div class="detail-row"><span class="label">${window.t('rate')}</span><span class="val">₹${window.fmt(r.rate)}/Q</span></div>`;
     html+=`<div class="detail-row"><span class="label">एकत्रित उत्पन्न (Gross)</span><span class="val">₹${window.fmt(r.c_grossIncome||0)}</span></div>`;
     html+='</div>';
@@ -2117,15 +2167,20 @@ window.openDetail = function(id){
       html+='</div>';
     }
 
-    html+=`<div class="farm-header">👷 मजुरी (शेतनिहाय)</div><div class="card">`;
-    ['M','P'].forEach(fm=>{
-      const label=fm==='M'?window.t('farmMLong'):window.t('farmPLong');
-      const p=fm.toLowerCase();
-      html+=`<div class="detail-row"><span class="label">${label}</span><span class="val">${r[`${p}_ghads`]||0} घड × ₹${r[`${p}_labourRate`]||10} = ₹${window.fmt(r[`${p}_totalLabour`]||0)}</span></div>`;
-      if(r[`${p}_kattar`])html+=`<div class="detail-row"><span class="label">${label} — ${window.t('kattar')}</span><span class="val" style="color:var(--red)">-₹${window.fmt(r[`${p}_kattar`]||0)}</span></div>`;
-    });
-    html+=`<div class="detail-row" style="border-top:2px solid var(--border);margin-top:6px;padding-top:8px"><span class="label" style="font-weight:700">एकूण मजुरी</span><span class="val">₹${window.fmt(r.combinedLabour||0)}</span></div>`;
+    html+=`<div class="farm-header">👷 ${window.t('labour')}</div><div class="card">`;
+    if(r.c_ghads!==undefined){
+      // New format: one combined labour entry for the whole harvest
+      html+=`<div class="detail-row"><span class="label">${window.t('ghadsCount')}</span><span class="val">${r.c_ghads||0} × ₹${r.c_labourRate||10} = ₹${window.fmt(r.c_totalLabour||0)}</span></div>`;
+    } else {
+      // Old format (records saved before this update): per-farm labour
+      ['M','P'].forEach(fm=>{
+        const label=fm==='M'?window.t('farmMLong'):window.t('farmPLong');
+        const p=fm.toLowerCase();
+        html+=`<div class="detail-row"><span class="label">${label}</span><span class="val">${r[`${p}_ghads`]||0} घड × ₹${r[`${p}_labourRate`]||10} = ₹${window.fmt(r[`${p}_totalLabour`]||0)}</span></div>`;
+      });
+    }
     if(r.combinedKattar)html+=`<div class="detail-row"><span class="label" style="font-weight:700">${window.t('kattar')}</span><span class="val" style="color:var(--red)">-₹${window.fmt(r.combinedKattar||0)}</span></div>`;
+    html+=`<div class="detail-row" style="border-top:2px solid var(--border);margin-top:6px;padding-top:8px"><span class="label" style="font-weight:700">एकूण मजुरी</span><span class="val">₹${window.fmt(r.combinedLabour||0)}</span></div>`;
     html+='</div>';
 
     html+=`<div class="farm-header">📊 अंतिम निव्वळ उत्पन्न</div><div class="card">
@@ -2455,13 +2510,16 @@ window._buildAndPrintPDF = function() {
     </div>`;
     
     if (farmType === 'MP') {
+      const treesTotal=(r.m_trees||0)+(r.p_trees||0);
       html += `<div class="entry-card">
         <div class="entry-card-title">वजन (एकत्रित — गाडी एकदाच वजन झाली)</div>
         <div class="entry-field-row"><span class="efl">एकूण वजन</span><span class="efv">${r.c_totalWQ || 0} क्विं + ${r.c_totalWKg || 0} किलो</span></div>
         ${harvestType !== 'box' ? `<div class="entry-field-row"><span class="efl">कपात/तारा</span><span class="efv">${r.c_dedQ || 0} क्विं + ${r.c_dedKg || 0} किलो</span></div>` : ''}
-        ${r.c_fanayaAdd ? `<div class="entry-field-row"><span class="efl">${window.t('fanayaAddLbl')}</span><span class="efv">+${window.fmtQ(r.c_fanayaAdd || 0)} क्विं</span></div>` : ''}
+        ${r.c_fanayaAdd ? `<div class="entry-field-row"><span class="efl">${window.t('fanayaAddLbl')} (+${r.c_fanayaPct||6}%)</span><span class="efv">+${window.fmtQ(r.c_fanayaAdd || 0)} क्विं</span></div>` : ''}
         ${r.c_is3Pct ? `<div class="entry-field-row"><span class="efl">3% अतिरिक्त कपात</span><span class="efv">${window.fmtQ(r.c_threePctDed || 0)} क्विं</span></div>` : ''}
         <div class="entry-field-row"><span class="efl">निव्वळ वजन</span><span class="efv">${window.fmtQ(r.c_netWeightQ || 0)} क्विंटल</span></div>
+        ${treesTotal?`<div class="entry-field-row"><span class="efl">${window.t('treesCut')}</span><span class="efv">म ${r.m_trees||0} + प ${r.p_trees||0} = ${treesTotal}</span></div>`:''}
+        ${r.raas?`<div class="entry-field-row"><span class="efl" style="font-weight:700">${window.t('raas')}</span><span class="efv" style="font-weight:700">${r.raas} kg/झाड</span></div>`:''}
       </div>`;
       
       html += `<div class="entry-hero-box">
@@ -2470,13 +2528,13 @@ window._buildAndPrintPDF = function() {
       </div>`;
       
       html += `<div class="entry-card">
-        <div class="entry-card-title">मजुरी खर्च (शेतनिहाय)</div>
-        <div class="entry-field-row"><span class="efl">शेत म — घड संख्या × दर</span><span class="efv">${r.m_ghads || 0} × ₹${window.fmt(r.m_labourRate || 10)} = ₹${window.fmt(r.m_totalLabour || 0)}</span></div>
-        <div class="entry-field-row"><span class="efl">शेत प — घड संख्या × दर</span><span class="efv">${r.p_ghads || 0} × ₹${window.fmt(r.p_labourRate || 10)} = ₹${window.fmt(r.p_totalLabour || 0)}</span></div>
-        ${r.m_kattar ? `<div class="entry-field-row"><span class="efl">शेत म — ${window.t('kattar')}</span><span class="efv">₹${window.fmt(r.m_kattar || 0)}</span></div>` : ''}
-        ${r.p_kattar ? `<div class="entry-field-row"><span class="efl">शेत प — ${window.t('kattar')}</span><span class="efv">₹${window.fmt(r.p_kattar || 0)}</span></div>` : ''}
+        <div class="entry-card-title">${window.t('labour')}</div>
+        ${r.c_ghads!==undefined
+          ? `<div class="entry-field-row"><span class="efl">घड संख्या × दर</span><span class="efv">${r.c_ghads || 0} × ₹${window.fmt(r.c_labourRate || 10)} = ₹${window.fmt(r.c_totalLabour || 0)}</span></div>`
+          : `<div class="entry-field-row"><span class="efl">शेत म — घड संख्या × दर</span><span class="efv">${r.m_ghads || 0} × ₹${window.fmt(r.m_labourRate || 10)} = ₹${window.fmt(r.m_totalLabour || 0)}</span></div>
+        <div class="entry-field-row"><span class="efl">शेत प — घड संख्या × दर</span><span class="efv">${r.p_ghads || 0} × ₹${window.fmt(r.p_labourRate || 10)} = ₹${window.fmt(r.p_totalLabour || 0)}</span></div>`}
+        ${r.combinedKattar ? `<div class="entry-field-row"><span class="efl">${window.t('kattar')}</span><span class="efv">₹${window.fmt(r.combinedKattar || 0)}</span></div>` : ''}
         <div class="entry-field-row"><span class="efl" style="font-weight:700">एकूण मजुरी</span><span class="efv">₹${window.fmt(r.combinedLabour || 0)}</span></div>
-        ${r.combinedKattar ? `<div class="entry-field-row"><span class="efl" style="font-weight:700">${window.t('kattar')}</span><span class="efv">₹${window.fmt(r.combinedKattar || 0)}</span></div>` : ''}
       </div>`;
       
       html += window.getCombinedPhotosHtmlForPDF(r);
