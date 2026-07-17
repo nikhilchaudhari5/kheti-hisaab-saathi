@@ -210,9 +210,9 @@ body {
 .pdf-title-banner { background: #1a6b3c; color: #fff; padding: 8px 12px; font-weight: 700; font-size: 15px; border-radius: 6px; margin: 14px 0 8px; }
 .pdf-hero-card { border: 2px solid #1a6b3c; border-radius: 10px; padding: 12px; margin: 12px 0; background: #fafafa; }
 
-/* FIX: Perfect Universal Print Engine overrides with No-Cut Images */
+/* FIX: Flawless Native Print Overrides - Removed absolute positioning */
 @media print {
-  html, body { height: max-content !important; min-height: max-content !important; overflow: visible !important; background: #fff !important; margin: 0 !important; padding: 0 !important; }
+  html, body { height: auto !important; min-height: auto !important; overflow: visible !important; background: #fff !important; margin: 0 !important; padding: 0 !important; }
   body > *:not(#printArea) { display: none !important; }
   #printArea { 
     display: block !important; 
@@ -220,8 +220,6 @@ body {
     width: 100% !important; 
     height: auto !important; 
     overflow: visible !important;
-    opacity: 1 !important;
-    z-index: 1 !important;
   }
   .print-page { page-break-after: always; break-after: page; padding: 0; margin-bottom: 20px; }
   img { page-break-inside: avoid; break-inside: avoid; }
@@ -1254,7 +1252,6 @@ window.renderExpenses = function(){
   const listEl=document.getElementById('expenses-list');
   if(!listEl)return;
   
-  // Custom sort function: Highest Date first, then Highest CreatedAt (if same date)
   const exps=[...window.getExpenses()].sort((a,b)=>{
     if(a.date === b.date) return (b.createdAt || 0) - (a.createdAt || 0);
     return (b.date||'').localeCompare(a.date||'');
@@ -1728,7 +1725,7 @@ window.recalcAll = function(){
     const labCostTotal = (ghadsM * labRateM) + (ghadsP * labRateP);
     totalLabour=labCostTotal;
 
-    totalNet=totalGross-labCostTotal-kattar;
+    totalNet=totalGross-totalLabour-kattar;
     breakdownC=c; breakdownLabourTotal=labCostTotal+kattar;
 
     document.getElementById('combinedSummary').style.display='block';
@@ -2103,7 +2100,7 @@ document.getElementById('traderFormBack').addEventListener('click',()=>{ window.
 
 document.getElementById('saveTraderBtn').addEventListener('click', async ()=>{
   const name=document.getElementById('tf_name').value.trim();
-  if(!name){window.showToast('नाव आवश्यक आहे');return;}
+  if(!name){window.showToast('नाव आवश्यकামোहै');return;}
   if(!window.currentUserUid) return;
 
   const trId = window.editingTrader || window.genId();
@@ -2218,17 +2215,17 @@ window.getCombinedPhotosHtmlForPDF = function(r) {
   return html;
 }
 
-// FIX: Instant generation. Removed toast block.
 window.generatePDF = function() {
   const allRecs = window.getRecords();
   if (!allRecs.length) {
     window.showToast('नोंदी नाहीत');
     return;
   }
-  
-  // Create an off-screen render area and inject the layout completely outside normal flow
-  const printArea = document.getElementById('printArea');
-  
+  window._buildAndPrintPDF();
+}
+
+window._buildAndPrintPDF = function() {
+  const allRecs = window.getRecords();
   const recs = allRecs.slice().sort((a, b) => (b.date||'').localeCompare(a.date||''));
   const stats = window.computeStats(recs, null);
   const statsM = window.computeStats(recs.filter(r => (r.farmType||'M') === 'M' || (r.farmType||'M') === 'MP'), 'M');
@@ -2358,13 +2355,8 @@ window.generatePDF = function() {
     <div class="pdf-row" style="background:#e8f5ee; font-size:16px;"><div class="pdf-col-label" style="font-weight:700; color:var(--green);">एकूण निव्वळ उत्पन्न</div><div class="pdf-col-val" style="font-weight:700; color:var(--green);">₹${window.fmt(stats.income)}</div></div>
   </div>`;
   
+  const printArea = document.getElementById('printArea');
   printArea.innerHTML = html;
-
-  // Render images hidden into DOM explicitly before print dialog opens
-  printArea.style.display = 'block';
-  printArea.style.position = 'absolute';
-  printArea.style.top = '-99999px';
-  printArea.style.left = '-99999px';
   
   const origTitle = document.title;
   const pad=n=>String(n).padStart(2,'0');
@@ -2374,45 +2366,13 @@ window.generatePDF = function() {
   
   const restoreEnvironment = () => {
     document.title = origTitle;
-    printArea.style.display = 'none';
-    printArea.innerHTML = '';
     window.removeEventListener('afterprint', restoreEnvironment);
   };
   
   window.addEventListener('afterprint', restoreEnvironment);
 
-  // Guarantee memory loads before invoking the OS Print window
-  const images = Array.from(printArea.querySelectorAll('img'));
-  if(images.length === 0) {
-    window.print();
-    return;
-  }
-
-  let loaded = 0;
-  let printTriggered = false;
-  const imgTracker = () => {
-    loaded++;
-    if(loaded >= images.length && !printTriggered) {
-      printTriggered = true;
-      setTimeout(() => window.print(), 150); 
-    }
-  };
-
-  images.forEach(img => {
-    if(img.complete) imgTracker();
-    else {
-      img.onload = imgTracker;
-      img.onerror = imgTracker;
-    }
-  });
-
-  // Failsafe escape hatch (if image drops connection)
-  setTimeout(() => {
-    if(!printTriggered) {
-      printTriggered = true;
-      window.print();
-    }
-  }, 2500);
+  // Instant print call - the native CSS `@media print` now controls the layout perfectly!
+  window.print();
 }
 
 window.applyLang();
