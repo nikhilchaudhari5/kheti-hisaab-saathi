@@ -210,18 +210,23 @@ body {
 .pdf-title-banner { background: #1a6b3c; color: #fff; padding: 8px 12px; font-weight: 700; font-size: 15px; border-radius: 6px; margin: 14px 0 8px; }
 .pdf-hero-card { border: 2px solid #1a6b3c; border-radius: 10px; padding: 12px; margin: 12px 0; background: #fafafa; }
 
-/* FIX: Flawless Native Print Overrides - Removed absolute positioning */
+/* FIX: Flawless Native Print Overrides */
 @media print {
   html, body { height: auto !important; min-height: auto !important; overflow: visible !important; background: #fff !important; margin: 0 !important; padding: 0 !important; }
   body > *:not(#printArea) { display: none !important; }
+  
   #printArea { 
     display: block !important; 
     position: static !important; 
     width: 100% !important; 
     height: auto !important; 
     overflow: visible !important;
+    opacity: 1 !important; 
+    visibility: visible !important; 
+    z-index: 9999 !important;
   }
-  .print-page { page-break-after: always; break-after: page; padding: 0; margin-bottom: 20px; }
+  
+  .print-page { page-break-after: always; break-after: page; padding: 0; margin-bottom: 20px; break-inside: auto; }
   img { page-break-inside: avoid; break-inside: avoid; }
 }
 </style>
@@ -1725,7 +1730,7 @@ window.recalcAll = function(){
     const labCostTotal = (ghadsM * labRateM) + (ghadsP * labRateP);
     totalLabour=labCostTotal;
 
-    totalNet=totalGross-totalLabour-kattar;
+    totalNet=totalGross-labCostTotal-kattar;
     breakdownC=c; breakdownLabourTotal=labCostTotal+kattar;
 
     document.getElementById('combinedSummary').style.display='block';
@@ -2100,7 +2105,7 @@ document.getElementById('traderFormBack').addEventListener('click',()=>{ window.
 
 document.getElementById('saveTraderBtn').addEventListener('click', async ()=>{
   const name=document.getElementById('tf_name').value.trim();
-  if(!name){window.showToast('नाव आवश्यकামোहै');return;}
+  if(!name){window.showToast('नाव आवश्यक आहे');return;}
   if(!window.currentUserUid) return;
 
   const trId = window.editingTrader || window.genId();
@@ -2190,9 +2195,9 @@ window.getPhotosHtmlForPDF = function(r, prefix) {
   if(r[`${prefix}photoTollAfter`]) arr.push({src: r[`${prefix}photoTollAfter`], label: 'टोल नंतर'});
   (r[`${prefix}photoPatti`]||[]).forEach((p,i)=>{ if(p) arr.push({src: p, label: `पट्टी ${i+1}`}); });
   if(arr.length > 0) {
-    html += `<div style="margin-top:14px; break-inside: avoid;"><div class="pdf-title-banner">पावत्या / फोटो</div><div style="display:flex;gap:12px;flex-wrap:wrap;justify-content:center;">`;
+    html += `<div style="margin-top:20px; page-break-before: always; break-before: always;"><div class="pdf-title-banner">पावत्या / फोटो</div><div style="display:flex;gap:12px;flex-wrap:wrap;justify-content:center;">`;
     arr.forEach(ph => {
-      html += `<div style="text-align:center; min-width:120px; max-width:45%; break-inside: avoid;"><div style="font-size:11px;color:#555;margin-bottom:4px;font-weight:600;">${ph.label}</div><img src="${ph.src}" style="width:100%;height:auto;border:1px solid #ddd;border-radius:4px;object-fit:contain;"></div>`;
+      html += `<div style="text-align:center; min-width:120px; max-width:45%; page-break-inside: avoid; break-inside: avoid;"><div style="font-size:11px;color:#555;margin-bottom:4px;font-weight:600;">${ph.label}</div><img src="${ph.src}" style="width:100%;height:auto;border:1px solid #ddd;border-radius:4px;object-fit:contain;"></div>`;
     });
     html += `</div></div>`;
   }
@@ -2206,9 +2211,9 @@ window.getCombinedPhotosHtmlForPDF = function(r) {
   if(r.c_photoTollAfter) arr.push({src: r.c_photoTollAfter, label: 'टोल नंतर'});
   (r.c_photoPatti||[]).forEach((p,i)=>{ if(p) arr.push({src: p, label: `पट्टी ${i+1}`}); });
   if(arr.length > 0) {
-    html += `<div style="margin-top:14px; break-inside: avoid;"><div class="pdf-title-banner">पावत्या / फोटो</div><div style="display:flex;gap:12px;flex-wrap:wrap;justify-content:center;">`;
+    html += `<div style="margin-top:20px; page-break-before: always; break-before: always;"><div class="pdf-title-banner">पावत्या / फोटो</div><div style="display:flex;gap:12px;flex-wrap:wrap;justify-content:center;">`;
     arr.forEach(ph => {
-      html += `<div style="text-align:center; min-width:120px; max-width:45%; break-inside: avoid;"><div style="font-size:11px;color:#555;margin-bottom:4px;font-weight:600;">${ph.label}</div><img src="${ph.src}" style="width:100%;height:auto;border:1px solid #ddd;border-radius:4px;object-fit:contain;"></div>`;
+      html += `<div style="text-align:center; min-width:120px; max-width:45%; page-break-inside: avoid; break-inside: avoid;"><div style="font-size:11px;color:#555;margin-bottom:4px;font-weight:600;">${ph.label}</div><img src="${ph.src}" style="width:100%;height:auto;border:1px solid #ddd;border-radius:4px;object-fit:contain;"></div>`;
     });
     html += `</div></div>`;
   }
@@ -2221,7 +2226,9 @@ window.generatePDF = function() {
     window.showToast('नोंदी नाहीत');
     return;
   }
-  window._buildAndPrintPDF();
+  window.showToast('📄 PDF तयार करत आहे... थांबा');
+  // Wait slightly so the toast renders, then launch print logic
+  setTimeout(window._buildAndPrintPDF, 150);
 }
 
 window._buildAndPrintPDF = function() {
@@ -2263,7 +2270,7 @@ window._buildAndPrintPDF = function() {
         ${r.raas ? `<div style="font-size:15px; font-weight:800; color:#a9631a; text-align:center; margin-top:6px;">🌳 ${window.t('raas')}: ${r.raas} kg/झाड</div>` : ''}
       </div>`;
       
-    html += `<div style="break-inside: avoid; margin-bottom: 12px;">
+    html += `<div style="page-break-inside: avoid; break-inside: avoid; margin-bottom: 12px;">
       <div class="pdf-title-banner">मूलभूत माहिती</div>
       <div class="pdf-row"><div class="pdf-col-label">काढणी प्रकार</div><div class="pdf-col-val">${harvestL[harvestType] || harvestType}</div></div>
       <div class="pdf-row"><div class="pdf-col-label">दर</div><div class="pdf-col-val">₹${window.fmt(r.rate)} / क्विंटल</div></div>
@@ -2272,17 +2279,17 @@ window._buildAndPrintPDF = function() {
     
     if (farmType === 'MP') {
       const netBeforeFanayaC = (r.c_totalWQ||0) + (r.c_totalWKg||0)/100 - ((r.c_dedQ||0) + (r.c_dedKg||0)/100);
-      html += `<div style="break-inside: avoid; margin-bottom: 12px;">
+      html += `<div style="page-break-inside: avoid; break-inside: avoid; margin-bottom: 12px;">
         <div class="pdf-title-banner">वजन (एकत्रित)</div>
         <div class="pdf-row"><div class="pdf-col-label">एकूण वजन</div><div class="pdf-col-val">${r.c_totalWQ || 0} क्विं + ${r.c_totalWKg || 0} किलो</div></div>
         ${harvestType !== 'box' && (r.c_dedQ || r.c_dedKg) ? `<div class="pdf-row"><div class="pdf-col-label">कपात/तारा</div><div class="pdf-col-val">${r.c_dedQ || 0} क्विं + ${r.c_dedKg || 0} किलो</div></div>` : ''}
         ${harvestType === 'fanaya' ? `<div class="pdf-row"><div class="pdf-col-label">तारा नंतर वजन</div><div class="pdf-col-val">${window.fmtQ(netBeforeFanayaC)} Q</div></div>` : ''}
         ${r.c_fanayaAdd ? `<div class="pdf-row"><div class="pdf-col-label">${window.t('fanayaAddLbl')} (+${r.c_fanayaPct||6}%)</div><div class="pdf-col-val" style="color:var(--green)">+${window.fmtQ(r.c_fanayaAdd)} क्विं</div></div>` : ''}
-        <div class="pdf-row" style="background:#e8f5ee;"><div class="pdf-col-label" style="font-weight:700;">निव्वळ वजन</div><div class="pdf-col-val" style="color:var(--blue); font-weight:700;">${window.fmtQ(r.c_netWeightQ || 0)} क्विंटल</div></div>
+        <div class="pdf-row" style="background:#e8f5ee;"><div class="pdf-col-label" style="font-weight:700;">निव्वळ वजन (अंतिम)</div><div class="pdf-col-val" style="color:var(--blue); font-weight:700;">${window.fmtQ(r.c_netWeightQ || 0)} क्विंटल</div></div>
         <div class="pdf-row"><div class="pdf-col-label" style="font-weight:700;">Gross उत्पन्न</div><div class="pdf-col-val" style="color:#1a6b3c; font-weight:700;">₹${window.fmt(r.c_grossIncome || 0)}</div></div>
       </div>`;
       
-      html += `<div style="break-inside: avoid; margin-bottom: 12px;">
+      html += `<div style="page-break-inside: avoid; break-inside: avoid; margin-bottom: 12px;">
         <div class="pdf-title-banner">मजुरी खर्च</div>
         <div class="pdf-row"><div class="pdf-col-label">शेत म (घड × दर)</div><div class="pdf-col-val">${r.m_ghads || 0} × ₹${r.m_labourRate || 10} = ₹${window.fmt(r.m_totalLabour || 0)}</div></div>
         <div class="pdf-row"><div class="pdf-col-label">शेत प (घड × दर)</div><div class="pdf-col-val">${r.p_ghads || 0} × ₹${r.p_labourRate || 10} = ₹${window.fmt(r.p_totalLabour || 0)}</div></div>
@@ -2290,15 +2297,22 @@ window._buildAndPrintPDF = function() {
         <div class="pdf-row" style="background:#f1f5f9;"><div class="pdf-col-label" style="font-weight:700;">एकूण मजुरी</div><div class="pdf-col-val" style="font-weight:700;">₹${window.fmt(r.combinedLabour || 0)}</div></div>
       </div>`;
       
+      html += `<div style="page-break-inside: avoid; break-inside: avoid; margin-bottom: 12px;">
+        <div class="pdf-title-banner" style="background:#21804a;">उत्पन्न सारांश</div>
+        <div class="pdf-row"><div class="pdf-col-label">एकूण Gross उत्पन्न</div><div class="pdf-col-val">₹${window.fmt(r.c_grossIncome || r.combinedGrossIncome || 0)}</div></div>
+        <div class="pdf-row" style="background:#fee2e2;"><div class="pdf-col-label" style="color:var(--red); font-weight:700;">वजा एकूण मजुरी</div><div class="pdf-col-val" style="color:var(--red); font-weight:700;">-₹${window.fmt(r.combinedLabour || 0)}</div></div>
+        <div class="pdf-row" style="background:#e8f5ee; font-size:16px;"><div class="pdf-col-label" style="color:var(--green); font-weight:700;">या नोंदीचे निव्वळ उत्पन्न</div><div class="pdf-col-val" style="color:var(--green); font-weight:700;">₹${window.fmt(r.combinedNetIncome || 0)}</div></div>
+      </div>`;
+      
       if (r.note) {
-        html += `<div style="margin-top:10px; background:#f8fafc; padding:8px; border-radius:6px; font-size:13px; break-inside: avoid;"><strong>टीप:</strong> ${r.note}</div>`;
+        html += `<div style="margin-top:10px; background:#f8fafc; padding:8px; border-radius:6px; font-size:13px; page-break-inside: avoid; break-inside: avoid;"><strong>टीप:</strong> ${r.note}</div>`;
       }
       html += window.getCombinedPhotosHtmlForPDF(r);
       
     } else {
       const p = farmType.toLowerCase();
       const netBeforeFanayaS = (r[`${p}_totalWQ`]||0) + (r[`${p}_totalWKg`]||0)/100 - ((r[`${p}_dedQ`]||0) + (r[`${p}_dedKg`]||0)/100);
-      html += `<div style="break-inside: avoid; margin-bottom: 12px;">
+      html += `<div style="page-break-inside: avoid; break-inside: avoid; margin-bottom: 12px;">
         <div class="pdf-title-banner">वजन तपशील</div>
         <div class="pdf-row"><div class="pdf-col-label">एकूण वजन</div><div class="pdf-col-val">${r[`${p}_totalWQ`] || 0} क्विं + ${r[`${p}_totalWKg`] || 0} किलो</div></div>
         ${harvestType !== 'box' && (r[`${p}_dedQ`] || r[`${p}_dedKg`]) ? `<div class="pdf-row"><div class="pdf-col-label">कपात/तारा</div><div class="pdf-col-val">${r[`${p}_dedQ`] || 0} क्विं + ${r[`${p}_dedKg`] || 0} किलो</div></div>` : ''}
@@ -2308,20 +2322,21 @@ window._buildAndPrintPDF = function() {
         <div class="pdf-row"><div class="pdf-col-label" style="font-weight:700;">Gross उत्पन्न</div><div class="pdf-col-val" style="color:#1a6b3c; font-weight:700;">₹${window.fmt(r[`${p}_grossIncome`] || 0)}</div></div>
       </div>`;
       
-      html += `<div style="break-inside: avoid; margin-bottom: 12px;">
+      html += `<div style="page-break-inside: avoid; break-inside: avoid; margin-bottom: 12px;">
         <div class="pdf-title-banner">मजुरी खर्च</div>
         <div class="pdf-row"><div class="pdf-col-label">घड संख्या × दर</div><div class="pdf-col-val">${r[`${p}_ghads`] || 0} × ₹${r[`${p}_labourRate`] || 10} = ₹${window.fmt(r[`${p}_totalLabour`] || 0)}</div></div>
         ${r[`${p}_kattar`] ? `<div class="pdf-row"><div class="pdf-col-label">${window.t('kattar')}</div><div class="pdf-col-val" style="color:var(--red)">-₹${window.fmt(r[`${p}_kattar`])}</div></div>` : ''}
       </div>`;
       
-      html += `<div style="break-inside: avoid; margin-bottom: 12px;">
+      html += `<div style="page-break-inside: avoid; break-inside: avoid; margin-bottom: 12px;">
         <div class="pdf-title-banner" style="background:#21804a;">उत्पन्न सारांश</div>
+        <div class="pdf-row"><div class="pdf-col-label">एकूण Gross उत्पन्न</div><div class="pdf-col-val">₹${window.fmt(r[`${p}_grossIncome`] || 0)}</div></div>
         <div class="pdf-row" style="background:#fee2e2;"><div class="pdf-col-label" style="color:var(--red); font-weight:700;">वजा एकूण मजुरी</div><div class="pdf-col-val" style="color:var(--red); font-weight:700;">-₹${window.fmt(r.combinedLabour || 0)}</div></div>
         <div class="pdf-row" style="background:#e8f5ee; font-size:16px;"><div class="pdf-col-label" style="color:var(--green); font-weight:700;">या नोंदीचे निव्वळ उत्पन्न</div><div class="pdf-col-val" style="color:var(--green); font-weight:700;">₹${window.fmt(r.combinedNetIncome || 0)}</div></div>
       </div>`;
 
       if (r.note) {
-        html += `<div style="margin-top:10px; background:#f8fafc; padding:8px; border-radius:6px; font-size:13px; break-inside: avoid;"><strong>टीप:</strong> ${r.note}</div>`;
+        html += `<div style="margin-top:10px; background:#f8fafc; padding:8px; border-radius:6px; font-size:13px; page-break-inside: avoid; break-inside: avoid;"><strong>टीप:</strong> ${r.note}</div>`;
       }
       
       html += window.getPhotosHtmlForPDF(r, p + '_');
@@ -2330,7 +2345,7 @@ window._buildAndPrintPDF = function() {
     html += '</div>';
   });
   
-  html += `<div class="print-page">
+  html += `<div class="print-page" style="padding:20px; font-family:sans-serif;">
     <div style="font-size:18px; font-weight:700; color:#1a6b3c; border-bottom:2px solid #1a6b3c; padding-bottom:4px; margin-bottom:10px;">🌿 शेत म — मोरगाव काढचं शेत — एकूण सारांश</div>
     <div class="pdf-row"><div class="pdf-col-label">एकूण काढणी</div><div class="pdf-col-val">${recs.filter(r => (r.farmType||'M') === 'M' || (r.farmType||'M') === 'MP').length}</div></div>
     <div class="pdf-row"><div class="pdf-col-label">एकूण निव्वळ वजन (फक्त एकल नोंदी)</div><div class="pdf-col-val">${window.fmtQ(statsM.weightQ)} Q</div></div>
@@ -2339,7 +2354,7 @@ window._buildAndPrintPDF = function() {
     <div class="pdf-row"><div class="pdf-col-label">एकूण घड (एकटे + एकत्रित)</div><div class="pdf-col-val">${statsM.ghads}</div></div>
   </div>`;
   
-  html += `<div class="print-page">
+  html += `<div class="print-page" style="padding:20px; font-family:sans-serif;">
     <div style="font-size:18px; font-weight:700; color:#1a6b3c; border-bottom:2px solid #1a6b3c; padding-bottom:4px; margin-bottom:10px;">🌿 शेत प — पाटोंदी काढचं शेत — एकूण सारांश</div>
     <div class="pdf-row"><div class="pdf-col-label">एकूण काढणी</div><div class="pdf-col-val">${recs.filter(r => (r.farmType||'M') === 'P' || (r.farmType||'M') === 'MP').length}</div></div>
     <div class="pdf-row"><div class="pdf-col-label">एकूण निव्वळ वजन (फक्त एकल नोंदी)</div><div class="pdf-col-val">${window.fmtQ(statsP.weightQ)} Q</div></div>
@@ -2348,7 +2363,7 @@ window._buildAndPrintPDF = function() {
     <div class="pdf-row"><div class="pdf-col-label">एकूण घड (एकटे + एकत्रित)</div><div class="pdf-col-val">${statsP.ghads}</div></div>
   </div>`;
   
-  html += `<div class="print-page">
+  html += `<div class="print-page" style="padding:20px; font-family:sans-serif;">
     <div style="font-size:18px; font-weight:700; color:#1a6b3c; border-bottom:2px solid #1a6b3c; padding-bottom:4px; margin-bottom:10px;">📊 सर्व मिळून एकूण (शेत म + शेत प)</div>
     <div class="pdf-row"><div class="pdf-col-label">एकूण नोंदी</div><div class="pdf-col-val">${recs.length}</div></div>
     <div class="pdf-row"><div class="pdf-col-label">एकूण निव्वळ वजन</div><div class="pdf-col-val">${window.fmtQ(stats.weightQ)} क्विंटल</div></div>
@@ -2357,7 +2372,7 @@ window._buildAndPrintPDF = function() {
   
   const printArea = document.getElementById('printArea');
   printArea.innerHTML = html;
-  
+
   const origTitle = document.title;
   const pad=n=>String(n).padStart(2,'0');
   const now=new Date();
@@ -2366,13 +2381,39 @@ window._buildAndPrintPDF = function() {
   
   const restoreEnvironment = () => {
     document.title = origTitle;
+    const toast = document.getElementById('toast');
+    if (toast) toast.classList.remove('show');
     window.removeEventListener('afterprint', restoreEnvironment);
   };
   
   window.addEventListener('afterprint', restoreEnvironment);
 
-  // Instant print call - the native CSS `@media print` now controls the layout perfectly!
-  window.print();
+  // Collect all images in the print area
+  const images = Array.from(printArea.querySelectorAll('img'));
+  
+  if (images.length === 0) {
+    window.print();
+    setTimeout(restoreEnvironment, 1000);
+    return;
+  }
+
+  // Create an array of Promises that wait for every single image to decode fully in memory
+  const imagePromises = images.map(img => {
+    return new Promise(resolve => {
+      if (img.complete) return resolve();
+      img.onload = resolve;
+      img.onerror = resolve; 
+    });
+  });
+
+  // Failsafe timeout so the app NEVER freezes if an image hangs
+  const timeout = new Promise(resolve => setTimeout(resolve, 2500));
+
+  // Wait for all images to decode OR the 2.5 second timeout, then fire the print menu
+  Promise.race([Promise.all(imagePromises), timeout]).then(() => {
+    window.print();
+    setTimeout(restoreEnvironment, 1000);
+  });
 }
 
 window.applyLang();
