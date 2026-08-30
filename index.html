@@ -1,5 +1,41 @@
+<!DOCTYPE html>
+<html lang="mr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=5.0, user-scalable=yes">
+<title>केळी हिशोब</title>
+<link rel="manifest" href="manifest.json">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* ========================================
+   🔴 RESET & BASE STYLES (iOS Native Feel)
+   ======================================== */
+*{ box-sizing:border-box; margin:0; padding:0; -webkit-tap-highlight-color:transparent; }
 
-  position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 14px rgba(15,23,42,.18); width: 100%;
+:root{
+  --green:#1a6b3c; --green-light:#e8f5ee; --red:#dc2626; --red-light:#fee2e2;
+  --blue:#1d4ed8; --blue-light:#dbeafe; --card:#fff; --bg:#f1f5f9;
+  --border:#e2e8f0; --text:#1e293b; --muted:#64748b
+}
+
+html, body { width: 100%; min-height: 100vh; overflow-x: hidden; margin: 0; padding: 0; }
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, 'Noto Sans Devanagari', sans-serif;
+  background:var(--bg); color:var(--text); position: relative;
+  font-size: 16px; line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  padding: max(0px, env(safe-area-inset-top)) max(0px, env(safe-area-inset-right)) max(0px, env(safe-area-inset-bottom)) max(0px, env(safe-area-inset-left));
+}
+
+/* ========================================
+   🔴 HEADER STYLES
+   ======================================== */
+.app-header {
+  background: linear-gradient(135deg, #1a6b3c, #21804a); color: #fff; padding: 12px 16px;
+  padding-top: max(12px, env(safe-area-inset-top));
+  display: flex; align-items: center; justify-content: space-between; gap: 10px;
+  position: sticky; top: 0; z-index: 100; box-shadow: 0 4px 20px rgba(0,0,0,0.06); width: 100%;
 }
 .app-header h1 { font-size: 18px; font-weight: 700; }
 .header-actions { display: flex; gap: 8px; align-items: center; }
@@ -8,18 +44,18 @@
 .icon-btn { background: none; border: none; color: #fff; cursor: pointer; font-size: 20px; line-height: 1; }
 
 /* ========================================
-   🔴 SIDE DRAWER (replaces bottom nav)
+   🔴 SIDE DRAWER
    ======================================== */
 .side-drawer {
   position: fixed; top: 0; left: 0; bottom: 0; width: 270px; max-width: 82vw;
   background: #fff; z-index: 300; transform: translateX(-100%);
-  transition: transform .25s ease; box-shadow: 2px 0 16px rgba(0,0,0,.18);
+  transition: transform .25s ease; box-shadow: 2px 0 16px rgba(0,0,0,.12);
   overflow-y: auto; -webkit-overflow-scrolling: touch;
   padding-top: max(0px, env(safe-area-inset-top));
 }
 .side-drawer.open { transform: translateX(0); }
 .drawer-backdrop {
-  position: fixed; inset: 0; background: rgba(0,0,0,.45); z-index: 299;
+  position: fixed; inset: 0; background: rgba(0,0,0,.4); z-index: 299;
   opacity: 0; pointer-events: none; transition: opacity .25s ease;
 }
 .drawer-backdrop.open { opacity: 1; pointer-events: auto; }
@@ -33,29 +69,25 @@
 }
 .drawer-item.active { background: var(--green-light); color: var(--green); }
 .drawer-item .drawer-icon { font-size: 20px; width: 26px; text-align: center; }
-.icon-btn#hamburgerBtn { font-size: 22px; }
 
 /* ========================================
-   🔴 SCREEN CONTENT & FAB
+   🔴 CONTENT CARDS
    ======================================== */
 .screen { display: none; padding: 12px 12px 90px; width: 100%; padding-left: max(12px, env(safe-area-inset-left)); padding-right: max(12px, env(safe-area-inset-right)); }
 .screen.active { display: block; }
-.fab { position: fixed; bottom: 16px; bottom: max(16px, env(safe-area-inset-bottom)); right: 16px; right: max(16px, env(safe-area-inset-right)); width: 56px; height: 56px; min-width: 56px; min-height: 56px; background: linear-gradient(135deg, #1a6b3c, #21804a); color: #fff; border: none; border-radius: 50%; font-size: 28px; cursor: pointer; box-shadow: 0 6px 18px rgba(26,107,60,.45); z-index: 99; display: flex; align-items: center; justify-content: center; line-height: 1; transition: transform 0.15s ease; } .fab:active{transform:scale(0.92)}
-.fab:active { transform: scale(0.95); }
+.fab { position: fixed; bottom: 16px; bottom: max(16px, env(safe-area-inset-bottom)); right: 16px; right: max(16px, env(safe-area-inset-right)); width: 56px; height: 56px; min-width: 56px; min-height: 56px; background: linear-gradient(135deg, #1a6b3c, #21804a); color: #fff; border: none; border-radius: 50%; font-size: 28px; cursor: pointer; box-shadow: 0 6px 18px rgba(26,107,60,.35); z-index: 99; display: flex; align-items: center; justify-content: center; line-height: 1; transition: transform 0.15s ease; }
+.fab:active { transform: scale(0.92); }
 
-/* ========================================
-   🔴 CARDS, STATS, RECORDS
-   ======================================== */
-.card { background: var(--card); border-radius: 18px; padding: 16px; margin-bottom: 12px; box-shadow: 0 2px 10px rgba(15,23,42,.06); width: 100%; transition: transform .15s ease, box-shadow .15s ease; }
+.card { background: var(--card); border-radius: 20px; padding: 16px; margin-bottom: 12px; box-shadow: 0 4px 16px rgba(0,0,0,0.03); width: 100%; }
 .stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 12px; width: 100%; }
-.stat-card { background: var(--card); border-radius: 16px; padding: 14px; box-shadow: 0 2px 10px rgba(15,23,42,.06); }
+.stat-card { background: var(--card); border-radius: 16px; padding: 14px; box-shadow: 0 4px 16px rgba(0,0,0,0.03); }
 .stat-label{font-size:11px;color:var(--muted);margin-bottom:4px}
 .stat-val{font-size:20px;font-weight:700;color:var(--green)}
 .stat-val.red{color:var(--red)}
 .stat-val.blue{color:var(--blue)}
 .sec-title{font-size:13px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin:16px 0 8px}
 
-.rec-card{ background:var(--card); border-radius:16px; padding:14px 16px; margin-bottom:10px; box-shadow:0 2px 10px rgba(15,23,42,.06); cursor:pointer; border-left:4px solid var(--green); width: 100%; min-height: 60px; transition: transform .15s ease; } .rec-card:active{transform:scale(0.985)}
+.rec-card{ background:var(--card); border-radius:16px; padding:14px 16px; margin-bottom:10px; box-shadow:0 4px 16px rgba(0,0,0,0.03); cursor:pointer; border-left:4px solid var(--green); width: 100%; min-height: 60px; } 
 .rec-card.pending{border-left-color:var(--red)}
 .rec-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:4px;flex-wrap:wrap;gap:8px}
 .rec-trader{font-weight:600;font-size:15px}
@@ -73,30 +105,27 @@
 .form-group { margin-bottom: 14px; width: 100%; }
 .form-label { font-size: 13px; font-weight: 600; color: var(--text); margin-bottom: 5px; display: block; }
 .form-input { width: 100%; padding: 12px 14px; border: 1.5px solid var(--border); border-radius: 12px; font-size: 16px; font-family: inherit; background: #fff; color: var(--text); outline: none; transition: border .2s, box-shadow .2s; -webkit-appearance: none; appearance: none; min-height: 46px; }
-.form-input:focus { border-color: var(--green); box-shadow: 0 0 0 3px rgba(26, 107, 60, 0.1); }
-.form-input:disabled { background: #f5f5f5; cursor: not-allowed; }
+.form-input:focus { border-color: var(--green); box-shadow: 0 0 0 3px rgba(26, 107, 60, 0.08); }
 .form-select { appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%2364748b' stroke-width='1.5' fill='none'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 12px center; padding-right: 36px; }
-.form-hint { font-size: 11px; color: var(--muted); margin-top: 3px; }
 .row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; width: 100%; }
-@media (max-width: 480px) { .row2 { grid-template-columns: 1fr; } }
 
-.toggle-group{ display:flex; background:var(--bg); border-radius:12px; padding:4px; gap:3px; width: 100%; flex-wrap: wrap; }
+.toggle-group{ display:flex; background:#e2e8f0; border-radius:12px; padding:4px; gap:3px; width: 100%; flex-wrap: wrap; }
 .toggle-btn{ flex:1; padding:8px; border:none; background:none; border-radius:9px; font-size:13px; font-family:inherit; cursor:pointer; font-weight:600; color:var(--muted); transition:all .2s; min-height: 44px; }
-.toggle-btn.active{ background:#fff; color:var(--green); font-weight:600; box-shadow:0 1px 3px rgba(0,0,0,.1) }
+.toggle-btn.active{ background:#fff; color:var(--green); box-shadow:0 2px 6px rgba(0,0,0,.06); }
 .auto-box{ padding:12px 14px; border-radius:14px; font-weight:600; font-size:15px; margin-top:4px; width: 100%; }
 .auto-box.blue{background:var(--blue-light);color:var(--blue)}
 .auto-box.green{background:var(--green-light);color:var(--green)}
 .auto-box.red{background:var(--red-light);color:var(--red)}
 
+.raas-box { background:#fff7e6; border:1px solid #ffe1a8; color:#a9631a; font-weight:700; padding:12px 14px; border-radius:14px; margin-top:8px; font-size:16px; }
+
 /* ========================================
    🔴 PHOTO SLOTS
    ======================================== */
 .photo-slots{ display:grid; grid-template-columns:1fr 1fr 1fr; gap:8px; margin-top:8px; width: 100%; }
-@media (max-width: 480px) { .photo-slots { grid-template-columns: 1fr 1fr; gap: 6px; } }
-.photo-slot{ aspect-ratio:1; border:2px dashed var(--border); border-radius:14px; display:flex; flex-direction:column; align-items:center; justify-content:center; cursor:pointer; background:#fafafa; position:relative; overflow:hidden; font-size:11px; color:var(--muted); text-align:center; gap:4px; min-height: 80px; transition: transform .15s ease; }
+.photo-slot{ aspect-ratio:1; border:2px dashed var(--border); border-radius:14px; display:flex; flex-direction:column; align-items:center; justify-content:center; cursor:pointer; background:#fafafa; position:relative; overflow:hidden; font-size:11px; color:var(--muted); text-align:center; gap:4px; min-height: 80px; }
 .photo-slot img{ width:100%; height:100%; object-fit:cover; position:absolute; inset:0 }
-.photo-slot .del-photo{ position:absolute; top:2px; right:2px; width:24px; height:24px; background:rgba(220,38,38,.9); border:none; border-radius:50%; color:#fff; font-size:14px; cursor:pointer; display:flex; align-items:center; justify-content:center; z-index:2; min-width: 24px; }
-.photo-label{font-size:11px;color:var(--muted);margin-bottom:4px}
+.photo-slot .del-photo{ position:absolute; top:2px; right:2px; width:24px; height:24px; background:rgba(220,38,38,.9); border:none; border-radius:50%; color:#fff; font-size:14px; cursor:pointer; display:flex; align-items:center; justify-content:center; z-index:2; }
 
 /* ========================================
    🔴 OVERLAYS & SHEETS
@@ -105,35 +134,25 @@
 .sheet-overlay.open{ display:flex; }
 .sheet{ background:#fff; border-radius:16px 16px 0 0; padding:20px; padding-bottom: max(20px, env(safe-area-inset-bottom)); width:100%; max-width:100%; animation:slideUp .3s ease; }
 @keyframes slideUp{ from{transform:translateY(100%)} to{transform:translateY(0)} }
-.sheet-title{ font-size:16px; font-weight:700; margin-bottom:16px; text-align:center }
-.sheet-btn{ width:100%; padding:14px; border:1.5px solid var(--border); border-radius:10px; background:#fff; font-size:15px; font-family:inherit; cursor:pointer; margin-bottom:8px; display:flex; align-items:center; gap:10px; font-weight:500; min-height: 44px; transition: all 0.2s ease; }
-.sheet-btn:active{ background:var(--bg); transform: scale(0.98); }
+.sheet-btn{ width:100%; padding:14px; border:1.5px solid var(--border); border-radius:10px; background:#fff; font-size:15px; font-family:inherit; cursor:pointer; margin-bottom:8px; display:flex; align-items:center; gap:10px; font-weight:500; min-height: 44px; }
 .lightbox{ display:none; position:fixed; top: 0; left: 0; right: 0; bottom: 0; width: 100%; height: 100%; background:rgba(0,0,0,.95); z-index:300; align-items:center; justify-content:center; }
 .lightbox.open{ display:flex; }
 .lightbox img{ max-width:95vw; max-height:90vh; object-fit:contain; }
-.lightbox-close{ position:absolute; top:16px; right:16px; background:rgba(255,255,255,.2); border:none; color:#fff; width:44px; height:44px; border-radius:50%; font-size:20px; cursor:pointer; min-width: 44px; }
+.lightbox-close{ position:absolute; top:16px; right:16px; background:rgba(255,255,255,.2); border:none; color:#fff; width:44px; height:44px; border-radius:50%; font-size:20px; cursor:pointer; }
 
-#formOverlay, #detailOverlay, #traderFormOverlay, #ledgerOverlay, #editConfirmOverlay, #profileOverlay, #distFormOverlay, #expenseFormOverlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; width: 100%; height: 100%; max-width: none; left: 0; transform: none; background: #fff; z-index: 150; overflow-y: auto; -webkit-overflow-scrolling: touch; display: none; }
+#formOverlay, #detailOverlay, #traderFormOverlay, #ledgerOverlay, #editConfirmOverlay, #profileOverlay, #distFormOverlay, #expenseFormOverlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; width: 100%; height: 100%; background: #fff; z-index: 150; overflow-y: auto; -webkit-overflow-scrolling: touch; display: none; }
 #formOverlay.open, #detailOverlay.open, #traderFormOverlay.open, #ledgerOverlay.open, #editConfirmOverlay.open, #profileOverlay.open, #distFormOverlay.open, #expenseFormOverlay.open { display: block; padding-top: max(0px, env(safe-area-inset-top)); }
 .detail-header{ background:var(--green); color:#fff; padding:12px 16px; padding-top: max(12px, env(safe-area-inset-top)); display:flex; align-items:center; gap:10px; position: sticky; top: 0; z-index: 101; }
 .detail-header h2{ font-size:16px; font-weight:700; }
 .back-btn{ background:none; border:none; color:#fff; font-size:22px; cursor:pointer; padding:8px; min-width: 44px; min-height: 44px; display: flex; align-items: center; justify-content: center; }
-.detail-row{ display:flex; justify-content:space-between; padding:6px 0; border-bottom:1px solid var(--bg); font-size:14px; flex-wrap: wrap; gap: 8px; }
-.detail-row:last-child{border-bottom:none}
-.detail-row .label{color:var(--muted)}
-.detail-row .val{font-weight:600}
+.detail-row{ display:flex; justify-content:space-between; padding:8px 0; border-bottom:1px solid var(--bg); font-size:14px; flex-wrap: wrap; gap: 8px; }
 
-/* ========================================
-   🔴 BUTTONS & MISC
-   ======================================== */
-.danger-btn, .pay-btn { width: 100%; padding: 13px; border: none; border-radius: 14px; font-size: 15px; font-family: inherit; font-weight: 700; cursor: pointer; min-height: 46px; transition: all 0.15s ease; letter-spacing: .2px; }
-.pay-btn{ background:var(--green); color:#fff; margin-bottom:8px; box-shadow: 0 3px 10px rgba(26,107,60,.28); }
-.pay-btn:active { background: #158638; transform: scale(0.98); }
+.danger-btn, .pay-btn { width: 100%; padding: 13px; border: none; border-radius: 14px; font-size: 15px; font-family: inherit; font-weight: 700; cursor: pointer; min-height: 46px; }
+.pay-btn{ background:var(--green); color:#fff; margin-bottom:8px; box-shadow: 0 4px 12px rgba(26,107,60,.2); }
 .danger-btn{ background:var(--red-light); color:var(--red); border:1.5px solid var(--red); margin-top:8px }
-.danger-btn:active { background: #fecaca; }
 
 .summary-box{background:#f8fafc;border:1px solid var(--border);border-radius:14px;padding:14px;margin:8px 0}
-.summary-row{display:flex;justify-content:space-between;padding:3px 0;font-size:14px}
+.summary-row{display:flex;justify-content:space-between;padding:4px 0;font-size:14px}
 .summary-divider{border:none;border-top:1px dashed var(--border);margin:6px 0}
 .summary-total{font-weight:700;font-size:16px;color:var(--green)}
 
@@ -142,38 +161,26 @@
 .trader-info{flex:1}
 .trader-name{font-weight:700;font-size:15px}
 .trader-meta{font-size:12px;color:var(--muted)}
-
 .empty-state{text-align:center;padding:40px 20px;color:var(--muted)}
 .empty-state .emoji{font-size:48px;display:block;margin-bottom:12px}
 
-/* ===== EDIT / LONG-PRESS / CONFIRM ===== */
-.rec-card{ -webkit-user-select:none; user-select:none; -webkit-touch-callout:none; transition: transform .15s ease, box-shadow .15s ease; }
-.rec-card.pressing{ transform: scale(0.97); box-shadow: 0 0 0 3px var(--green-light), 0 1px 3px rgba(0,0,0,.08); }
 .confirm-box{ background:#fff; border:1.5px solid var(--border); border-radius:10px; padding:10px 12px; margin-bottom:8px; }
 .confirm-field-label{ font-size:11px; color:var(--muted); text-transform:uppercase; letter-spacing:.3px; margin-bottom:4px; }
 .confirm-old{ font-size:14px; color:var(--red); text-decoration:line-through; opacity:.7; }
 .confirm-new{ font-size:15px; color:var(--green); font-weight:700; }
 .confirm-arrow{ color:var(--muted); margin:0 6px; font-size:13px; }
 .confirm-unchanged{ font-size:14px; color:var(--text); }
-.edit-hint-toast{ position:fixed; bottom:100px; left:50%; transform:translateX(-50%); background:#1e293b; color:#fff; padding:8px 16px; border-radius:20px; font-size:12px; z-index:400; opacity:0; transition:opacity .3s; pointer-events:none; white-space:nowrap; }
-.edit-hint-toast.show{opacity:1}
 
-/* ===== LONG-PRESS ACTION MENU ===== */
 .action-menu-overlay{ display:none; position:fixed; top:0;left:0;right:0;bottom:0; width:100vw;height:100vh; background:rgba(0,0,0,.4); z-index:250; align-items:center; justify-content:center; }
 .action-menu-overlay.open{display:flex}
-.action-menu-box{ background:#fff; border-radius:14px; width:85%; max-width:320px; overflow:hidden; box-shadow:0 10px 40px rgba(0,0,0,.3); animation:popIn .18s ease; }
-@keyframes popIn{ from{transform:scale(.9);opacity:0} to{transform:scale(1);opacity:1} }
+.action-menu-box{ background:#fff; border-radius:14px; width:85%; max-width:320px; overflow:hidden; box-shadow:0 10px 40px rgba(0,0,0,.2); }
 .action-menu-header{ padding:14px 16px; border-bottom:1px solid var(--border); text-align:center; }
 .action-menu-header .trader{font-weight:700;font-size:15px}
 .action-menu-header .meta{font-size:12px;color:var(--muted);margin-top:2px}
 .action-menu-btn{ width:100%; padding:14px 16px; border:none; background:#fff; font-size:15px; font-family:inherit; font-weight:600; text-align:left; display:flex; align-items:center; gap:10px; cursor:pointer; min-height:48px; border-bottom:1px solid var(--bg); }
-.action-menu-btn:active{background:var(--bg)}
-.action-menu-btn:last-child{border-bottom:none}
 .action-menu-btn.edit{color:var(--blue)}
-.action-menu-btn.view{color:var(--text)}
 .action-menu-btn.delete{color:var(--red)}
 
-/* ===== GHAD BREAKDOWN CARD ===== */
 .ghad-breakdown-card{ background:var(--card); border-radius:12px; padding:12px; box-shadow:0 1px 3px rgba(0,0,0,.08); }
 .ghad-breakdown-card .stat-label{font-size:11px;color:var(--muted);margin-bottom:6px}
 .ghad-line{ display:flex; justify-content:space-between; align-items:baseline; padding:3px 0; font-size:13px; }
@@ -184,113 +191,65 @@
 .ghad-line.solo .ghad-num{color:var(--blue)}
 .ghad-line.combined .ghad-num{color:#854d0e}
 
-/* ===== DASHBOARD COMBINED SECTION ===== */
-.combined-section-header{ display:flex; align-items:center; justify-content:space-between; margin:18px 0 8px; }
-.combined-section-header .sec-title{margin:0}
-.combined-count-badge{ background:#fef9c3; color:#854d0e; font-size:11px; font-weight:700; padding:2px 10px; border-radius:10px; }
-.action-menu-cancel{ width:100%; padding:14px; border:none; background:var(--bg); font-size:15px; font-family:inherit; font-weight:600; color:var(--muted); cursor:pointer; min-height:48px; }
-
-/* ===== CLOUD CONNECTION STATUS PILL ===== */
-.connection-pill{ position:fixed; top:calc(env(safe-area-inset-top) + 8px); right:12px; background:rgba(0,0,0,.75); color:#fff; font-size:11px; padding:5px 12px; border-radius:14px; z-index:500; display:none; align-items:center; gap:6px; transition:opacity .3s; cursor:pointer; }
+.connection-pill{ position:fixed; top:calc(env(safe-area-inset-top) + 8px); right:12px; background:rgba(0,0,0,.75); color:#fff; font-size:11px; padding:5px 12px; border-radius:14px; z-index:500; display:none; align-items:center; gap:6px; }
 .connection-pill.show{display:flex}
 .connection-pill .dot{ width:7px;height:7px;border-radius:50%; background:#fbbf24; }
 .connection-pill.connected .dot{background:#22c55e}
 .connection-pill.offline .dot{background:#94a3b8}
-.connection-pill.error .dot{background:#ef4444}
 
-/* ===== PROFILE ICON IN HEADER ===== */
 .profile-icon-btn{ min-height:44px; min-width:44px; display:flex; align-items:center; justify-content:center; background:rgba(255,255,255,.2); border:1px solid rgba(255,255,255,.4); border-radius:50%; color:#fff; font-size:16px; cursor:pointer; }
-.farm-header{background:var(--green-light);border-radius:8px;padding:8px 12px;font-weight:700;color:var(--green);margin:12px 0 8px;font-size:14px}
-.input-error{border-color:var(--red)!important}
-.error-msg{color:var(--red);font-size:12px;margin-top:4px;width: 100%}
-
-.pay-history-row{display:flex;justify-content:space-between;align-items:flex-start;padding:10px 0;border-bottom:1px solid var(--bg)}
-.pay-history-row:last-child{border-bottom:none}
-.pay-mode-badge{display:inline-flex;align-items:center;gap:4px;padding:3px 10px;border-radius:20px;font-size:12px;font-weight:600;background:var(--green-light);color:var(--green)}
-.pay-mode-badge.cheque{background:#fef3c7;color:#92400e}
-.pay-mode-badge.rtgs{background:#dbeafe;color:#1e40af}
-.pay-mode-badge.phonepay,.pay-mode-badge.gpay,.pay-mode-badge.upi{background:#f3e8ff;color:#7e22ce}
-
-.toast{ position:fixed; bottom: 100px; left:50%; transform:translateX(-50%); background:#1e293b; color:#fff; padding:10px 20px; border-radius:24px; font-size:14px; z-index:400; opacity:0; transition:opacity .3s; pointer-events:none; white-space:nowrap; }
-.toast.show{opacity:1}
-#printArea{display:none}
+.farm-header{background:var(--green-light);border-radius:8px;padding:8px 12px;font-weight:700;color:var(--green);margin:12px 0 8px;font-size:16px;}
 
 /* ========================================
-   🔴 PRINT STYLES 
+   🔴 DOCUMENT EXPORT GRID ALIGNMENT
    ======================================== */
+#printArea{display:none;}
+.pdf-row { display: flex; width: 100%; border-bottom: 1px dashed #e2e8f0; padding: 6px 0; font-size: 14px; }
+.pdf-col-label { width: 45%; color: #4a5568; font-weight: 500; text-align: left; }
+.pdf-col-val { width: 55%; font-weight: 700; color: #1a202c; text-align: right; }
+.pdf-title-banner { background: #1a6b3c; color: #fff; padding: 8px 12px; font-weight: 700; font-size: 15px; border-radius: 6px; margin: 14px 0 8px; }
+.pdf-hero-card { border: 2px solid #1a6b3c; border-radius: 10px; padding: 12px; margin: 12px 0; background: #fafafa; }
+
+/* FIX: Flawless Native Print Overrides */
 @media print {
-  html, body { height: auto !important; min-height: auto !important; overflow: visible !important; }
-  body>*:not(#printArea){display:none!important}
-  #printArea{display:block!important}
-  .print-page{page-break-inside:avoid;padding:24px;font-family:'Noto Sans Devanagari','Inter',sans-serif;font-size:12px;color:#000;margin-bottom:20px;}
-  .print-cover { display:flex; flex-direction:column; align-items:center; justify-content:center; height:90vh; text-align:center; page-break-after:always; }
-  .print-cover .cover-title { font-size:32px; font-weight:700; color:#1a6b3c; margin-bottom:12px; }
-  .print-cover .cover-sub { font-size:14px; color:#666; margin-bottom:24px; }
-  .print-cover .cover-dates { font-size:16px; color:#1e293b; background:#e8f5ee; padding:10px 24px; border-radius:8px; border:1px solid #a8dbbf; }
-  .entry-number-badge { display:inline-block; background:#1a6b3c; color:#fff; font-size:20px; font-weight:700; padding:6px 18px; border-radius:8px; margin-bottom:4px; }
-  .entry-card { border:1.5px solid #ccc; border-radius:10px; padding:14px 16px; margin:10px 0; background:#fafafa; }
-  .entry-card-title { font-size:13px; font-weight:700; color:#1a6b3c; text-transform:uppercase; letter-spacing:.5px; margin-bottom:8px; border-bottom:1px solid #ddd; padding-bottom:4px; }
-  .entry-field-row { display:flex; justify-content:space-between; padding:5px 0; font-size:13px; border-bottom:1px dotted #e0e0e0; }
-  .entry-field-row:last-child { border-bottom:none }
-  .entry-field-row .efl { color:#555 }
-  .entry-field-row .efv { font-weight:700; color:#1e293b }
-  .entry-hero-box { background:#1a6b3c; color:#fff; border-radius:10px; padding:14px 18px; margin:10px 0; display:flex; justify-content:space-between; align-items:center; }
-  .entry-hero-box .ehl { font-size:13px; opacity:.9 }
-  .entry-hero-box .ehv { font-size:24px; font-weight:700 }
-  .entry-hero-box.pending-box { background:#dc2626 }
-  .entry-trader-banner { background:#fff; border:2px solid #1a6b3c; border-radius:10px; padding:12px 16px; margin-bottom:12px; text-align:center; }
-  .entry-trader-banner .etb-name { font-size:20px; font-weight:700; color:#1a6b3c }
-  .entry-trader-banner .etb-date { font-size:13px; color:#666; margin-top:2px }
-  .entry-trader-banner .etb-farm { display:inline-block; margin-top:6px; background:#fef9c3; color:#854d0e; font-size:12px; font-weight:700; padding:3px 12px; border-radius:12px; }
-  .summary-final-page .sfp-title { font-size:20px; font-weight:700; color:#1a6b3c; margin-bottom:14px; border-bottom:3px solid #1a6b3c; padding-bottom:8px; }
-  .summary-final-row { display:flex; justify-content:space-between; padding:8px 0; font-size:14px; border-bottom:1px solid #eee; }
-  .summary-final-row.grand { font-size:18px; font-weight:700; color:#1a6b3c; border-top:2px solid #1a6b3c; border-bottom:none; margin-top:8px; padding-top:10px; }
-}
-
-/* ========================================
-   🔴 RESPONSIVE DESIGN
-   ======================================== */
-@media (max-width: 600px) {
-  body { max-width: 100%; margin: 0; }
-  .app-header { padding: 10px 12px; padding-top: max(10px, env(safe-area-inset-top)); }
-  .app-header h1 { font-size: 16px; }
-  .screen { padding: 10px 10px 100px; padding-left: max(10px, env(safe-area-inset-left)); padding-right: max(10px, env(safe-area-inset-right)); }
-  .card, .stat-card, .rec-card { padding: 12px; }
-  .stat-grid { gap: 8px; }
-  .form-input { font-size: 16px; padding: 12px; min-height: 44px; }
-  .toggle-btn { font-size: 12px; padding: 9px 8px; }
-  .fab { bottom: 78px; right: max(12px, env(safe-area-inset-right)); }
-  .photo-slots { grid-template-columns: 1fr 1fr; }
-  .detail-header { padding: 10px 12px; padding-top: max(10px, env(safe-area-inset-top)); }
-  .detail-header h2 { font-size: 15px; }
-}
-@media (max-width: 380px) {
-  .app-header h1 { font-size: 14px; }
-  .stat-grid { grid-template-columns: 1fr; }
-  .photo-slots { grid-template-columns: 1fr; }
+  html, body { height: auto !important; min-height: auto !important; overflow: visible !important; background: #fff !important; margin: 0 !important; padding: 0 !important; }
+  body > *:not(#printArea) { display: none !important; }
+  
+  #printArea { 
+    display: block !important; 
+    position: static !important; 
+    width: 100% !important; 
+    height: auto !important; 
+    overflow: visible !important;
+    opacity: 1 !important; 
+    visibility: visible !important; 
+    z-index: 9999 !important;
+  }
+  
+  .print-page { page-break-after: always; break-after: page; padding: 0; margin-bottom: 20px; break-inside: auto; }
+  img { page-break-inside: avoid; break-inside: avoid; }
 }
 </style>
 </head>
 <body>
 
-<!-- 1. LOADING SCREEN (Visible by default) -->
+<!-- 1. LOADING OVERLAY -->
 <div id="loading-screen" style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; background: #1a6b3c; color: white;">
   <div style="font-size: 48px; margin-bottom: 12px;">🍌</div>
   <div style="font-weight: 600; font-size: 18px;">लोड होत आहे...</div>
 </div>
 
-<!-- 2. LOGIN SCREEN (Hidden by default) -->
+<!-- 2. PORTAL LOGIN OVERLAY -->
 <div id="login-screen" style="display: none; flex-direction: column; align-items: center; justify-content: center; height: 100vh; background: #1a6b3c; color: white; padding: 20px; text-align: center;">
   <div style="font-size: 64px; margin-bottom: 10px;">🍌</div>
   <h1 style="font-size: 28px; font-weight: 700; margin-bottom: 8px;">केळी हिशोब साथी</h1>
   <p style="font-size: 14px; opacity: 0.85; margin-bottom: 32px; max-width: 280px;">तुमचा शेतीचा हिशोब सुरक्षित आणि कायमस्वरूपी क्लाउडवर ठेवा.</p>
-  
-  <button class="pay-btn" style="background: white; color: #1a6b3c; max-width: 280px; font-size: 16px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);" onclick="window.connectGoogleManually()">
+  <button class="pay-btn" style="background: white; color: #1a6b3c; max-width: 280px; font-size: 16px;" onclick="window.connectGoogleManually()">
     🔗 Google सह लॉग इन करा
   </button>
 </div>
 
-<!-- 3. MAIN APP CONTENT (Hidden by default until authenticated) -->
+<!-- 3. MAIN DASHBOARD CONTENT -->
 <div id="app" style="display: none;">
 <div class="connection-pill" id="connectionPill" onclick="document.getElementById('profileIconBtn').click()">
   <span class="dot"></span><span id="connectionPillText">जोडत आहे...</span>
@@ -307,13 +266,12 @@
 </header>
 
 <div class="screen active" id="screen-dash">
-  
 <div class="stat-grid" id="dash-stats"></div>
 <div class="sec-title" id="lbl-recent">अलीकडील नोंदी</div>
 <div id="dash-recent"></div>
-<div class="combined-section-header" id="combinedHeader" style="display:none">
-  <div class="sec-title">🌿🌿 एकत्रित नोंदी (Combined)</div>
-  <div class="combined-count-badge" id="combinedCountBadge">0</div>
+<div class="combined-section-header" id="combinedHeader" style="display:none; justify-content: space-between; align-items: center; margin: 18px 0 8px;">
+  <div class="sec-title" style="margin: 0;">🌿🌿 एकत्रित नोंदी (Combined)</div>
+  <div class="combined-count-badge" id="combinedCountBadge" style="background:#fef9c3; color:#854d0e; font-size:11px; font-weight:700; padding:2px 10px; border-radius:10px;">0</div>
 </div>
 <div id="dash-combined"></div>
 </div>
@@ -351,8 +309,11 @@
 </div>
 
 <div class="screen" id="screen-expenses">
-<button class="pay-btn" id="addExpenseBtn" style="margin-bottom:12px">+ <span data-t="addExpense">नोंद जोडा</span></button>
-<div id="expenses-list"></div>
+  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+    <div class="sec-title" style="margin: 0;">इतर नोंदी / खर्च</div>
+    <button class="pay-btn" id="addExpenseBtn" style="width: auto; margin: 0; padding: 6px 14px; min-height: 38px; font-size: 14px; border-radius: 10px;">+ नोंद जोडा</button>
+  </div>
+  <div id="expenses-list"></div>
 </div>
 
 <button class="fab" id="fabBtn">+</button>
@@ -373,7 +334,7 @@
 </nav>
 </div>
 
-<!-- FORMS & OVERLAYS -->
+<!-- CAPTURE SUBMISSION ENGINE FORM -->
 <div id="formOverlay">
 <div class="detail-header"><button class="back-btn" id="formBack">←</button><h2 id="formTitle">नवीन नोंद</h2></div>
 <div style="padding:12px 12px 80px" id="formBody">
@@ -404,7 +365,7 @@
 <div class="auto-box green" id="f_netDisplay">निव्वळ उत्पन्न: ₹0</div>
 <div class="form-group" style="margin-top:10px" id="receivedFieldWrap">
 <label class="form-label" data-t="received">मिळालेली रक्कम ₹</label>
-<input type="number" class="form-input" id="f_received" placeholder="0" oninput="recalcAll()">
+<input type="number" class="form-input" id="f_received" placeholder="0" oninput="window.recalcAll()">
 </div>
 <div class="auto-box red" id="f_pendingDisplay">थकबाकी: ₹0</div>
 <div class="sec-title" data-t="note">टीप</div>
@@ -465,14 +426,14 @@
 <div id="profileOverlay">
 <div class="detail-header"><button class="back-btn" id="profileBack">←</button><h2>प्रोफाइल</h2></div>
 <div style="padding:12px 12px 80px">
-  <div class="profile-section-title">वैयक्तिक माहिती</div>
+  <div class="sec-title">वैयक्तिक माहिती</div>
   <div class="form-group"><label class="form-label">शेतकऱ्याचे नाव</label><input type="text" class="form-input" id="profile_name" placeholder="तुमचे नाव"></div>
-  <div class="profile-section-title">डीफॉल्ट सेटिंग्स</div>
+  <div class="sec-title">डीफॉल्ट सेटिंग्स</div>
   <div class="form-group"><label class="form-label">डीफॉल्ट मजुरी दर (प्रति घड)</label><input type="number" class="form-input" id="profile_defaultLabRate" placeholder="10"></div>
   <div class="form-group"><label class="form-label" data-t="fanayaPctLabel">फणाया % (वजनात वाढ)</label><input type="number" step="0.1" class="form-input" id="profile_fanayaPct" placeholder="6"></div>
-  <div class="form-group"><label class="form-label" data-t="kutsuthaPctInline">कट व सुठा %</label><input type="number" step="0.1" class="form-input" id="profile_kutsuthaPct" placeholder="2"></div>
+  <div class="form-group"><label class="form-label" data-t="kutsuthaPctInline">कट व सुट %</label><input type="number" step="0.1" class="form-input" id="profile_kutsuthaPct" placeholder="2"></div>
   <div class="form-group"><label class="form-label">थकबाकी इशारा (किती दिवसांनी)</label><input type="number" class="form-input" id="profile_overdueDays" placeholder="15"></div>
-  <div class="profile-section-title" data-t="partnerNames">भागीदारांची नावे</div>
+  <div class="sec-title" data-t="partnerNames">भागीदारांची नावे</div>
   <div class="form-group"><label class="form-label" data-t="partner1">भागीदार १</label><input type="text" class="form-input" id="profile_partner1" placeholder="भागीदार १"></div>
   <div class="form-group"><label class="form-label" data-t="partner2">भागीदार २</label><input type="text" class="form-input" id="profile_partner2" placeholder="भागीदार २"></div>
   <button class="pay-btn" id="saveProfileBtn" style="margin-top:18px">जतन करा</button>
@@ -501,9 +462,6 @@
 <div class="toast" id="toast"></div>
 <div id="printArea"></div>
 
-<!-- =========================================================================
-   🔴 JAVASCRIPT & FIREBASE LOGIC
-   ========================================================================= -->
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
@@ -528,7 +486,6 @@ window.appTraders = [];
 window.appDistributions = [];
 window.appExpenses = [];
 
-// FIREBASE AUTH LISTENER
 onAuthStateChanged(auth, async (user) => {
   const loadingView = document.getElementById('loading-screen');
   const loginView = document.getElementById('login-screen');
@@ -536,7 +493,6 @@ onAuthStateChanged(auth, async (user) => {
   const connPillText = document.getElementById('connectionPillText');
   const connPill = document.getElementById('connectionPill');
 
-  // Hide the loading screen immediately once Firebase responds
   if(loadingView) loadingView.style.display = 'none';
 
   if (user) {
@@ -567,7 +523,6 @@ window.connectGoogleManually = () => {
   const provider = new GoogleAuthProvider();
   signInWithPopup(auth, provider).catch(error => {
     console.error("Login failed:", error);
-    alert("लॉगिन अयशस्वी झाले. कृपया पुन्हा प्रयत्न करा.");
   });
 };
 
@@ -592,45 +547,31 @@ async function fetchCloudData() {
     tradersSnap.forEach(doc => window.appTraders.push(doc.data()));
   } catch (error) {
     console.error("Records/Traders fetch error:", error);
-    showToast(error?.code === 'permission-denied' ? "डेटा अ‍ॅक्सेस नाकारला (Firestore rules तपासा)" : "इंटरनेट कनेक्शन तपासा");
   }
 
-  // Fetched separately: a rules/permission issue on this newer collection should never block records/traders from loading
   try {
     const distSnap = await getDocs(collection(db, "users", window.currentUserUid, "distributions"));
     window.appDistributions = [];
     distSnap.forEach(doc => window.appDistributions.push(doc.data()));
   } catch (error) {
-    console.error("Distributions fetch error:", error);
-    window.appDistributions = window.appDistributions || [];
-    if (error?.code === 'permission-denied') {
-      showToast("वाटप डेटा अ‍ॅक्सेस नाकारला — Firestore rules अपडेट करा");
-    }
+    console.warn("Distributions query omitted.");
   }
 
-  // Fetched separately too, for the same reason
   try {
     const expSnap = await getDocs(collection(db, "users", window.currentUserUid, "expenses"));
     window.appExpenses = [];
     expSnap.forEach(doc => window.appExpenses.push(doc.data()));
   } catch (error) {
-    console.error("Expenses fetch error:", error);
-    window.appExpenses = window.appExpenses || [];
-    if (error?.code === 'permission-denied') {
-      showToast("खर्च डेटा अ‍ॅक्सेस नाकारला — Firestore rules अपडेट करा");
-    }
+    console.warn("Expenses query omitted.");
   }
-
   renderAll();
 }
 
-// Override Local Storage Functions to read from Memory (Fetched from Cloud)
 window.getRecords = function() { return window.appRecords || []; }
 window.getTraders = function() { return window.appTraders || []; }
 window.getDistributions = function() { return window.appDistributions || []; }
 window.getExpenses = function() { return window.appExpenses || []; }
 
-// Helper variables & logic for the app
 const LANG={
 mr:{appName:'केळी हिशोब साथी',dashboard:'डॅशबोर्ड',farmM:'शेत म',farmP:'शेत प',
 records:'नोंदी',traders:'व्यापारी',addRecord:'नवीन नोंद',totalIncome:'एकूण उत्पन्न',
@@ -671,7 +612,7 @@ menu:'मेनू',expenses:'खर्च / नोंदी',addExpense:'नो
 noExpenses:'अजून कोणतीही नोंद नाही',deleteExpense:'नोंद हटवा',confirmDeleteExpense:'ही नोंद हटवायची आहे का?',
 expenseSaved:'नोंद जतन झाली ✓',expenseDeleted:'नोंद हटवली',valExpenseEmpty:'रक्कम, टीप किंवा फोटो यापैकी काहीतरी टाका!',
 fanayaPctInline:'फणाया %',incomeBreakdown:'उत्पन्न तपशील',totalIncomeBeforeAdd:'एकूण उत्पन्न (वाढीआधी)',
-kutsuthaPctInline:'कट व सुठा %',kutsutha:'कट व सुठा',kutsuthaDeduction:'कट व सुठा वजा',
+kutsuthaPctInline:'कट व सुट %',kutsutha:'कट व सुट',kutsuthaDeduction:'कट व सुट वजा',
 fanayaAddition:'फणाया वाढ',grossAfterFanaya:'फणाया नंतर एकूण',labourDeduction:'मजुरी वजा',finalNetIncome:'अंतिम निव्वळ उत्पन्न',
 raas:'राास',weightAfterDed:'वजन (कापत/तारा नंतर)',finalWeight:'अंतिम वजन',weightBreakdown:'वजन तपशील'},
 en:{appName:'Kheti Hisaab Saathi',dashboard:'Dashboard',farmM:'Farm M',farmP:'Farm P',
@@ -755,13 +696,14 @@ window.calcFarm = function(Q,kg,dQ,dKg,is3pct,ghads,labourRate,rate,harvestType,
   const totalWQ=Number(Q||0)+Number(kg||0)/100;
   const dedQ=Number(dQ||0)+Number(dKg||0)/100;
   const afterDed=totalWQ-dedQ;
-  // फणाया harvests get an extra weight addition (देठ) — default from profile, but editable per record — applied after कपात/तारा deduction
+  
   const fanayaPct=(fanayaPctOverride!==undefined && fanayaPctOverride!==null && fanayaPctOverride!=='')?Number(fanayaPctOverride):window.getFanayaPct();
   const fanayaAdd=(harvestType==='fanaya')?afterDed*(fanayaPct/100):0;
   const afterFanaya=afterDed+fanayaAdd;
-  // कट व सुठा — a further deduction (default 2%, editable), applied on the weight AFTER फणाया is added, फणाया harvests only
+
   const kutsuthaPct=(kutsuthaPctOverride!==undefined && kutsuthaPctOverride!==null && kutsuthaPctOverride!=='')?Number(kutsuthaPctOverride):window.getKutsuthaPct();
   const kutsuthaDed=(harvestType==='fanaya')?afterFanaya*(kutsuthaPct/100):0;
+  
   const after=afterFanaya-kutsuthaDed;
   const threePct=is3pct?after*0.03:0;
   const netWQ=Math.max(0,after-threePct);
@@ -835,7 +777,6 @@ window.computeStats = function(records,farmFilter){
   return{income,pending,received,weightQ,ghads,labour};
 }
 
-/* ===== ROBUST LONG PRESS SYSTEM ===== */
 window.holdTimer=null; window.pressedCard=null; window.startX=0; window.startY=0;
 const MOVE_THRESHOLD = 15;
 
@@ -900,6 +841,41 @@ window.showEditHint = function(){
   setTimeout(()=>{div.classList.remove('show');setTimeout(()=>div.remove(),300);},3000);
 }
 
+// ----------------------------------------------------
+// DYNAMIC KG/% SYNC LOGIC
+// ----------------------------------------------------
+window.handleFanayaKg = function(fm) {
+  const Q=Number(document.getElementById(`f_${fm}_wQ`)?.value||0);
+  const kg=Number(document.getElementById(`f_${fm}_wKg`)?.value||0);
+  const dQ=window.curHarvest!=='box'?Number(document.getElementById(`f_${fm}_dQ`)?.value||0):0;
+  const dKg=window.curHarvest!=='box'?Number(document.getElementById(`f_${fm}_dKg`)?.value||0):0;
+  const afterDedQ = (Q + kg/100) - (dQ + dKg/100);
+  
+  const typedKg = Number(document.getElementById(`f_${fm}_fanayaKg`)?.value||0);
+  const newPct = afterDedQ > 0 ? (typedKg / (afterDedQ * 100)) * 100 : 0;
+  const pctEl = document.getElementById(`f_${fm}_fanayaPct`);
+  if(pctEl) pctEl.value = newPct.toFixed(2);
+  window.recalcAll();
+}
+
+window.handleKutsuthaKg = function(fm) {
+  const Q=Number(document.getElementById(`f_${fm}_wQ`)?.value||0);
+  const kg=Number(document.getElementById(`f_${fm}_wKg`)?.value||0);
+  const dQ=window.curHarvest!=='box'?Number(document.getElementById(`f_${fm}_dQ`)?.value||0):0;
+  const dKg=window.curHarvest!=='box'?Number(document.getElementById(`f_${fm}_dKg`)?.value||0):0;
+  const afterDedQ = (Q + kg/100) - (dQ + dKg/100);
+  
+  const fanayaPct = Number(document.getElementById(`f_${fm}_fanayaPct`)?.value||0);
+  const fanayaAdd = afterDedQ * (fanayaPct/100);
+  const afterFanayaQ = afterDedQ + fanayaAdd;
+
+  const typedKg = Number(document.getElementById(`f_${fm}_kutsuthaKg`)?.value||0);
+  const newPct = afterFanayaQ > 0 ? (typedKg / (afterFanayaQ * 100)) * 100 : 0;
+  const pctEl = document.getElementById(`f_${fm}_kutsuthaPct`);
+  if(pctEl) pctEl.value = newPct.toFixed(2);
+  window.recalcAll();
+}
+
 window.openEditForm = function(recordId){
   const r=window.getRecords().find(x=>x.id===recordId);
   if(!r)return;
@@ -915,23 +891,27 @@ window.openEditForm = function(recordId){
     document.getElementById('f_date').value=r.date;
     document.getElementById('f_trader').value=r.traderId;
     document.getElementById('f_vehicle').value=r.vehicle||'';
-    document.getElementById('f_rate').value=r.rate||'';
     document.getElementById('f_received').value=r.received||'';
     document.getElementById('f_note').value=r.note||'';
 
     document.querySelectorAll('#farmToggle .toggle-btn').forEach(b=>b.classList.toggle('active',b.dataset.farm===window.curFarm));
     document.querySelectorAll('#harvestToggle .toggle-btn').forEach(b=>b.classList.toggle('active',b.dataset.harvest===window.curHarvest));
-    window.buildFarmFields();
+    
+    window.buildFarmFields(false);
 
     setTimeout(()=>{
+      window.setVal('f_rate', r.rate);
+
       window.setVal('f_C_wQ', r.c_totalWQ);
       window.setVal('f_C_wKg', r.c_totalWKg);
       window.setVal('f_C_dQ', r.c_dedQ);
       window.setVal('f_C_dKg', r.c_dedKg);
       window.setVal('f_C_fanayaPct', r.c_fanayaPct);
       window.setVal('f_C_kutsuthaPct', r.c_kutsuthaPct);
-      window.setVal('f_C_ghads', r.c_ghads);
-      window.setVal('f_C_labRate', r.c_labourRate);
+      window.setVal('f_M_ghads', r.m_ghads);
+      window.setVal('f_M_labRate', r.m_labourRate);
+      window.setVal('f_P_ghads', r.p_ghads);
+      window.setVal('f_P_labRate', r.p_labourRate);
       window.setVal('f_C_kattar', r.c_kattar);
       const chkC=document.getElementById('f_C_3pct');
       if(chkC)chkC.checked=!!r.c_is3Pct;
@@ -998,7 +978,6 @@ document.getElementById('actionMenuEdit').addEventListener('click',()=>{
   if(id)window.openEditForm(id);
 });
 
-// FIREBASE DELETE RECORD
 document.getElementById('actionMenuDelete').addEventListener('click', async ()=>{
   const id=window.actionMenuRecordId;
   window.closeActionMenu();
@@ -1013,7 +992,6 @@ document.getElementById('actionMenuDelete').addEventListener('click', async ()=>
     await fetchCloudData(); 
   } catch (error) {
     console.error("Error deleting:", error);
-    alert("हटवता आले नाही. इंटरनेट कनेक्शन तपासा.");
   }
 });
 
@@ -1086,13 +1064,11 @@ window.openEditConfirm = function(){
   document.getElementById('cancelUpdateBtn').onclick=()=>window.hideOverlay('editConfirmOverlay');
 }
 
-// FIREBASE UPDATE RECORD
 window.performUpdate = async function(){
   const traderId=document.getElementById('f_trader').value;
   const trader=window.getTraders().find(x=>x.id===traderId);
   const traderName = trader ? trader.name : '?';
   const rate=Number(document.getElementById('f_rate').value||0);
-  const farms=window.curFarm==='MP'?['M','P']:[window.curFarm];
   const date=document.getElementById('f_date').value;
   const received=Number(document.getElementById('f_received').value||0);
   const note=document.getElementById('f_note').value;
@@ -1106,7 +1082,6 @@ window.performUpdate = async function(){
   let totalNet=0,totalWQ=0,totalLabour=0,totalGross=0,totalKattar=0;
 
   if(window.curFarm==='MP'){
-    // Combined weight is entered ONCE (f_C_*), not per farm — read it from the combined fields
     const Q=Number(document.getElementById('f_C_wQ')?.value||0);
     const kg=Number(document.getElementById('f_C_wKg')?.value||0);
     const dQ=window.curHarvest!=='box'?Number(document.getElementById('f_C_dQ')?.value||0):0;
@@ -1114,6 +1089,13 @@ window.performUpdate = async function(){
     const is3=window.curHarvest!=='box'?(document.getElementById('f_C_3pct')?.checked||false):false;
     const fanayaPctC=document.getElementById('f_C_fanayaPct')?.value;
     const kutsuthaPctC=document.getElementById('f_C_kutsuthaPct')?.value;
+    
+    const ghadsM=Number(document.getElementById('f_M_ghads')?.value||0);
+    const labRateM=Number(document.getElementById('f_M_labRate')?.value||10)||10;
+    const ghadsP=Number(document.getElementById('f_P_ghads')?.value||0);
+    const labRateP=Number(document.getElementById('f_P_labRate')?.value||10)||10;
+    const totalInputGhads = ghadsM + ghadsP;
+
     const c=window.calcFarm(Q,kg,dQ,dKg,is3,0,0,rate,window.curHarvest,0,fanayaPctC,kutsuthaPctC);
     totalWQ=c.netWQ; totalGross=c.gross;
 
@@ -1127,21 +1109,19 @@ window.performUpdate = async function(){
     const newCPatti=[0,1,2].map(i=>window.photoTargets[`patti_${i}`]||null).filter(Boolean);
     rec.c_photoPatti=newCPatti.length?newCPatti:(rec.c_photoPatti||[]);
 
-    const ghadsC=Number(document.getElementById('f_C_ghads')?.value||0);
-    const labRateC=Number(document.getElementById('f_C_labRate')?.value||10)||10;
     const kattarC=Number(document.getElementById('f_C_kattar')?.value||0);
-    const labCostC=ghadsC*labRateC;
-    rec.c_ghads=ghadsC; rec.c_labourRate=labRateC; rec.c_totalLabour=labCostC; rec.c_kattar=kattarC;
-    totalLabour=labCostC; totalKattar=kattarC;
+    const labCostTotal = (ghadsM * labRateM) + (ghadsP * labRateP);
+    
+    rec.m_ghads=ghadsM; rec.m_labourRate=labRateM; rec.m_totalLabour=(ghadsM * labRateM);
+    rec.p_ghads=ghadsP; rec.p_labourRate=labRateP; rec.p_totalLabour=(ghadsP * labRateP);
+    rec.c_kattar=kattarC;
+    totalLabour=labCostTotal; totalKattar=kattarC;
     totalNet=totalGross-totalLabour-totalKattar;
 
-    rec.raas=ghadsC>0?Number((c.netWQ*100/ghadsC).toFixed(2)):null;
-
+    rec.raas=totalInputGhads>0?Number((c.netWQ*100/totalInputGhads).toFixed(2)):null;
     rec.m_totalWQ=0;rec.m_netWeightQ=0;rec.m_netIncome=0;rec.m_grossIncome=0;rec.m_fanayaAdd=0;
     rec.p_totalWQ=0;rec.p_netWeightQ=0;rec.p_netIncome=0;rec.p_grossIncome=0;rec.p_fanayaAdd=0;
-    // Clear any old per-farm labour fields from a pre-update record format
-    rec.m_ghads=0;rec.m_labourRate=0;rec.m_totalLabour=0;rec.m_kattar=0;
-    rec.p_ghads=0;rec.p_labourRate=0;rec.p_totalLabour=0;rec.p_kattar=0;
+    rec.c_ghads=null;rec.c_labourRate=null;rec.c_totalLabour=null;
 
   } else {
     const fm=window.curFarm;
@@ -1157,6 +1137,7 @@ window.performUpdate = async function(){
     const kutsuthaPctFm=document.getElementById(`f_${fm}_kutsuthaPct`)?.value;
     const c=window.calcFarm(Q,kg,dQ,dKg,is3,ghads,labRate,rate,window.curHarvest,kattar,fanayaPctFm,kutsuthaPctFm);
     const p=fm.toLowerCase();
+    
     rec[`${p}_totalWQ`]=Q;rec[`${p}_totalWKg`]=kg;rec[`${p}_totalWeightQ`]=c.totalWQ;
     rec[`${p}_dedQ`]=dQ;rec[`${p}_dedKg`]=dKg;rec[`${p}_deductionQ`]=c.dedQ;
     rec[`${p}_fanayaAdd`]=c.fanayaAdd;rec[`${p}_fanayaPct`]=c.fanayaPct;rec[`${p}_kutsuthaDed`]=c.kutsuthaDed;rec[`${p}_kutsuthaPct`]=c.kutsuthaPct;
@@ -1170,6 +1151,7 @@ window.performUpdate = async function(){
     rec[`${p}_photoPatti`]=newPatti.length?newPatti:(rec[`${p}_photoPatti`]||[]);
     totalNet=c.net; totalWQ=c.netWQ; totalLabour=c.labCost; totalKattar=kattar; totalGross=c.gross;
     rec.raas=ghads>0?Number((c.netWQ*100/ghads).toFixed(2)):null;
+    
     if(fm==='P'){rec.m_totalWQ=0;rec.m_netWeightQ=0;rec.m_netIncome=0;rec.m_totalLabour=0;rec.m_grossIncome=0;rec.m_ghads=0;rec.m_kattar=0;rec.m_fanayaAdd=0;}
     if(fm==='M'){rec.p_totalWQ=0;rec.p_netWeightQ=0;rec.p_netIncome=0;rec.p_totalLabour=0;rec.p_grossIncome=0;rec.p_ghads=0;rec.p_kattar=0;rec.p_fanayaAdd=0;}
   }
@@ -1190,7 +1172,6 @@ window.performUpdate = async function(){
     await fetchCloudData(); 
   } catch(error) {
     console.error("Update Error:", error);
-    alert("अपडेट करता आले नाही. इंटरनेट कनेक्शन तपासा.");
   }
 }
 
@@ -1288,7 +1269,6 @@ window.removeDistPhoto = function(idx){
   window.renderDistPhotosGrid();
 }
 
-// ---- Expense photo grid (same dynamic add-more pattern as distribution photos) ----
 window.expensePhotos=[];
 window.renderExpensePhotosGrid = function(){
   const grid=document.getElementById('ef_photos_grid');
@@ -1327,7 +1307,12 @@ window.removeExpensePhoto = function(idx){
 window.renderExpenses = function(){
   const listEl=document.getElementById('expenses-list');
   if(!listEl)return;
-  const exps=[...window.getExpenses()].sort((a,b)=>(b.date||'').localeCompare(a.date||''));
+  
+  const exps=[...window.getExpenses()].sort((a,b)=>{
+    if(a.date === b.date) return (b.createdAt || 0) - (a.createdAt || 0);
+    return (b.date||'').localeCompare(a.date||'');
+  });
+  
   if(!exps.length){
     listEl.innerHTML=`<div class="empty-state"><span class="emoji">🧾</span>${window.t('noExpenses')}</div>`;
     return;
@@ -1378,11 +1363,6 @@ document.getElementById('saveExpenseBtn').addEventListener('click', async ()=>{
     await fetchCloudData();
   } catch(error) {
     console.error("Expense Save Error:", error);
-    if(error?.code === 'permission-denied'){
-      alert("नोंद जतन करता आली नाही: Firestore Rules मध्ये 'expenses' कलेक्शनला परवानगी नाही.");
-    } else {
-      alert("नोंद जतन करता आली नाही. इंटरनेट तपासा. (त्रुटी: "+(error?.message||error)+")");
-    }
   }
 });
 
@@ -1396,7 +1376,6 @@ window.deleteExpense = async function(id){
     await fetchCloudData();
   } catch(error) {
     console.error("Expense Delete Error:", error);
-    alert("हटवता आले नाही. इंटरनेट तपासा.");
   }
 }
 
@@ -1407,7 +1386,6 @@ window.renderPartners = function(){
   const recs=[...window.getRecords()].sort((a,b)=>(b.date||'').localeCompare(a.date||''));
   const dists=window.getDistributions();
 
-  // ---- Per-harvest breakdown: each harvest's own 50/50 split, independent of other harvests ----
   const rows=recs.map(r=>{
     const linked=dists.filter(d=>d.recordId===r.id);
     const pool=r.combinedNetIncome||0;
@@ -1458,7 +1436,6 @@ window.renderPartners = function(){
     }
   }
 
-  // ---- Full distribution history (audit trail, all entries across all harvests) ----
   const distListEl=document.getElementById('partners-distlist');
   if(distListEl){
     const allDists=[...dists].sort((a,b)=>(b.date||'').localeCompare(a.date||''));
@@ -1496,8 +1473,6 @@ document.getElementById('addDistBtn').addEventListener('click',()=>{
   window.showOverlay('distFormOverlay');
 });
 
-// Open the distribution form pre-linked to one specific harvest record.
-// origin tells us which screen to return to after saving: 'partners' (stay on Partners tab, default) or 'detail' (reopen the record's detail view).
 window.openDistFormForRecord = function(recordId, origin){
   const r=window.getRecords().find(x=>x.id===recordId);
   if(!r)return;
@@ -1525,7 +1500,6 @@ window.openDistFormForRecord = function(recordId, origin){
 };
 document.getElementById('distFormBack').addEventListener('click',()=>{ window.hideOverlay('distFormOverlay'); });
 
-// FIREBASE SAVE DISTRIBUTION
 document.getElementById('saveDistBtn').addEventListener('click', async ()=>{
   const errEl=document.getElementById('distFormError');
   errEl.style.display='none';
@@ -1554,15 +1528,9 @@ document.getElementById('saveDistBtn').addEventListener('click', async ()=>{
     if(recordId && origin==='detail') window.openDetail(recordId);
   } catch(error) {
     console.error("Distribution Save Error:", error);
-    if(error?.code === 'permission-denied'){
-      alert("वाटप जतन करता आले नाही: Firestore Rules मध्ये 'distributions' कलेक्शनला परवानगी नाही. Firebase Console → Firestore → Rules मध्ये तो नियम जोडा.");
-    } else {
-      alert("वाटप जतन करता आले नाही. इंटरनेट कनेक्शन तपासा. (त्रुटी: "+(error?.message||error)+")");
-    }
   }
 });
 
-// FIREBASE DELETE DISTRIBUTION
 window.deleteDistribution = async function(id, recordId, origin){
   if(!confirm(window.t('confirmDeleteDist')))return;
   if(!window.currentUserUid) return;
@@ -1574,11 +1542,6 @@ window.deleteDistribution = async function(id, recordId, origin){
     if(recordId && origin==='detail') window.openDetail(recordId);
   } catch(error) {
     console.error("Distribution Delete Error:", error);
-    if(error?.code === 'permission-denied'){
-      alert("हटवता आले नाही: Firestore Rules मध्ये 'distributions' कलेक्शनला परवानगी नाही.");
-    } else {
-      alert("हटवता आले नाही. इंटरनेट तपासा. (त्रुटी: "+(error?.message||error)+")");
-    }
   }
 }
 
@@ -1612,54 +1575,8 @@ document.getElementById('drawerBackdrop').addEventListener('click', window.close
 document.getElementById('fabBtn').addEventListener('click', () => window.openAddForm());
 
 document.getElementById('pdfBtn').addEventListener('click', async () => {
-  if (navigator.share && /Android|iPhone/i.test(navigator.userAgent)) {
-    const recs = window.getRecords();
-    const stats = window.computeStats(recs, null);
-    const statsM = window.computeStats(recs.filter(r=>(r.farmType||'M')==='M'||(r.farmType||'M')==='MP'), 'M');
-    const statsP = window.computeStats(recs.filter(r=>(r.farmType||'M')==='P'||(r.farmType||'M')==='MP'), 'P');
-    const dates = recs.map(r=>r.date).sort();
-    const from = dates.length ? window.fmtDate(dates[0]) : '—';
-    const to = dates.length ? window.fmtDate(dates[dates.length-1]) : '—';
-    const shareText = `🌿 केळी हिशोब साथी — उत्पन्न अहवाल
-━━━━━━━━━━━━━━━━
-📅 कालावधी: ${from} ते ${to}
-📋 एकूण नोंदी: ${recs.length}
-
-🌿 शेत म (मोरगाव काढचं शेत)
-  वजन: ${window.fmtQ(statsM.weightQ)} Q
-  उत्पन्न: ₹${window.fmt(statsM.income)}
-  मिळाले: ₹${window.fmt(statsM.received)}
-  थकबाकी: ₹${window.fmt(statsM.pending)}
-
-🌿 शेत प (पाटोंदी काढचं शेत)
-  वजन: ${window.fmtQ(statsP.weightQ)} Q
-  उत्पन्न: ₹${window.fmt(statsP.income)}
-  मिळाले: ₹${window.fmt(statsP.received)}
-  थकबाकी: ₹${window.fmt(statsP.pending)}
-
-━━━━━━━━━━━━━━━━
-📊 एकूण
-  वजन: ${window.fmtQ(stats.weightQ)} Q
-  उत्पन्न: ₹${window.fmt(stats.income)}
-  मिळाले: ₹${window.fmt(stats.received)}
-  थकबाकी: ₹${window.fmt(stats.pending)}`;
-
-    document.getElementById('sheetTitle').textContent = '📤 Share करा';
-    document.getElementById('sheetContent').innerHTML = `
-      <button class="sheet-btn" onclick="window.closeSheet();window.generatePDF()">📄 PDF / Print (सगळे photos सहित)</button>
-      <button class="sheet-btn" onclick="window.closeSheet();window.shareTextFn()">📱 WhatsApp / Share (summary)</button>`;
-    window._shareText = shareText;
-    document.getElementById('sheetOverlay').classList.add('open');
-  } else {
-    window.generatePDF();
-  }
+  window.generatePDF();
 });
-
-window.shareTextFn = function() {
-  if (navigator.share) {
-    navigator.share({ title: 'केळी हिशोब साथी', text: window._shareText }).catch(() => {});
-  }
-}
 
 window.renderAll = function(){
   window.renderDash();
@@ -1689,7 +1606,7 @@ window.openAddForm = function(){
     window.showOverlay('traderFormOverlay');
     return;
   }
-  const isEdit=window._skipResetEdit; // true when opened from openEditForm — must preserve curFarm/curHarvest set there
+  const isEdit=window._skipResetEdit; 
   if(!window._skipResetEdit) window.editingRecord=null;
   window._skipResetEdit=false;
   window.photoTargets={};
@@ -1698,6 +1615,7 @@ window.openAddForm = function(){
   document.getElementById('f_vehicle').value='';
   document.getElementById('f_received').value='';
   document.getElementById('f_note').value='';
+  
   document.getElementById('saveError').style.display='none';
   const receivedWrap=document.getElementById('receivedFieldWrap');
   if(receivedWrap) receivedWrap.style.display=isEdit?'block':'none';
@@ -1705,7 +1623,9 @@ window.openAddForm = function(){
   tSel.innerHTML=traders.map(tr=>`<option value="${tr.id}">${tr.name}</option>`).join('');
   document.querySelectorAll('#farmToggle .toggle-btn').forEach(b=>b.classList.toggle('active',b.dataset.farm===window.curFarm));
   document.querySelectorAll('#harvestToggle .toggle-btn').forEach(b=>b.classList.toggle('active',b.dataset.harvest===window.curHarvest));
+  
   window.buildFarmFields(!isEdit);
+  
   window.showOverlay('formOverlay');
   document.getElementById('formTitle').textContent=window.t('addRecord');
   window.applyLang();
@@ -1730,10 +1650,15 @@ window.buildFarmFields = function(clearRate){
 
   if(isCombined){
     html+=`<div class="farm-header">🌿🌿 ${window.t('farmMLong')} + ${window.t('farmPLong')} — एकत्रित मोजणी</div>`;
+    html+=`<div class="raas-box" id="f_C_raas">🌳 ${window.t('raas')}: —</div>`;
+
     html+=`<div class="form-group"><div class="sec-title" style="margin-top:8px">${window.t('weight')} (एकत्रित — गाडी एकदाच वजन होते)</div><div class="row2">
       <div><label class="form-label">Q</label><input type="number" class="form-input" id="f_C_wQ" placeholder="0" min="0" oninput="window.recalcAll()"></div>
       <div><label class="form-label">kg</label><input type="number" class="form-input" id="f_C_wKg" placeholder="0" min="0" max="99" oninput="window.recalcAll()"></div>
     </div><div class="form-hint">दोन्ही शेतांची मिळून एकूण गाडी वजन (2 Q + 34 kg = 2.34 Q)</div></div>`;
+
+    html+=`<div class="sec-title" style="margin-top:8px" data-t="rate">दर (प्रति क्विंटल)</div>
+    <div class="form-group"><input type="number" class="form-input" id="f_rate" placeholder="₹ दर" oninput="window.recalcAll()"></div>`;
 
     if(window.curHarvest!=='box'){
       html+=`<div class="form-group"><div class="sec-title" style="margin-top:8px">${window.t('deduction')} (एकत्रित)</div><div class="row2">
@@ -1742,54 +1667,74 @@ window.buildFarmFields = function(clearRate){
       </div></div>`;
     }
 
-    html+=`<div class="sec-title" style="margin-top:8px" data-t="rate">दर (प्रति क्विंटल)</div>
-    <div class="form-group"><input type="number" class="form-input" id="f_rate" placeholder="₹ दर" oninput="window.recalcAll()"></div>`;
-
     if(window.curHarvest==='fanaya'){
-      html+=`<div class="form-group"><label class="form-label">🍌 ${window.t('fanayaPctInline')}</label><input type="number" step="0.1" class="form-input" id="f_C_fanayaPct" placeholder="${window.getFanayaPct()}" value="${window.getFanayaPct()}" oninput="window.recalcAll()"></div>`;
-      html+=`<div class="form-group"><label class="form-label">✂️ ${window.t('kutsuthaPctInline')}</label><input type="number" step="0.1" class="form-input" id="f_C_kutsuthaPct" placeholder="${window.getKutsuthaPct()}" value="${window.getKutsuthaPct()}" oninput="window.recalcAll()"></div>`;
+      html+=`<div class="form-group"><div class="sec-title" style="margin-top:8px">🍌 ${window.t('fanayaAddLbl')}</div><div class="row2">
+        <div><label class="form-label">%</label><input type="number" step="0.1" class="form-input" id="f_C_fanayaPct" placeholder="${window.getFanayaPct()}" value="${window.getFanayaPct()}" oninput="window.syncDynamic('fanaya','pct','C')"></div>
+        <div><label class="form-label">kg</label><input type="number" step="0.1" class="form-input" id="f_C_fanayaKg" placeholder="0" oninput="window.handleFanayaKg('C')"></div>
+      </div></div>`;
+      html+=`<div class="form-group"><div class="sec-title" style="margin-top:8px">✂️ ${window.t('kutsutha')}</div><div class="row2">
+        <div><label class="form-label">%</label><input type="number" step="0.1" class="form-input" id="f_C_kutsuthaPct" placeholder="${window.getKutsuthaPct()}" value="${window.getKutsuthaPct()}" oninput="window.syncDynamic('kutsutha','pct','C')"></div>
+        <div><label class="form-label">kg</label><input type="number" step="0.1" class="form-input" id="f_C_kutsuthaKg" placeholder="0" oninput="window.handleKutsuthaKg('C')"></div>
+      </div></div>`;
     }
 
     html+=`<div class="summary-box" id="f_C_weightBreakdown" style="margin-bottom:8px"></div>`;
     html+=`<div class="auto-box green" id="f_C_grossInc" style="margin-bottom:12px">एकत्रित उत्पन्न (Gross): ₹0</div>`;
-
-    html+=`<div class="auto-box" style="margin-bottom:12px;background:#fff7e6;border:1px solid #ffe1a8;color:#a9631a;font-weight:700" id="f_C_raas">${window.t('raas')}: —</div>`;
 
     html+=`<div class="sec-title">पावत्या (एकत्रित — फक्त एकदाच अपलोड करा)</div>`;
     html+=window.photoSectionHTML('tollBefore','टोल आधी',1);
     html+=window.photoSectionHTML('tollAfter','टोल नंतर',1);
     html+=window.photoSectionHTML('patti','पट्टी',3);
 
-    html+=`<div class="sec-title" style="margin-top:18px">👷 ${window.t('labour')} (एकत्रित — एकदाच)</div>`;
-    html+=`<div class="form-group"><div class="row2">
-      <div><label class="form-label">${window.t('ghadsCount')}</label><input type="number" class="form-input" id="f_C_ghads" placeholder="0" min="0" oninput="window.recalcAll()"></div>
-      <div><label class="form-label">${window.t('labourRate')}</label><input type="number" class="form-input" id="f_C_labRate" placeholder="10" min="0" oninput="window.recalcAll()"></div>
-    </div>
-    <div class="auto-box blue" style="margin-top:6px;font-size:13px" id="f_C_labFormula">0 × ₹10 = ₹0</div>
-    <div style="margin-top:8px"><label class="form-label">${window.t('kattar')}</label><input type="number" class="form-input" id="f_C_kattar" placeholder="0" min="0" oninput="window.recalcAll()"></div></div>`;
+    html+=`<div class="sec-title" style="margin-top:18px">👷 मजुरी खर्च (शेतनिहाय)</div>`;
+    html+=`<div class="form-group" style="background:#f8fafc; padding:10px; border-radius:12px; margin-bottom:10px;">
+      <label class="form-label" style="color:var(--green)">🌿 मोरगाव (शेत म)</label>
+      <div class="row2">
+        <div><label class="form-label">${window.t('ghadsCount')}</label><input type="number" class="form-input" id="f_M_ghads" placeholder="0" min="0" oninput="window.recalcAll()"></div>
+        <div><label class="form-label">${window.t('labourRate')}</label><input type="number" class="form-input" id="f_M_labRate" placeholder="10" min="0" oninput="window.recalcAll()"></div>
+      </div>
+    </div>`;
+    html+=`<div class="form-group" style="background:#f8fafc; padding:10px; border-radius:12px; margin-bottom:10px;">
+      <label class="form-label" style="color:var(--blue)">🌿 पाटोंदी (शेत प)</label>
+      <div class="row2">
+        <div><label class="form-label">${window.t('ghadsCount')}</label><input type="number" class="form-input" id="f_P_ghads" placeholder="0" min="0" oninput="window.recalcAll()"></div>
+        <div><label class="form-label">${window.t('labourRate')}</label><input type="number" class="form-input" id="f_P_labRate" placeholder="10" min="0" oninput="window.recalcAll()"></div>
+      </div>
+    </div>`;
+    html+=`<div style="margin-top:8px"><label class="form-label">${window.t('kattar')} (फक्त एकदाच)</label><input type="number" class="form-input" id="f_C_kattar" placeholder="0" min="0" oninput="window.recalcAll()"></div>`;
 
   } else {
     const fm=window.curFarm;
     const label=fm==='M'?window.t('farmMFull'):window.t('farmPFull');
     html+=`<div class="farm-header">🌿 ${label}</div>`;
+    html+=`<div class="raas-box" id="f_${fm}_raas">🌳 ${window.t('raas')}: —</div>`;
+
     html+=`<div class="form-group"><div class="sec-title" style="margin-top:8px">${window.t('weight')}</div><div class="row2">
       <div><label class="form-label">Q</label><input type="number" class="form-input" id="f_${fm}_wQ" placeholder="0" min="0" oninput="window.recalcAll()"></div>
       <div><label class="form-label">kg</label><input type="number" class="form-input" id="f_${fm}_wKg" placeholder="0" min="0" max="99" oninput="window.recalcAll()"></div>
     </div><div class="form-hint">2 Q + 34 kg = 2.34 Q</div></div>`;
+
+    html+=`<div class="sec-title" style="margin-top:8px" data-t="rate">दर (प्रति क्विंटल)</div>
+    <div class="form-group"><input type="number" class="form-input" id="f_rate" placeholder="₹ दर" oninput="window.recalcAll()"></div>`;
+
     if(window.curHarvest!=='box'){
       html+=`<div class="form-group"><div class="sec-title" style="margin-top:8px">${window.t('deduction')}</div><div class="row2">
         <div><label class="form-label">Q</label><input type="number" class="form-input" id="f_${fm}_dQ" placeholder="0" min="0" oninput="window.recalcAll()"></div>
         <div><label class="form-label">kg</label><input type="number" class="form-input" id="f_${fm}_dKg" placeholder="0" min="0" max="99" oninput="window.recalcAll()"></div>
       </div></div>`;
     }
-    html+=`<div class="sec-title" style="margin-top:8px" data-t="rate">दर (प्रति क्विंटल)</div>
-    <div class="form-group"><input type="number" class="form-input" id="f_rate" placeholder="₹ दर" oninput="window.recalcAll()"></div>`;
     if(window.curHarvest==='fanaya'){
-      html+=`<div class="form-group"><label class="form-label">🍌 ${window.t('fanayaPctInline')}</label><input type="number" step="0.1" class="form-input" id="f_${fm}_fanayaPct" placeholder="${window.getFanayaPct()}" value="${window.getFanayaPct()}" oninput="window.recalcAll()"></div>`;
-      html+=`<div class="form-group"><label class="form-label">✂️ ${window.t('kutsuthaPctInline')}</label><input type="number" step="0.1" class="form-input" id="f_${fm}_kutsuthaPct" placeholder="${window.getKutsuthaPct()}" value="${window.getKutsuthaPct()}" oninput="window.recalcAll()"></div>`;
+      html+=`<div class="form-group"><div class="sec-title" style="margin-top:8px">🍌 ${window.t('fanayaAddLbl')}</div><div class="row2">
+        <div><label class="form-label">%</label><input type="number" step="0.1" class="form-input" id="f_${fm}_fanayaPct" placeholder="${window.getFanayaPct()}" value="${window.getFanayaPct()}" oninput="window.syncDynamic('fanaya','pct','${fm}')"></div>
+        <div><label class="form-label">kg</label><input type="number" step="0.1" class="form-input" id="f_${fm}_fanayaKg" placeholder="0" oninput="window.handleFanayaKg('${fm}')"></div>
+      </div></div>`;
+      html+=`<div class="form-group"><div class="sec-title" style="margin-top:8px">✂️ ${window.t('kutsutha')}</div><div class="row2">
+        <div><label class="form-label">%</label><input type="number" step="0.1" class="form-input" id="f_${fm}_kutsuthaPct" placeholder="${window.getKutsuthaPct()}" value="${window.getKutsuthaPct()}" oninput="window.syncDynamic('kutsutha','pct','${fm}')"></div>
+        <div><label class="form-label">kg</label><input type="number" step="0.1" class="form-input" id="f_${fm}_kutsuthaKg" placeholder="0" oninput="window.handleKutsuthaKg('${fm}')"></div>
+      </div></div>`;
     }
     html+=`<div class="summary-box" id="f_${fm}_weightBreakdown" style="margin-bottom:8px"></div>`;
-    html+=`<div class="auto-box" style="margin-bottom:12px;background:#fff7e6;border:1px solid #ffe1a8;color:#a9631a;font-weight:700" id="f_${fm}_raas">${window.t('raas')}: —</div>`;
+    
     html+=`<div class="form-group"><div class="sec-title" style="margin-top:8px">${window.t('labour')}</div><div class="row2">
       <div><label class="form-label">${window.t('ghadsCount')}</label><input type="number" class="form-input" id="f_${fm}_ghads" placeholder="0" min="0" oninput="window.recalcAll()"></div>
       <div><label class="form-label">${window.t('labourRate')}</label><input type="number" class="form-input" id="f_${fm}_labRate" placeholder="10" min="0" oninput="window.recalcAll()"></div>
@@ -1817,6 +1762,40 @@ window.photoSectionHTML = function(key,label,max){
   return`<div class="form-group"><div class="photo-label">${label}</div><div class="photo-slots" style="grid-template-columns:repeat(${max},1fr)">${slots}</div></div>`;
 }
 
+window.syncDynamic = function(field, source, farm) {
+  const Q = Number(document.getElementById(`f_${farm}_wQ`)?.value||0);
+  const kg = Number(document.getElementById(`f_${farm}_wKg`)?.value||0);
+  const dQ = window.curHarvest !== 'box' ? Number(document.getElementById(`f_${farm}_dQ`)?.value||0) : 0;
+  const dKg = window.curHarvest !== 'box' ? Number(document.getElementById(`f_${farm}_dKg`)?.value||0) : 0;
+  const totalWQ = Q + kg/100;
+  const dedQ = dQ + dKg/100;
+  const afterDedQ = totalWQ - dedQ;
+  
+  let baseQ = afterDedQ;
+  
+  if (field === 'kutsutha') {
+      const fPct = Number(document.getElementById(`f_${farm}_fanayaPct`)?.value||0);
+      baseQ = afterDedQ + (afterDedQ * (fPct/100));
+  }
+
+  if (baseQ <= 0) {
+      window.recalcAll();
+      return; 
+  }
+  
+  const pctEl = document.getElementById(`f_${farm}_${field}Pct`);
+  const kgEl = document.getElementById(`f_${farm}_${field}Kg`);
+  
+  if (source === 'pct') {
+      const pct = Number(pctEl.value||0);
+      kgEl.value = (baseQ * 100 * (pct/100)).toFixed(2);
+  } else {
+      const valKg = Number(kgEl.value||0);
+      pctEl.value = ((valKg / (baseQ * 100)) * 100).toFixed(2);
+  }
+  window.recalcAll();
+}
+
 window.recalcAll = function(){
   const rate=Number(document.getElementById('f_rate')?.value||0);
   let totalNet=0, totalGross=0, totalLabour=0, netWQ=0;
@@ -1828,36 +1807,46 @@ window.recalcAll = function(){
     const dQ=window.curHarvest!=='box'?Number(document.getElementById('f_C_dQ')?.value||0):0;
     const dKg=window.curHarvest!=='box'?Number(document.getElementById('f_C_dKg')?.value||0):0;
     const is3=window.curHarvest!=='box'?(document.getElementById('f_C_3pct')?.checked||false):false;
-
     const fanayaPctC=document.getElementById('f_C_fanayaPct')?.value;
     const kutsuthaPctC=document.getElementById('f_C_kutsuthaPct')?.value;
+    
+    const ghadsM=Number(document.getElementById('f_M_ghads')?.value||0);
+    const labRateM=Number(document.getElementById('f_M_labRate')?.value||10)||10;
+    const ghadsP=Number(document.getElementById('f_P_ghads')?.value||0);
+    const labRateP=Number(document.getElementById('f_P_labRate')?.value||10)||10;
+    const totalCombinedGhads = ghadsM + ghadsP;
+
     const c=window.calcFarm(Q,kg,dQ,dKg,is3,0,0,rate,window.curHarvest,0,fanayaPctC,kutsuthaPctC);
     netWQ=c.netWQ; totalGross=c.gross;
+
+    const f_C_fanayaKg = document.getElementById('f_C_fanayaKg');
+    if(f_C_fanayaKg && document.activeElement !== f_C_fanayaKg && document.activeElement !== document.getElementById('f_C_fanayaPct')) {
+        f_C_fanayaKg.value = (c.fanayaAdd * 100).toFixed(2);
+    }
+    const f_C_kutsuthaKg = document.getElementById('f_C_kutsuthaKg');
+    if(f_C_kutsuthaKg && document.activeElement !== f_C_kutsuthaKg && document.activeElement !== document.getElementById('f_C_kutsuthaPct')) {
+        f_C_kutsuthaKg.value = (c.kutsuthaDed * 100).toFixed(2);
+    }
 
     window.renderWeightBreakdown('f_C_weightBreakdown', c);
     const grossEl=document.getElementById('f_C_grossInc');
     if(grossEl)grossEl.textContent=`एकत्रित उत्पन्न (Gross): ₹${window.fmt(c.gross)}`;
 
-    // Single combined labour entry (one cutting team for the whole combined harvest, not per-farm)
-    const ghads=Number(document.getElementById('f_C_ghads')?.value||0);
-    const labRate=Number(document.getElementById('f_C_labRate')?.value||10)||10;
-    const kattar=Number(document.getElementById('f_C_kattar')?.value||0);
-    const labCost=ghads*labRate;
-    totalLabour=labCost;
-    const labEl=document.getElementById('f_C_labFormula');
-    if(labEl)labEl.textContent=`${ghads} × ₹${labRate} = ₹${window.fmt(labCost)}`;
-
-    // राास = final weight (kg) ÷ घड संख्या
     const raasEl=document.getElementById('f_C_raas');
-    if(raasEl)raasEl.textContent=ghads>0?`${window.t('raas')}: ${(c.netWQ*100/ghads).toFixed(2)} kg/घड`:`${window.t('raas')}: —`;
+    if(raasEl)raasEl.textContent=totalCombinedGhads>0?`🌳 ${window.t('raas')}: ${(c.netWQ*100/totalCombinedGhads).toFixed(2)} kg/घड`:`🌳 ${window.t('raas')}: —`;
 
-    totalNet=totalGross-labCost-kattar;
-    breakdownC=c; breakdownLabourTotal=labCost+kattar;
+    const kattar=Number(document.getElementById('f_C_kattar')?.value||0);
+    const labCostTotal = (ghadsM * labRateM) + (ghadsP * labRateP);
+    totalLabour=labCostTotal;
+
+    totalNet=totalGross-totalLabour-kattar;
+    breakdownC=c; breakdownLabourTotal=labCostTotal+kattar;
 
     document.getElementById('combinedSummary').style.display='block';
     document.getElementById('combinedBox').innerHTML=
       `<div class="summary-row"><span>एकत्रित वजन: ${window.fmtQ(netWQ)}Q</span><span style="font-weight:700">₹${window.fmt(totalGross)}</span></div>`+
-      `<div class="summary-row"><span>मजुरी: ${ghads} घड × ₹${labRate}</span><span style="font-weight:700">₹${window.fmt(labCost)}</span></div>`+
+      `<div class="summary-row"><span>शेत म मजुरी: ${ghadsM} घड × ₹${labRateM}</span><span style="font-weight:700">₹${window.fmt(ghadsM*labRateM)}</span></div>`+
+      `<div class="summary-row"><span>शेत प मजुरी: ${ghadsP} घड × ₹${labRateP}</span><span style="font-weight:700">₹${window.fmt(ghadsP*labRateP)}</span></div>`+
       (kattar>0?`<div class="summary-row"><span>${window.t('kattar')}</span><span style="font-weight:700">₹${window.fmt(kattar)}</span></div>`:'')+
       `<hr class="summary-divider"><div class="summary-row summary-total"><span>निव्वळ उत्पन्न (Gross − मजुरी)</span><span>₹${window.fmt(totalNet)}</span></div>`;
   } else {
@@ -1874,6 +1863,15 @@ window.recalcAll = function(){
     const kutsuthaPctFm=document.getElementById(`f_${fm}_kutsuthaPct`)?.value;
     const c=window.calcFarm(Q,kg,dQ,dKg,is3,ghads,labRate,rate,window.curHarvest,kattar,fanayaPctFm,kutsuthaPctFm);
 
+    const f_fanayaKg = document.getElementById(`f_${fm}_fanayaKg`);
+    if(f_fanayaKg && document.activeElement !== f_fanayaKg && document.activeElement !== document.getElementById(`f_${fm}_fanayaPct`)) {
+        f_fanayaKg.value = (c.fanayaAdd * 100).toFixed(2);
+    }
+    const f_kutsuthaKg = document.getElementById(`f_${fm}_kutsuthaKg`);
+    if(f_kutsuthaKg && document.activeElement !== f_kutsuthaKg && document.activeElement !== document.getElementById(`f_${fm}_kutsuthaPct`)) {
+        f_kutsuthaKg.value = (c.kutsuthaDed * 100).toFixed(2);
+    }
+
     window.renderWeightBreakdown(`f_${fm}_weightBreakdown`, c);
     const labEl=document.getElementById(`f_${fm}_labFormula`);
     if(labEl)labEl.textContent=`${ghads} × ₹${labRate} = ₹${window.fmt(c.labCost)}`;
@@ -1881,7 +1879,7 @@ window.recalcAll = function(){
     if(netEl)netEl.textContent=`${window.t('netIncome')}: ₹${window.fmt(c.net)}`;
 
     const raasEl=document.getElementById(`f_${fm}_raas`);
-    if(raasEl)raasEl.textContent=ghads>0?`${window.t('raas')}: ${(c.netWQ*100/ghads).toFixed(2)} kg/घड`:`${window.t('raas')}: —`;
+    if(raasEl)raasEl.textContent=ghads>0?`🌳 ${window.t('raas')}: ${(c.netWQ*100/ghads).toFixed(2)} kg/घड`:`🌳 ${window.t('raas')}: —`;
 
     totalNet=c.net; totalGross=c.gross; totalLabour=c.labCost+kattar; netWQ=c.netWQ;
     breakdownC=c; breakdownLabourTotal=c.labCost+kattar;
@@ -1895,7 +1893,7 @@ window.recalcAll = function(){
     let bHtml=`<div class="summary-row"><span>${window.t('totalIncomeBeforeAdd')}</span><span style="font-weight:700">₹${window.fmt(preFanayaIncome)}</span></div>`;
     if(window.curHarvest==='fanaya'){
       bHtml+=`<div class="summary-row"><span>${window.t('fanayaAddition')} (+${breakdownC.fanayaPct}%)</span><span style="font-weight:700;color:var(--green)">+₹${window.fmt(fanayaIncomeAdd)}</span></div>`;
-      bHtml+=`<div class="summary-row"><span>${window.t('kutsuthaDeduction')} (-${breakdownC.kutsuthaPct}%)</span><span style="font-weight:700;color:var(--red)">-₹${window.fmt(kutsuthaIncomeDed)}</span></div>`;
+      if(breakdownC.kutsuthaDed>0) bHtml+=`<div class="summary-row"><span>${window.t('kutsuthaDeduction')} (-${breakdownC.kutsuthaPct}%)</span><span style="font-weight:700;color:var(--red)">-₹${window.fmt(kutsuthaIncomeDed)}</span></div>`;
       bHtml+=`<div class="summary-row"><span>${window.t('grossAfterFanaya')}</span><span style="font-weight:700">₹${window.fmt(breakdownC.gross)}</span></div>`;
     }
     bHtml+=`<div class="summary-row"><span>${window.t('labourDeduction')}</span><span style="font-weight:700;color:var(--red)">-₹${window.fmt(breakdownLabourTotal)}</span></div>`;
@@ -1908,19 +1906,27 @@ window.recalcAll = function(){
   document.getElementById('f_pendingDisplay').textContent=`${window.t('pending')}: ₹${window.fmt(pend)}`;
 }
 
-// Shows weight after कापत/तारा → + फणाया addition (if applicable) → final weight, in both Q and kg
 window.renderWeightBreakdown = function(elId, c){
   const el=document.getElementById(elId);
   if(!el)return;
-  const afterDedKg=(c.totalWQ-c.dedQ)*100;
-  let html=`<div class="summary-row"><span>${window.t('weightAfterDed')}</span><span style="font-weight:700">${window.fmtQ(c.totalWQ-c.dedQ)} Q (${window.fmt(afterDedKg)} kg)</span></div>`;
-  if(c.fanayaAdd>0){
-    html+=`<div class="summary-row"><span>${window.t('fanayaAddLbl')} (+${c.fanayaPct}%)</span><span style="font-weight:700;color:var(--green)">+${window.fmtQ(c.fanayaAdd)} Q (+${window.fmt(c.fanayaAdd*100)} kg)</span></div>`;
+  const netBeforeFanya = c.totalWQ - c.dedQ;
+
+  let html = '';
+  if (c.dedQ > 0) {
+    html += `<div class="summary-row"><span style="color:var(--muted)">एकूण वजन (Base)</span><span>${window.fmtQ(c.totalWQ)} Q</span></div>`;
+    html += `<div class="summary-row"><span style="color:var(--red)">- कपात/तारा</span><span style="color:var(--red)">${window.fmtQ(c.dedQ)} Q</span></div>`;
   }
-  if(c.kutsuthaDed>0){
-    html+=`<div class="summary-row"><span>${window.t('kutsuthaDeduction')} (-${c.kutsuthaPct}%)</span><span style="font-weight:700;color:var(--red)">-${window.fmtQ(c.kutsuthaDed)} Q (-${window.fmt(c.kutsuthaDed*100)} kg)</span></div>`;
+  
+  html += `<div class="summary-row"><span>${window.t('weightAfterDed')}</span><span style="font-weight:600">${window.fmtQ(netBeforeFanya)} Q (${window.fmt(netBeforeFanya*100)} kg)</span></div>`;
+  
+  if(c.fanayaAdd > 0){
+    html += `<div class="summary-row"><span>${window.t('fanayaAddLbl')} (+${c.fanayaPct}%)</span><span style="font-weight:700;color:var(--green)">+${window.fmtQ(c.fanayaAdd)} Q (+${window.fmt(c.fanayaAdd*100)} kg)</span></div>`;
   }
-  html+=`<hr class="summary-divider"><div class="summary-row summary-total"><span>${window.t('finalWeight')}</span><span>${window.fmtQ(c.netWQ)} Q (${window.fmt(c.netWQ*100)} kg)</span></div>`;
+  if(c.kutsuthaDed > 0){
+    html += `<div class="summary-row"><span>${window.t('kutsuthaDeduction')} (-${c.kutsuthaPct}%)</span><span style="font-weight:700;color:var(--red)">-${window.fmtQ(c.kutsuthaDed)} Q (-${window.fmt(c.kutsuthaDed*100)} kg)</span></div>`;
+  }
+  
+  html += `<hr class="summary-divider"><div class="summary-row summary-total"><span>${window.t('finalWeight')}</span><span>${window.fmtQ(c.netWQ)} Q (${window.fmt(c.netWQ*100)} kg)</span></div>`;
   el.innerHTML=html;
 }
 
@@ -1932,7 +1938,6 @@ document.getElementById('saveRecordBtn').addEventListener('click',()=>{
   }
 });
 
-// FIREBASE SAVE RECORD
 window.saveRecord = async function(){
   const errEl=document.getElementById('saveError');
   errEl.style.display='none';
@@ -1961,6 +1966,13 @@ window.saveRecord = async function(){
     const is3=window.curHarvest!=='box'?(document.getElementById('f_C_3pct')?.checked||false):false;
     const fanayaPctC=document.getElementById('f_C_fanayaPct')?.value;
     const kutsuthaPctC=document.getElementById('f_C_kutsuthaPct')?.value;
+    
+    const ghadsM=Number(document.getElementById('f_M_ghads')?.value||0);
+    const labRateM=Number(document.getElementById('f_M_labRate')?.value||10)||10;
+    const ghadsP=Number(document.getElementById('f_P_ghads')?.value||0);
+    const labRateP=Number(document.getElementById('f_P_labRate')?.value||10)||10;
+    const combinedTotalGhads = ghadsM + ghadsP;
+
     const c=window.calcFarm(Q,kg,dQ,dKg,is3,0,0,rate,window.curHarvest,0,fanayaPctC,kutsuthaPctC);
     netWQ=c.netWQ; totalGross=c.gross;
 
@@ -1973,15 +1985,16 @@ window.saveRecord = async function(){
     rec.c_photoTollAfter=window.photoTargets['tollAfter']||null;
     rec.c_photoPatti=[0,1,2].map(i=>window.photoTargets[`patti_${i}`]||null).filter(Boolean);
 
-    const ghads=Number(document.getElementById('f_C_ghads')?.value||0);
-    const labRate=Number(document.getElementById('f_C_labRate')?.value||10)||10;
     const kattar=Number(document.getElementById('f_C_kattar')?.value||0);
-    const labCost=ghads*labRate;
-    rec.c_ghads=ghads; rec.c_labourRate=labRate; rec.c_totalLabour=labCost; rec.c_kattar=kattar;
-    totalLabour=labCost; totalKattar=kattar;
+    const labCostCalculated = (ghadsM * labRateM) + (ghadsP * labRateP);
+    
+    rec.m_ghads=ghadsM; rec.m_labourRate=labRateM; rec.m_totalLabour=(ghadsM * labRateM);
+    rec.p_ghads=ghadsP; rec.p_labourRate=labRateP; rec.p_totalLabour=(ghadsP * labRateP);
+    rec.c_kattar=kattar;
+    totalLabour=labCostCalculated; totalKattar=kattar;
     totalNet=totalGross-totalLabour-totalKattar;
 
-    rec.raas=ghads>0?Number((c.netWQ*100/ghads).toFixed(2)):null;
+    rec.raas=combinedTotalGhads>0?Number((c.netWQ*100/combinedTotalGhads).toFixed(2)):null;
 
   } else {
     const fm=window.curFarm;
@@ -2011,7 +2024,6 @@ window.saveRecord = async function(){
     rec[`${p}_photoPatti`]=[0,1,2].map(i=>window.photoTargets[`patti_${i}`]||null).filter(Boolean);
 
     totalNet=c.net; totalGross=c.gross; totalLabour=c.labCost; totalKattar=kattar; netWQ=c.netWQ;
-
     rec.raas=ghads>0?Number((c.netWQ*100/ghads).toFixed(2)):null;
   }
 
@@ -2031,7 +2043,6 @@ window.saveRecord = async function(){
     await fetchCloudData();
   } catch (error) {
     console.error("Save Error:", error);
-    alert("नोंद जतन करता आली नाही. इंटरनेट तपासा.");
   }
 }
 
@@ -2083,6 +2094,7 @@ window.openDetail = function(id){
   const htLabel=r.harvestType==='ghad'?'केळीचे घड':r.harvestType==='box'?'बॉक्स पॅकिंग':'फणाया';
   const farmType = r.farmType || 'M';
   const farmBadge=farmType==='M'?`<span class="badge badge-m">शेत म</span>`:farmType==='P'?`<span class="badge badge-p">शेत प</span>`:`<span class="badge badge-mp">म+प</span>`;
+  
   let html=`<div class="card">
     <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px">${farmBadge}<span class="badge" style="background:#f1f5f9;color:var(--muted)">${htLabel}</span></div>
     ${r.raas?`<div style="font-weight:800;font-size:16px;color:#a9631a;margin-bottom:8px">🌳 ${window.t('raas')}: ${r.raas} kg/घड</div>`:''}
@@ -2090,6 +2102,7 @@ window.openDetail = function(id){
     <div class="detail-row"><span class="label">${window.t('date')}</span><span class="val">${window.fmtDate(r.date)}</span></div>
     ${r.vehicle?`<div class="detail-row"><span class="label">${window.t('vehicle')}</span><span class="val">${r.vehicle}</span></div>`:''}
   </div>`;
+
   const farmRows=(fm,prefix)=>{
     const label=fm==='M'?window.t('farmMFull'):window.t('farmPFull');
     let h=`<div class="farm-header">🌿 ${label}</div><div class="card">`;
@@ -2107,6 +2120,7 @@ window.openDetail = function(id){
     if(r[`${prefix}kattar`])h+=`<div class="detail-row"><span class="label">${window.t('kattar')}</span><span class="val" style="color:var(--red)">-₹${window.fmt(r[`${prefix}kattar`]||0)}</span></div>`;
     h+=`<div class="detail-row"><span class="label">${window.t('netIncome')}</span><span class="val" style="color:var(--green);font-size:16px">₹${window.fmt(r[`${prefix}netIncome`]||0)}</span></div>`;
     h+='</div>';
+    
     const photos=[];
     if(r[`${prefix}photoTollBefore`])photos.push({src:r[`${prefix}photoTollBefore`],lbl:`${fm} — टोल आधी`});
     if(r[`${prefix}photoTollAfter`])photos.push({src:r[`${prefix}photoTollAfter`],lbl:`${fm} — टोल नंतर`});
@@ -2118,7 +2132,8 @@ window.openDetail = function(id){
     }
     return h;
   };
-  if(farmType==='MP'){
+
+  if(farmType=='MP'){
     html+=`<div class="farm-header">🌿🌿 एकत्रित मोजणी</div><div class="card">`;
     html+=`<div class="detail-row"><span class="label">${window.t('weight')}</span><span class="val">${r.c_totalWQ||0} Q + ${r.c_totalWKg||0} kg = ${window.fmtQ(r.c_totalWeightQ||0)} Q</span></div>`;
     if((r.harvestType||'ghad')!=='box'){
@@ -2142,63 +2157,28 @@ window.openDetail = function(id){
       html+='</div>';
     }
 
-    html+=`<div class="farm-header">👷 ${window.t('labour')}</div><div class="card">`;
-    if(r.c_ghads!==undefined){
-      // New format: one combined labour entry for the whole harvest
-      html+=`<div class="detail-row"><span class="label">${window.t('ghadsCount')}</span><span class="val">${r.c_ghads||0} × ₹${r.c_labourRate||10} = ₹${window.fmt(r.c_totalLabour||0)}</span></div>`;
-    } else {
-      // Old format (records saved before this update): per-farm labour
-      ['M','P'].forEach(fm=>{
-        const label=fm==='M'?window.t('farmMLong'):window.t('farmPLong');
-        const p=fm.toLowerCase();
-        html+=`<div class="detail-row"><span class="label">${label}</span><span class="val">${r[`${p}_ghads`]||0} घड × ₹${r[`${p}_labourRate`]||10} = ₹${window.fmt(r[`${p}_totalLabour`]||0)}</span></div>`;
-      });
-    }
-    if(r.combinedKattar)html+=`<div class="detail-row"><span class="label" style="font-weight:700">${window.t('kattar')}</span><span class="val" style="color:var(--red)">-₹${window.fmt(r.combinedKattar||0)}</span></div>`;
+    html+=`<div class="farm-header">👷 मजुरी खर्च (शेतनिहाय)</div><div class="card">`;
+    html+=`<div class="detail-row"><span class="label">शेत म (मोरगाव)</span><span class="val">${r.m_ghads||0} घड × ₹${r.m_labourRate||10} = ₹${window.fmt(r.m_totalLabour||0)}</span></div>`;
+    html+=`<div class="detail-row"><span class="label">शेत प (पाटोंदी)</span><span class="val">${r.p_ghads||0} घड × ₹${r.p_labourRate||10} = ₹${window.fmt(r.p_totalLabour||0)}</span></div>`;
+    if(r.c_kattar)html+=`<div class="detail-row"><span class="label" style="font-weight:700">${window.t('kattar')}</span><span class="val" style="color:var(--red)">-₹${window.fmt(r.c_kattar||0)}</span></div>`;
     html+=`<div class="detail-row" style="border-top:2px solid var(--border);margin-top:6px;padding-top:8px"><span class="label" style="font-weight:700">एकूण मजुरी</span><span class="val">₹${window.fmt(r.combinedLabour||0)}</span></div>`;
     html+='</div>';
 
     html+=`<div class="farm-header">📊 अंतिम निव्वळ उत्पन्न</div><div class="card">
       <div class="detail-row"><span class="label">एकत्रित Gross</span><span class="val">₹${window.fmt(r.combinedGrossIncome||0)}</span></div>
       <div class="detail-row"><span class="label">वजा एकूण मजुरी</span><span class="val" style="color:var(--red)">-₹${window.fmt(r.combinedLabour||0)}</span></div>
-      ${r.combinedKattar?`<div class="detail-row"><span class="label">वजा ${window.t('kattar')}</span><span class="val" style="color:var(--red)">-₹${window.fmt(r.combinedKattar||0)}</span></div>`:''}
+      ${r.c_kattar?`<div class="detail-row"><span class="label">वजा ${window.t('kattar')}</span><span class="val" style="color:var(--red)">-₹${window.fmt(r.c_kattar||0)}</span></div>`:''}
       <div class="detail-row"><span class="label" style="font-weight:700">निव्वळ उत्पन्न</span><span class="val" style="color:var(--green);font-size:16px">₹${window.fmt(r.combinedNetIncome)}</span></div>
     </div>`;
   } else {
     if(farmType==='M') html+=farmRows('M','m_');
     if(farmType==='P') html+=farmRows('P','p_');
   }
-  html+=`<div class="farm-header">💰 ${window.t('payment')}</div><div class="card">
-    <div class="detail-row"><span class="label">${window.t('netIncome')}</span><span class="val" style="color:var(--green)">₹${window.fmt(r.combinedNetIncome)}</span></div>
-    <div class="detail-row"><span class="label">${window.t('received')}</span><span class="val">₹${window.fmt(r.received)}</span></div>
-    <div class="detail-row"><span class="label">${window.t('pending')}</span><span class="val" style="color:var(--red)">₹${window.fmt(r.pending)}</span></div>
+
+  html+=`<div class="farm-header">📊 उत्पन्न सारांश</div><div class="card">
+    <div class="detail-row"><span class="label">${window.t('netIncome')}</span><span class="val" style="color:var(--green); font-size:16px">₹${window.fmt(r.combinedNetIncome)}</span></div>
   </div>`;
   if(r.note)html+=`<div class="card"><div class="detail-row"><span class="label">${window.t('note')}</span><span class="val">${r.note}</span></div></div>`;
-  const modeIcon={'cash':'💵','cheque':'🏦','rtgs':'🔁','phonepay':'📱','gpay':'📱','upi':'📲'};
-  const modeLabel={'cash':window.t('modeCash'),'cheque':window.t('modeCheque'),'rtgs':window.t('modeRTGS'),'phonepay':window.t('modePhonePe'),'gpay':window.t('modeGPay'),'upi':window.t('modeUPI')};
-  if(r.payments && r.payments.length){
-    html+=`<div class="farm-header">💳 ${window.t('payHistory')}</div><div class="card">`;
-    r.payments.forEach((p,i)=>{
-      const icon=modeIcon[p.mode]||'💵';
-      const label=modeLabel[p.mode]||p.mode;
-      html+=`<div class="detail-row" style="flex-wrap:wrap;gap:4px">
-        <div>
-          <div style="font-weight:600;font-size:14px">${icon} ${label}</div>
-          <div style="font-size:11px;color:var(--muted)">${window.fmtDate(p.date)}${p.ref?' · '+p.ref:''}</div>
-        </div>
-        <div style="font-weight:700;font-size:16px;color:var(--green)">₹${window.fmt(p.amt)}</div>
-      </div>`;
-    });
-    const totalPaid=r.payments.reduce((s,p)=>s+p.amt,0);
-    html+=`<div style="display:flex;justify-content:space-between;padding:8px 0;margin-top:4px;border-top:2px solid var(--border);font-weight:700">
-      <span>एकूण जमा</span><span style="color:var(--green)">₹${window.fmt(totalPaid)}</span>
-    </div></div>`;
-  } else {
-    html+=`<div class="farm-header">💳 ${window.t('payHistory')}</div>
-      <div class="card" style="text-align:center;color:var(--muted);padding:16px">${window.t('noPayments')}</div>`;
-  }
-  if((r.pending||0)>0)html+=`<button class="pay-btn" onclick="window.openPaySheet('${r.id}')">${window.t('payNow')}</button>`;
-  else html+=`<div style="background:var(--green-light);border:1px solid #a8dbbf;border-radius:10px;padding:12px;text-align:center;color:var(--green);font-weight:600;margin-bottom:8px">✅ पूर्ण पेमेंट झाले</div>`;
 
   const linkedDists=window.getDistributions().filter(d=>d.recordId===r.id).sort((a,b)=>(b.date||'').localeCompare(a.date||''));
   const farmExpForRecord=linkedDists.filter(d=>d.recipient==='farm').reduce((s,d)=>s+(d.amount||0),0);
@@ -2208,6 +2188,7 @@ window.openDetail = function(id){
   const pf=getProfile();
   const p1n=pf.partner1||window.t('partner1'), p2n=pf.partner2||window.t('partner2');
   const recipLabel=(rec)=>rec==='partner1'?p1n:rec==='partner2'?p2n:rec==='both'?window.t('distBoth'):window.t('distFarm');
+
   html+=`<div class="farm-header">🤲 ${window.t('partners')} — ${window.t('distributions')}</div><div class="card">
     <div class="detail-row"><span class="label">${window.t('netIncome')}</span><span class="val">₹${window.fmt(r.combinedNetIncome||0)}</span></div>
     ${farmExpForRecord?`<div class="detail-row"><span class="label">${window.t('farmExpense')}</span><span class="val" style="color:var(--red)">-₹${window.fmt(farmExpForRecord)}</span></div>`:''}
@@ -2225,62 +2206,10 @@ window.openDetail = function(id){
     </div>`;}).join('');
   }
   html+=`<button class="pay-btn" style="margin-top:8px" onclick="window.openDistFormForRecord('${r.id}','detail')">+ ${window.t('addDistribution')}</button>`;
-
   html+=`<button class="danger-btn" onclick="window.deleteRecordFromDetail('${r.id}')">${window.t('delete')}</button>`;
   document.getElementById('detailBody').innerHTML=html;
 }
 document.getElementById('detailBack').addEventListener('click',()=>{ window.hideOverlay('detailOverlay');});
-
-window.openPaySheet = function(id){
-  const today2=window.today();
-  document.getElementById('sheetTitle').textContent=window.t('payNow');
-  document.getElementById('sheetContent').innerHTML=`
-    <div class="form-group"><label class="form-label">${window.t('payAmount')}</label><input type="number" class="form-input" id="payInput" placeholder="0" style="font-size:20px;font-weight:700;color:var(--green)"></div>
-    <div class="form-group"><label class="form-label">${window.t('payDate')}</label><input type="date" class="form-input" id="payDate" value="${today2}"></div>
-    <div class="form-group"><label class="form-label">${window.t('payMode')}</label>
-      <select class="form-input form-select" id="payMode">
-        <option value="cash">💵 ${window.t('modeCash')}</option>
-        <option value="cheque">🏦 ${window.t('modeCheque')}</option>
-        <option value="rtgs">🔁 ${window.t('modeRTGS')}</option>
-        <option value="phonepay">📱 ${window.t('modePhonePe')}</option>
-        <option value="gpay">📱 ${window.t('modeGPay')}</option>
-        <option value="upi">📲 ${window.t('modeUPI')}</option>
-      </select>
-    </div>
-    <div class="form-group"><label class="form-label">${window.t('payRef')} <span style="color:var(--muted);font-size:11px">(${window.t('optional')})</span></label><input type="text" class="form-input" id="payRef" placeholder="${window.t('payRefHint')}"></div>
-    <button class="pay-btn" onclick="window.savePayment('${id}')">${window.t('payNow')}</button>`;
-  document.getElementById('sheetOverlay').classList.add('open');
-}
-
-// FIREBASE UPDATE PAYMENT
-window.savePayment = async function(id){
-  const amt=Number(document.getElementById('payInput')?.value||0);
-  if(!amt){window.showToast(window.t('valPayAmt'));return;}
-  const payDate=document.getElementById('payDate')?.value||window.today();
-  const payMode=document.getElementById('payMode')?.value||'cash';
-  const payRef=document.getElementById('payRef')?.value||'';
-  
-  const recs=window.getRecords();
-  const r=recs.find(x=>x.id===id);if(!r)return;
-  
-  r.received=(r.received||0)+amt;
-  r.pending=Math.max(0,r.combinedNetIncome-r.received);
-  if(!r.payments) r.payments=[];
-  r.payments.push({amt, date:payDate, mode:payMode, ref:payRef, addedAt:Date.now()});
-  
-  if(!window.currentUserUid) return;
-  try {
-    const recordRef = doc(db, "users", window.currentUserUid, "records", r.id);
-    await setDoc(recordRef, r);
-    window.closeSheet();
-    window.openDetail(id);
-    window.showToast(window.t('paymentSaved'));
-    await fetchCloudData();
-  } catch(error) {
-    console.error("Payment Error:", error);
-    alert("पेमेंट जतन करता आले नाही.");
-  }
-}
 
 window.deleteRecordFromDetail = async function(id){
   if(!confirm(window.t('confirmDelete')))return;
@@ -2293,7 +2222,6 @@ window.deleteRecordFromDetail = async function(id){
     await fetchCloudData(); 
   } catch(error) {
     console.error("Delete Error:", error);
-    alert("इंटरनेट कनेक्शन तपासा.");
   }
 }
 
@@ -2304,7 +2232,6 @@ document.getElementById('addTraderBtn').addEventListener('click',()=>{
 });
 document.getElementById('traderFormBack').addEventListener('click',()=>{ window.hideOverlay('traderFormOverlay');});
 
-// FIREBASE SAVE TRADER
 document.getElementById('saveTraderBtn').addEventListener('click', async ()=>{
   const name=document.getElementById('tf_name').value.trim();
   if(!name){window.showToast('नाव आवश्यक आहे');return;}
@@ -2321,7 +2248,6 @@ document.getElementById('saveTraderBtn').addEventListener('click', async ()=>{
     await fetchCloudData();
   } catch(error) {
     console.error("Trader Error:", error);
-    alert("व्यापारी जतन करता आला नाही.");
   }
 });
 
@@ -2345,7 +2271,6 @@ window.openLedger = function(traderId){
   window.showOverlay('ledgerOverlay');
 }
 
-// FIREBASE DELETE TRADER
 window.deleteTrader = async function(id){
   if(!confirm('व्यापारी हटवायचा आहे का?'))return;
   if(!window.currentUserUid) return;
@@ -2357,7 +2282,6 @@ window.deleteTrader = async function(id){
     await fetchCloudData();
   } catch(error) {
     console.error("Trader Delete Error:", error);
-    alert("हटवता आले नाही.");
   }
 }
 document.getElementById('ledgerBack').addEventListener('click',()=>{ window.hideOverlay('ledgerOverlay');});
@@ -2402,9 +2326,9 @@ window.getPhotosHtmlForPDF = function(r, prefix) {
   if(r[`${prefix}photoTollAfter`]) arr.push({src: r[`${prefix}photoTollAfter`], label: 'टोल नंतर'});
   (r[`${prefix}photoPatti`]||[]).forEach((p,i)=>{ if(p) arr.push({src: p, label: `पट्टी ${i+1}`}); });
   if(arr.length > 0) {
-    html += `<div class="entry-card" style="page-break-inside: avoid;"><div class="entry-card-title">पावत्या / फोटो</div><div style="display:flex;gap:12px;flex-wrap:wrap;justify-content:space-around;">`;
+    html += `<div style="margin-top:14px; break-inside: avoid;"><div class="pdf-title-banner">पावत्या / फोटो</div><div style="display:flex;gap:12px;flex-wrap:wrap;justify-content:center;">`;
     arr.forEach(ph => {
-      html += `<div style="flex: 1 1 30%; text-align:center; min-width:120px;"><div style="font-size:11px;color:#555;margin-bottom:4px;font-weight:600;">${ph.label}</div><img src="${ph.src}" style="width:100%;max-width:200px;height:auto;border:1px solid #ddd;border-radius:4px;object-fit:contain;"></div>`;
+      html += `<div style="text-align:center; min-width:120px; max-width:45%; break-inside: avoid;"><div style="font-size:11px;color:#555;margin-bottom:4px;font-weight:600;">${ph.label}</div><img src="${ph.src}" style="width:100%;height:auto;border:1px solid #ddd;border-radius:4px;object-fit:contain;"></div>`;
     });
     html += `</div></div>`;
   }
@@ -2418,9 +2342,9 @@ window.getCombinedPhotosHtmlForPDF = function(r) {
   if(r.c_photoTollAfter) arr.push({src: r.c_photoTollAfter, label: 'टोल नंतर'});
   (r.c_photoPatti||[]).forEach((p,i)=>{ if(p) arr.push({src: p, label: `पट्टी ${i+1}`}); });
   if(arr.length > 0) {
-    html += `<div class="entry-card" style="page-break-inside: avoid;"><div class="entry-card-title">पावत्या / फोटो</div><div style="display:flex;gap:12px;flex-wrap:wrap;justify-content:space-around;">`;
+    html += `<div style="margin-top:14px; break-inside: avoid;"><div class="pdf-title-banner">पावत्या / फोटो</div><div style="display:flex;gap:12px;flex-wrap:wrap;justify-content:center;">`;
     arr.forEach(ph => {
-      html += `<div style="flex: 1 1 30%; text-align:center; min-width:120px;"><div style="font-size:11px;color:#555;margin-bottom:4px;font-weight:600;">${ph.label}</div><img src="${ph.src}" style="width:100%;max-width:200px;height:auto;border:1px solid #ddd;border-radius:4px;object-fit:contain;"></div>`;
+      html += `<div style="text-align:center; min-width:120px; max-width:45%; break-inside: avoid;"><div style="font-size:11px;color:#555;margin-bottom:4px;font-weight:600;">${ph.label}</div><img src="${ph.src}" style="width:100%;height:auto;border:1px solid #ddd;border-radius:4px;object-fit:contain;"></div>`;
     });
     html += `</div></div>`;
   }
@@ -2433,10 +2357,8 @@ window.generatePDF = function() {
     window.showToast('नोंदी नाहीत');
     return;
   }
-  // Show feedback immediately, then let the browser paint it before the heavy (synchronous) build+print work runs.
-  // This is why the button used to feel frozen/late — there was zero feedback while it worked.
   window.showToast('📄 PDF तयार करत आहे... थांबा');
-  setTimeout(window._buildAndPrintPDF, 30);
+  setTimeout(window._buildAndPrintPDF, 300);
 }
 
 window._buildAndPrintPDF = function() {
@@ -2451,16 +2373,13 @@ window._buildAndPrintPDF = function() {
   const toDate = datesSorted.length ? window.fmtDate(datesSorted[datesSorted.length - 1]) : '—';
   const today2 = window.fmtDate(new Date().toISOString().split('T')[0]);
   
-  const modeL = { 'cash': 'रोख', 'cheque': 'चेक', 'rtgs': 'आरटीजीएस/एनईएफटी', 'phonepay': 'फोनपे', 'gpay': 'गुगल पे', 'upi': 'युपीआय' };
   const harvestL = { 'ghad': 'केळीचे घड', 'box': 'बॉक्स पॅकिंग', 'fanaya': 'फणाया' };
   const farmL = { 'M': 'शेत म', 'P': 'शेत प', 'MP': 'शेत म + शेत प (एकत्रित)' };
   
-  let html = `<div class="print-page">
-    <div class="print-cover">
-      <div class="cover-title">केळी हिशोब साथी</div>
-      <div class="cover-sub">संपूर्ण उत्पन्न अहवाल</div>
-      <div class="cover-dates">कालावधी: ${fromDate} ते ${toDate}<br><span style="font-size:12px;opacity:.7">तयार केले: ${today2}</span></div>
-    </div>
+  let html = `<div class="print-page" style="padding-top:30vh; text-align:center;">
+      <div style="font-size:36px; font-weight:700; color:#1a6b3c; margin-bottom:12px;">केळी हिशोब साथी</div>
+      <div style="font-size:18px; color:#555; margin-bottom:24px;">संपूर्ण उत्पन्न अहवाल</div>
+      <div style="font-size:16px; color:#1e293b; background:#e8f5ee; padding:12px 24px; border-radius:8px; border:1px solid #a8dbbf; display:inline-block;">कालावधी: ${fromDate} ते ${toDate}<br><span style="font-size:12px;opacity:.7">तयार केले: ${today2}</span></div>
   </div>`;
   
   recs.forEach((r, idx) => {
@@ -2469,151 +2388,175 @@ window._buildAndPrintPDF = function() {
     const harvestType = r.harvestType || 'ghad';
     const farmLabel = farmL[farmType] || farmType;
     
-    html += `<div class="print-page">
-      <div style="text-align:center;margin-bottom:10px">
-        <span class="entry-number-badge">हार्वेस्ट नोंद क्रमांक ${entryNum}</span>
+    html += `<div class="print-page" style="padding:20px; font-family:sans-serif;">
+      <div style="text-align:center; margin-bottom:12px;">
+        <span style="background:#1a6b3c; color:#fff; font-size:16px; font-weight:700; padding:6px 16px; border-radius:6px;">हार्वेस्ट नोंद क्रमांक ${entryNum}</span>
       </div>
-      <div class="entry-trader-banner">
-        <div class="etb-name">${r.traderName || '?'}</div>
-        <div class="etb-date">📅 ${window.fmtDate(r.date)}</div>
-        <div class="etb-farm">🌿 ${farmLabel}</div>
+      
+      <div class="pdf-hero-card">
+        <div style="font-size:20px; font-weight:700; color:#1a6b3c; text-align:center;">${r.traderName || '?'}</div>
+        <div style="font-size:14px; color:#555; text-align:center; margin-top:2px;">📅 तारीख: ${window.fmtDate(r.date)}</div>
+        <div style="font-size:14px; font-weight:700; color:#854d0e; text-align:center; margin-top:4px;">🌿 ${farmLabel}</div>
+        ${r.raas ? `<div style="font-size:15px; font-weight:800; color:#a9631a; text-align:center; margin-top:6px;">🌳 ${window.t('raas')}: ${r.raas} kg/घड</div>` : ''}
       </div>`;
       
-    html += `<div class="entry-card">
-      <div class="entry-card-title">मूलभूत माहिती</div>
-      <div class="entry-field-row"><span class="efl">काढणी प्रकार</span><span class="efv">${harvestL[harvestType] || harvestType}</span></div>
-      <div class="entry-field-row"><span class="efl">दर</span><span class="efv">₹${window.fmt(r.rate)} / क्विंटल</span></div>
-      ${r.vehicle ? `<div class="entry-field-row"><span class="efl">वाहन क्रमांक</span><span class="efv">${r.vehicle}</span></div>` : ''}
+    html += `<div style="break-inside: avoid; margin-bottom: 12px;">
+      <div class="pdf-title-banner">मूलभूत माहिती</div>
+      <div class="pdf-row"><div class="pdf-col-label">काढणी प्रकार</div><div class="pdf-col-val">${harvestL[harvestType] || harvestType}</div></div>
+      <div class="pdf-row"><div class="pdf-col-label">दर</div><div class="pdf-col-val">₹${window.fmt(r.rate)} / क्विंटल</div></div>
+      ${r.vehicle ? `<div class="pdf-row"><div class="pdf-col-label">वाहन क्रमांक</div><div class="pdf-col-val">${r.vehicle}</div></div>` : ''}
     </div>`;
     
     if (farmType === 'MP') {
-      html += `<div class="entry-card">
-        <div class="entry-card-title">वजन (एकत्रित — गाडी एकदाच वजन झाली)</div>
-        <div class="entry-field-row"><span class="efl">एकूण वजन</span><span class="efv">${r.c_totalWQ || 0} क्विं + ${r.c_totalWKg || 0} किलो</span></div>
-        ${harvestType !== 'box' ? `<div class="entry-field-row"><span class="efl">कपात/तारा</span><span class="efv">${r.c_dedQ || 0} क्विं + ${r.c_dedKg || 0} किलो</span></div>` : ''}
-        ${r.c_fanayaAdd ? `<div class="entry-field-row"><span class="efl">${window.t('fanayaAddLbl')} (+${r.c_fanayaPct||6}%)</span><span class="efv">+${window.fmtQ(r.c_fanayaAdd || 0)} क्विं</span></div>` : ''}
-        ${r.c_kutsuthaDed ? `<div class="entry-field-row"><span class="efl">${window.t('kutsuthaDeduction')} (-${r.c_kutsuthaPct||2}%)</span><span class="efv">-${window.fmtQ(r.c_kutsuthaDed || 0)} क्विं</span></div>` : ''}
-        ${r.c_is3Pct ? `<div class="entry-field-row"><span class="efl">3% अतिरिक्त कपात</span><span class="efv">${window.fmtQ(r.c_threePctDed || 0)} क्विं</span></div>` : ''}
-        <div class="entry-field-row"><span class="efl">निव्वळ वजन</span><span class="efv">${window.fmtQ(r.c_netWeightQ || 0)} क्विंटल</span></div>
-        ${r.raas?`<div class="entry-field-row"><span class="efl" style="font-weight:700">${window.t('raas')}</span><span class="efv" style="font-weight:700">${r.raas} kg/घड</span></div>`:''}
+      const netBeforeFanayaC = (r.c_totalWQ||0) + (r.c_totalWKg||0)/100 - ((r.c_dedQ||0) + (r.c_dedKg||0)/100);
+      html += `<div style="break-inside: avoid; margin-bottom: 12px;">
+        <div class="pdf-title-banner">वजन (एकत्रित)</div>
+        <div class="pdf-row"><div class="pdf-col-label">एकूण वजन</div><div class="pdf-col-val">${r.c_totalWQ || 0} क्विं + ${r.c_totalWKg || 0} किलो</div></div>
+        ${harvestType !== 'box' && (r.c_dedQ || r.c_dedKg) ? `<div class="pdf-row"><div class="pdf-col-label">कपात/तारा</div><div class="pdf-col-val">${r.c_dedQ || 0} क्विं + ${r.c_dedKg || 0} किलो</div></div>` : ''}
+        ${harvestType === 'fanaya' ? `<div class="pdf-row"><div class="pdf-col-label">तारा नंतर वजन</div><div class="pdf-col-val">${window.fmtQ(netBeforeFanayaC)} Q</div></div>` : ''}
+        ${r.c_fanayaAdd ? `<div class="pdf-row"><div class="pdf-col-label">${window.t('fanayaAddLbl')} (+${r.c_fanayaPct||6}%)</div><div class="pdf-col-val" style="color:var(--green)">+${window.fmtQ(r.c_fanayaAdd)} क्विं</div></div>` : ''}
+        ${r.c_kutsuthaDed ? `<div class="pdf-row"><div class="pdf-col-label">${window.t('kutsuthaDeduction')} (-${r.c_kutsuthaPct||2}%)</div><div class="pdf-col-val" style="color:var(--red)">-${window.fmtQ(r.c_kutsuthaDed)} क्विं</div></div>` : ''}
+        <div class="pdf-row" style="background:#e8f5ee;"><div class="pdf-col-label" style="font-weight:700;">निव्वळ वजन</div><div class="pdf-col-val" style="color:var(--blue); font-weight:700;">${window.fmtQ(r.c_netWeightQ || 0)} क्विंटल</div></div>
+        <div class="pdf-row"><div class="pdf-col-label" style="font-weight:700;">Gross उत्पन्न</div><div class="pdf-col-val" style="color:#1a6b3c; font-weight:700;">₹${window.fmt(r.c_grossIncome || 0)}</div></div>
       </div>`;
       
-      html += `<div class="entry-hero-box">
-        <span class="ehl">एकत्रित Gross उत्पन्न</span>
-        <span class="ehv">₹${window.fmt(r.c_grossIncome || 0)}</span>
+      html += `<div style="break-inside: avoid; margin-bottom: 12px;">
+        <div class="pdf-title-banner">मजुरी खर्च</div>
+        <div class="pdf-row"><div class="pdf-col-label">शेत म (घड × दर)</div><div class="pdf-col-val">${r.m_ghads || 0} × ₹${r.m_labourRate || 10} = ₹${window.fmt(r.m_totalLabour || 0)}</div></div>
+        <div class="pdf-row"><div class="pdf-col-label">शेत प (घड × दर)</div><div class="pdf-col-val">${r.p_ghads || 0} × ₹${r.p_labourRate || 10} = ₹${window.fmt(r.p_totalLabour || 0)}</div></div>
+        ${r.combinedKattar ? `<div class="pdf-row"><div class="pdf-col-label">${window.t('kattar')}</div><div class="pdf-col-val" style="color:var(--red)">-₹${window.fmt(r.combinedKattar)}</div></div>` : ''}
+        <div class="pdf-row" style="background:#f1f5f9;"><div class="pdf-col-label" style="font-weight:700;">एकूण मजुरी</div><div class="pdf-col-val" style="font-weight:700;">₹${window.fmt(r.combinedLabour || 0)}</div></div>
       </div>`;
       
-      html += `<div class="entry-card">
-        <div class="entry-card-title">${window.t('labour')}</div>
-        ${r.c_ghads!==undefined
-          ? `<div class="entry-field-row"><span class="efl">घड संख्या × दर</span><span class="efv">${r.c_ghads || 0} × ₹${window.fmt(r.c_labourRate || 10)} = ₹${window.fmt(r.c_totalLabour || 0)}</span></div>`
-          : `<div class="entry-field-row"><span class="efl">शेत म — घड संख्या × दर</span><span class="efv">${r.m_ghads || 0} × ₹${window.fmt(r.m_labourRate || 10)} = ₹${window.fmt(r.m_totalLabour || 0)}</span></div>
-        <div class="entry-field-row"><span class="efl">शेत प — घड संख्या × दर</span><span class="efv">${r.p_ghads || 0} × ₹${window.fmt(r.p_labourRate || 10)} = ₹${window.fmt(r.p_totalLabour || 0)}</span></div>`}
-        ${r.combinedKattar ? `<div class="entry-field-row"><span class="efl">${window.t('kattar')}</span><span class="efv">₹${window.fmt(r.combinedKattar || 0)}</span></div>` : ''}
-        <div class="entry-field-row"><span class="efl" style="font-weight:700">एकूण मजुरी</span><span class="efv">₹${window.fmt(r.combinedLabour || 0)}</span></div>
+      html += `<div style="break-inside: avoid; margin-bottom: 12px;">
+        <div class="pdf-title-banner" style="background:#21804a;">उत्पन्न सारांश</div>
+        <div class="pdf-row"><div class="pdf-col-label">एकूण Gross उत्पन्न</div><div class="pdf-col-val">₹${window.fmt(r.c_grossIncome || r.combinedGrossIncome || 0)}</div></div>
+        <div class="pdf-row" style="background:#fee2e2;"><div class="pdf-col-label" style="color:var(--red); font-weight:700;">वजा एकूण मजुरी</div><div class="pdf-col-val" style="color:var(--red); font-weight:700;">-₹${window.fmt(r.combinedLabour || 0)}</div></div>
+        <div class="pdf-row" style="background:#e8f5ee; font-size:16px;"><div class="pdf-col-label" style="color:var(--green); font-weight:700;">या नोंदीचे निव्वळ उत्पन्न</div><div class="pdf-col-val" style="color:var(--green); font-weight:700;">₹${window.fmt(r.combinedNetIncome || 0)}</div></div>
       </div>`;
       
+      if (r.note) {
+        html += `<div style="margin-top:10px; background:#f8fafc; padding:8px; border-radius:6px; font-size:13px; break-inside: avoid;"><strong>टीप:</strong> ${r.note}</div>`;
+      }
       html += window.getCombinedPhotosHtmlForPDF(r);
       
     } else {
       const p = farmType.toLowerCase();
-      html += `<div class="entry-card">
-        <div class="entry-card-title">वजन</div>
-        <div class="entry-field-row"><span class="efl">एकूण वजन</span><span class="efv">${r[`${p}_totalWQ`] || 0} क्विं + ${r[`${p}_totalWKg`] || 0} किलो</span></div>
-        ${harvestType !== 'box' ? `<div class="entry-field-row"><span class="efl">कपात/तारा</span><span class="efv">${r[`${p}_dedQ`] || 0} क्विं + ${r[`${p}_dedKg`] || 0} किलो</span></div>` : ''}
-        ${r[`${p}_fanayaAdd`] ? `<div class="entry-field-row"><span class="efl">${window.t('fanayaAddLbl')}</span><span class="efv">+${window.fmtQ(r[`${p}_fanayaAdd`] || 0)} क्विं</span></div>` : ''}
-        ${r[`${p}_kutsuthaDed`] ? `<div class="entry-field-row"><span class="efl">${window.t('kutsuthaDeduction')}</span><span class="efv">-${window.fmtQ(r[`${p}_kutsuthaDed`] || 0)} क्विं</span></div>` : ''}
-        ${r[`${p}_is3Pct`] ? `<div class="entry-field-row"><span class="efl">3% अतिरिक्त कपात</span><span class="efv">${window.fmtQ(r[`${p}_threePctDed`] || 0)} क्विं</span></div>` : ''}
-        <div class="entry-field-row"><span class="efl">निव्वळ वजन</span><span class="efv">${window.fmtQ(r[`${p}_netWeightQ`] || 0)} क्विंटल</span></div>
+      const netBeforeFanayaS = (r[`${p}_totalWQ`]||0) + (r[`${p}_totalWKg`]||0)/100 - ((r[`${p}_dedQ`]||0) + (r[`${p}_dedKg`]||0)/100);
+      html += `<div style="break-inside: avoid; margin-bottom: 12px;">
+        <div class="pdf-title-banner">वजन तपशील</div>
+        <div class="pdf-row"><div class="pdf-col-label">एकूण वजन</div><div class="pdf-col-val">${r[`${p}_totalWQ`] || 0} क्विं + ${r[`${p}_totalWKg`] || 0} किलो</div></div>
+        ${harvestType !== 'box' && (r[`${p}_dedQ`] || r[`${p}_dedKg`]) ? `<div class="pdf-row"><div class="pdf-col-label">कपात/तारा</div><div class="pdf-col-val">${r[`${p}_dedQ`] || 0} क्विं + ${r[`${p}_dedKg`] || 0} किलो</div></div>` : ''}
+        ${harvestType === 'fanaya' ? `<div class="pdf-row"><div class="pdf-col-label">तारा नंतर वजन</div><div class="pdf-col-val">${window.fmtQ(netBeforeFanayaS)} Q</div></div>` : ''}
+        ${r[`${p}_fanayaAdd`] ? `<div class="pdf-row"><div class="pdf-col-label">${window.t('fanayaAddLbl')} (+${r[`${p}_fanayaPct`]}%)</div><div class="pdf-col-val" style="color:var(--green)">+${window.fmtQ(r[`${p}_fanayaAdd`])} क्विं</div></div>` : ''}
+        ${r[`${p}_kutsuthaDed`] ? `<div class="pdf-row"><div class="pdf-col-label">${window.t('kutsuthaDeduction')} (-${r[`${p}_kutsuthaPct`]}%)</div><div class="pdf-col-val" style="color:var(--red)">-${window.fmtQ(r[`${p}_kutsuthaDed`])} क्विं</div></div>` : ''}
+        <div class="pdf-row" style="background:#e8f5ee;"><div class="pdf-col-label" style="font-weight:700;">निव्वळ वजन</div><div class="pdf-col-val" style="color:var(--blue); font-weight:700;">${window.fmtQ(r[`${p}_netWeightQ`] || 0)} क्विंटल</div></div>
+        <div class="pdf-row"><div class="pdf-col-label" style="font-weight:700;">Gross उत्पन्न</div><div class="pdf-col-val" style="color:#1a6b3c; font-weight:700;">₹${window.fmt(r[`${p}_grossIncome`] || 0)}</div></div>
       </div>`;
       
-      html += `<div class="entry-hero-box">
-        <span class="ehl">Gross उत्पन्न</span>
-        <span class="ehv">₹${window.fmt(r[`${p}_grossIncome`] || 0)}</span>
+      html += `<div style="break-inside: avoid; margin-bottom: 12px;">
+        <div class="pdf-title-banner">मजुरी खर्च</div>
+        <div class="pdf-row"><div class="pdf-col-label">घड संख्या × दर</div><div class="pdf-col-val">${r[`${p}_ghads`] || 0} × ₹${r[`${p}_labourRate`] || 10} = ₹${window.fmt(r[`${p}_totalLabour`] || 0)}</div></div>
+        ${r[`${p}_kattar`] ? `<div class="pdf-row"><div class="pdf-col-label">${window.t('kattar')}</div><div class="pdf-col-val" style="color:var(--red)">-₹${window.fmt(r[`${p}_kattar`])}</div></div>` : ''}
       </div>`;
       
-      html += `<div class="entry-card">
-        <div class="entry-card-title">मजुरी खर्च</div>
-        <div class="entry-field-row"><span class="efl">घड संख्या × दर</span><span class="efv">${r[`${p}_ghads`] || 0} × ₹${window.fmt(r[`${p}_labourRate`] || 10)} = ₹${window.fmt(r[`${p}_totalLabour`] || 0)}</span></div>
-        ${r[`${p}_kattar`] ? `<div class="entry-field-row"><span class="efl">${window.t('kattar')}</span><span class="efv">₹${window.fmt(r[`${p}_kattar`] || 0)}</span></div>` : ''}
+      html += `<div style="break-inside: avoid; margin-bottom: 12px;">
+        <div class="pdf-title-banner" style="background:#21804a;">उत्पन्न सारांश</div>
+        <div class="pdf-row"><div class="pdf-col-label">एकूण Gross उत्पन्न</div><div class="pdf-col-val">₹${window.fmt(r[`${p}_grossIncome`] || 0)}</div></div>
+        <div class="pdf-row" style="background:#fee2e2;"><div class="pdf-col-label" style="color:var(--red); font-weight:700;">वजा एकूण मजुरी</div><div class="pdf-col-val" style="color:var(--red); font-weight:700;">-₹${window.fmt(r.combinedLabour || 0)}</div></div>
+        <div class="pdf-row" style="background:#e8f5ee; font-size:16px;"><div class="pdf-col-label" style="color:var(--green); font-weight:700;">या नोंदीचे निव्वळ उत्पन्न</div><div class="pdf-col-val" style="color:var(--green); font-weight:700;">₹${window.fmt(r.combinedNetIncome || 0)}</div></div>
       </div>`;
+
+      if (r.note) {
+        html += `<div style="margin-top:10px; background:#f8fafc; padding:8px; border-radius:6px; font-size:13px; break-inside: avoid;"><strong>टीप:</strong> ${r.note}</div>`;
+      }
       
       html += window.getPhotosHtmlForPDF(r, p + '_');
     }
     
-    html += `<div class="entry-hero-box">
-      <span class="ehl">या नोंदीचे निव्वळ उत्पन्न</span>
-      <span class="ehv">₹${window.fmt(r.combinedNetIncome || 0)}</span>
-    </div>`;
-    
-    html += `<div class="entry-card">
-      <div class="entry-card-title">देयक स्थिती</div>
-      <div class="entry-field-row"><span class="efl">मिळालेली रक्कम</span><span class="efv">₹${window.fmt(r.received || 0)}</span></div>
-      <div class="entry-field-row"><span class="efl">थकबाकी</span><span class="efv" style="color:${(r.pending || 0) > 0 ? '#dc2626' : '#1a6b3c'}">₹${window.fmt(r.pending || 0)}</span></div>
-    </div>`;
-    
-    if (r.payments && r.payments.length) {
-      html += `<div class="entry-card">
-        <div class="entry-card-title">पेमेंट इतिहास</div>`;
-      r.payments.forEach(p => {
-        html += `<div class="entry-field-row"><span class="efl">${window.fmtDate(p.date)} · ${modeL[p.mode] || p.mode}${p.ref ? ' · ' + p.ref : ''}</span><span class="efv">₹${window.fmt(p.amt)}</span></div>`;
-      });
-      html += '</div>';
-    }
-    
-    if (r.note) {
-      html += `<div class="entry-card">
-        <div class="entry-card-title">टीप</div>
-        <div style="font-size:13px">${r.note}</div>
-      </div>`;
-    }
     html += '</div>';
   });
   
-  html += `<div class="print-page summary-final-page">
-    <div class="sfp-title">🌿 शेत म — मोरगाव काढचं शेत — एकूण</div>
-    <div class="summary-final-row"><span>एकूण काढणी</span><span>${recs.filter(r => (r.farmType||'M') === 'M' || (r.farmType||'M') === 'MP').length}</span></div>
-    <div class="summary-final-row"><span>एकूण निव्वळ वजन (फक्त एकल नोंदी)</span><span>${window.fmtQ(statsM.weightQ)} क्विंटल</span></div>
-    <div class="summary-final-row"><span>एकूण निव्वळ उत्पन्न (फक्त एकल नोंदी)</span><span>₹${window.fmt(statsM.income)}</span></div>
-    <div class="summary-final-row"><span>एकूण मजुरी</span><span>₹${window.fmt(statsM.labour)}</span></div>
-    <div class="summary-final-row"><span>एकूण घड (एकटे + एकत्रित मिळून)</span><span>${statsM.ghads}</span></div>
-    <div class="summary-final-row"><span>एकूण मिळालेली रक्कम</span><span>₹${window.fmt(statsM.received)}</span></div>
-    <div class="summary-final-row grand"><span>एकूण थकबाकी</span><span>₹${window.fmt(statsM.pending)}</span></div>
+  html += `<div class="print-page" style="padding:20px; font-family:sans-serif;">
+    <div style="font-size:18px; font-weight:700; color:#1a6b3c; border-bottom:2px solid #1a6b3c; padding-bottom:4px; margin-bottom:10px;">🌿 शेत म — मोरगाव काढचं शेत — एकूण सारांश</div>
+    <div class="pdf-row"><div class="pdf-col-label">एकूण काढणी</div><div class="pdf-col-val">${recs.filter(r => (r.farmType||'M') === 'M' || (r.farmType||'M') === 'MP').length}</div></div>
+    <div class="pdf-row"><div class="pdf-col-label">एकूण निव्वळ वजन (फक्त एकल नोंदी)</div><div class="pdf-col-val">${window.fmtQ(statsM.weightQ)} Q</div></div>
+    <div class="pdf-row"><div class="pdf-col-label">एकूण उत्पन्न (फक्त एकल नोंदी)</div><div class="pdf-col-val">₹${window.fmt(statsM.income)}</div></div>
+    <div class="pdf-row"><div class="pdf-col-label">एकूण मजुरी</div><div class="pdf-col-val">₹${window.fmt(statsM.labour)}</div></div>
+    <div class="pdf-row"><div class="pdf-col-label">एकूण घड (एकटे + एकत्रित)</div><div class="pdf-col-val">${statsM.ghads}</div></div>
   </div>`;
   
-  html += `<div class="print-page summary-final-page">
-    <div class="sfp-title">🌿 शेत प — पाटोंदी काढचं शेत — एकूण</div>
-    <div class="summary-final-row"><span>एकूण काढणी</span><span>${recs.filter(r => (r.farmType||'M') === 'P' || (r.farmType||'M') === 'MP').length}</span></div>
-    <div class="summary-final-row"><span>एकूण निव्वळ वजन (फक्त एकल नोंदी)</span><span>${window.fmtQ(statsP.weightQ)} क्विंटल</span></div>
-    <div class="summary-final-row"><span>एकूण निव्वळ उत्पन्न (फक्त एकल नोंदी)</span><span>₹${window.fmt(statsP.income)}</span></div>
-    <div class="summary-final-row"><span>एकूण मजुरी</span><span>₹${window.fmt(statsP.labour)}</span></div>
-    <div class="summary-final-row"><span>एकूण घड (एकटे + एकत्रित मिळून)</span><span>${statsP.ghads}</span></div>
-    <div class="summary-final-row"><span>एकूण मिळालेली रक्कम</span><span>₹${window.fmt(statsP.received)}</span></div>
-    <div class="summary-final-row grand"><span>एकूण थकबाकी</span><span>₹${window.fmt(statsP.pending)}</span></div>
+  html += `<div class="print-page" style="padding:20px; font-family:sans-serif;">
+    <div style="font-size:18px; font-weight:700; color:#1a6b3c; border-bottom:2px solid #1a6b3c; padding-bottom:4px; margin-bottom:10px;">🌿 शेत प — पाटोंदी काढचं शेत — एकूण सारांश</div>
+    <div class="pdf-row"><div class="pdf-col-label">एकूण काढणी</div><div class="pdf-col-val">${recs.filter(r => (r.farmType||'M') === 'P' || (r.farmType||'M') === 'MP').length}</div></div>
+    <div class="pdf-row"><div class="pdf-col-label">एकूण निव्वळ वजन (फक्त एकल नोंदी)</div><div class="pdf-col-val">${window.fmtQ(statsP.weightQ)} Q</div></div>
+    <div class="pdf-row"><div class="pdf-col-label">एकूण उत्पन्न (फक्त एकल नोंदी)</div><div class="pdf-col-val">₹${window.fmt(statsP.income)}</div></div>
+    <div class="pdf-row"><div class="pdf-col-label">एकूण मजुरी</div><div class="pdf-col-val">₹${window.fmt(statsP.labour)}</div></div>
+    <div class="pdf-row"><div class="pdf-col-label">एकूण घड (एकटे + एकत्रित)</div><div class="pdf-col-val">${statsP.ghads}</div></div>
   </div>`;
   
-  html += `<div class="print-page summary-final-page">
-    <div class="sfp-title">📊 सर्व मिळून एकूण (शेत म + शेत प)</div>
-    <div class="summary-final-row"><span>एकूण नोंदी</span><span>${recs.length}</span></div>
-    <div class="summary-final-row"><span>एकूण निव्वळ वजन</span><span>${window.fmtQ(stats.weightQ)} क्विंटल</span></div>
-    <div class="summary-final-row"><span>एकूण मिळालेली रक्कम</span><span>₹${window.fmt(stats.received)}</span></div>
-    <div class="summary-final-row"><span>एकूण थकबाकी</span><span>₹${window.fmt(stats.pending)}</span></div>
-    <div class="summary-final-row grand"><span>एकूण निव्वळ उत्पन्न</span><span>₹${window.fmt(stats.income)}</span></div>
+  html += `<div class="print-page" style="padding:20px; font-family:sans-serif;">
+    <div style="font-size:18px; font-weight:700; color:#1a6b3c; border-bottom:2px solid #1a6b3c; padding-bottom:4px; margin-bottom:10px;">📊 सर्व मिळून एकूण (शेत म + शेत प)</div>
+    <div class="pdf-row"><div class="pdf-col-label">एकूण नोंदी</div><div class="pdf-col-val">${recs.length}</div></div>
+    <div class="pdf-row"><div class="pdf-col-label">एकूण निव्वळ वजन</div><div class="pdf-col-val">${window.fmtQ(stats.weightQ)} क्विंटल</div></div>
+    <div class="pdf-row" style="background:#e8f5ee; font-size:16px;"><div class="pdf-col-label" style="font-weight:700; color:var(--green);">एकूण निव्वळ उत्पन्न</div><div class="pdf-col-val" style="font-weight:700; color:var(--green);">₹${window.fmt(stats.income)}</div></div>
   </div>`;
   
   const printArea = document.getElementById('printArea');
   printArea.innerHTML = html;
 
-  // So "Save as PDF" suggests today's date in the filename (browsers use document.title as the default filename)
+  // Render invisibly in the background so mobile browsers decode the images
+  printArea.style.display = 'block';
+  printArea.style.position = 'absolute';
+  printArea.style.top = '0';
+  printArea.style.left = '0';
+  printArea.style.width = '100%';
+  printArea.style.opacity = '0.01'; 
+  printArea.style.zIndex = '-9999';
+
   const origTitle = document.title;
   const pad=n=>String(n).padStart(2,'0');
   const now=new Date();
   const fileDate=`${pad(now.getDate())}-${pad(now.getMonth()+1)}-${now.getFullYear()}`;
   document.title = `Keli-Hisab-Report-${fileDate}`;
-  const restoreTitle=()=>{ document.title = origTitle; window.removeEventListener('afterprint', restoreTitle); };
-  window.addEventListener('afterprint', restoreTitle);
+  
+  const restoreEnvironment = () => {
+    document.title = origTitle;
+    printArea.style.display = 'none';
+    printArea.innerHTML = '';
+    const toast = document.getElementById('toast');
+    if (toast) toast.classList.remove('show');
+    window.removeEventListener('afterprint', restoreEnvironment);
+  };
+  
+  window.addEventListener('afterprint', restoreEnvironment);
 
-  window.print();
+  // Collect all images in the print area
+  const images = Array.from(printArea.querySelectorAll('img'));
+  
+  if (images.length === 0) {
+    window.print();
+    setTimeout(restoreEnvironment, 1000);
+    return;
+  }
+
+  // Create an array of Promises that wait for every single image to decode fully in memory
+  const imagePromises = images.map(img => {
+    return new Promise(resolve => {
+      if (img.complete) return resolve();
+      img.onload = resolve;
+      img.onerror = resolve; 
+    });
+  });
+
+  // Failsafe timeout so the app NEVER freezes if an image hangs
+  const timeout = new Promise(resolve => setTimeout(resolve, 2500));
+
+  // Wait for all images to decode OR the 2.5 second timeout, then fire the print menu
+  Promise.race([Promise.all(imagePromises), timeout]).then(() => {
+    window.print();
+    setTimeout(restoreEnvironment, 1000);
+  });
 }
 
 window.applyLang();
