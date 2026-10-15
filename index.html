@@ -5,6 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=5.0, user-scalable=yes">
 <title>केळी हिशोब</title>
 <link rel="manifest" href="manifest.json">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 /* ========================================
@@ -243,9 +245,14 @@ body {
 <div id="login-screen" style="display: none; flex-direction: column; align-items: center; justify-content: center; height: 100vh; background: #1a6b3c; color: white; padding: 20px; text-align: center;">
   <div style="font-size: 64px; margin-bottom: 10px;">🍌</div>
   <h1 style="font-size: 28px; font-weight: 700; margin-bottom: 8px;">केळी हिशोब साथी</h1>
-  <p style="font-size: 14px; opacity: 0.85; margin-bottom: 32px; max-width: 280px;">तुमचा शेतीचा हिशोब सुरक्षित आणि कायमस्वरूपी क्लाउडवर ठेवा.</p>
-  <button class="pay-btn" style="background: white; color: #1a6b3c; max-width: 280px; font-size: 16px;" onclick="window.connectGoogleManually()">
+  <p style="font-size: 14px; opacity: 0.85; margin-bottom: 24px; max-width: 280px;">तुमचा शेतीचा हिशोब सुरक्षित आणि कायमस्वरूपी क्लाउडवर ठेवा.</p>
+  <button id="googleLoginBtn" class="pay-btn" style="background: white; color: #1a6b3c; max-width: 280px; font-size: 16px; font-weight: 700;" onclick="window.connectGoogleManually()">
     🔗 Google सह लॉग इन करा
+  </button>
+  <div id="loginErrorMsg" style="display: none; margin-top: 16px; background: rgba(185, 28, 28, 0.95); color: white; padding: 14px; border-radius: 12px; font-size: 13px; max-width: 320px; text-align: left; line-height: 1.5; border: 1px solid rgba(255,255,255,0.3); box-shadow: 0 4px 12px rgba(0,0,0,0.2);"></div>
+  <div style="margin-top: 20px; font-size: 12px; opacity: 0.75;">किंवा स्थानिक चाचणीसाठी</div>
+  <button class="pay-btn" style="background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.4); color: white; max-width: 280px; font-size: 14px; margin-top: 8px;" onclick="window.startDemoMode()">
+    💻 ऑफलाइन / लोकल डेमो मोड (चाचणी)
   </button>
 </div>
 
@@ -437,7 +444,15 @@ body {
   <div class="form-group"><label class="form-label" data-t="partner1">भागीदार १</label><input type="text" class="form-input" id="profile_partner1" placeholder="भागीदार १"></div>
   <div class="form-group"><label class="form-label" data-t="partner2">भागीदार २</label><input type="text" class="form-input" id="profile_partner2" placeholder="भागीदार २"></div>
   <button class="pay-btn" id="saveProfileBtn" style="margin-top:18px">जतन करा</button>
-  <button class="danger-btn" onclick="window.logoutFirebase()" style="margin-top:18px">लॉग आउट (Log Out)</button>
+  
+  <div class="sec-title" style="margin-top:24px">डेटा सुरक्षितता व बॅकअप (Safety & Backup)</div>
+  <button class="pay-btn" id="backupDataBtn" style="background:#2563eb;margin-top:8px">📥 संपूर्ण डेटा बॅकअप घ्या (Download JSON)</button>
+  <label class="pay-btn" style="background:#0891b2;margin-top:10px;display:flex;align-items:center;justify-content:center;cursor:pointer">
+    📤 बॅकअप रिस्टोअर करा (Restore JSON)
+    <input type="file" id="restoreDataInput" accept=".json" style="display:none">
+  </label>
+  
+  <button class="danger-btn" onclick="window.logoutFirebase()" style="margin-top:24px">लॉग आउट (Log Out)</button>
 </div>
 </div>
 
@@ -464,8 +479,8 @@ body {
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-import { getFirestore, doc, setDoc, getDocs, collection, deleteDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+import { getAuth, signInWithPopup, signInWithRedirect, getRedirectResult, GoogleAuthProvider, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import { initializeFirestore, persistentLocalCache, persistentMultipleTabManager, getFirestore, doc, setDoc, getDocs, collection, deleteDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyAbLfEPer8fwicNFa0h5aZ_ABCSRP-hL3o",
@@ -478,13 +493,33 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
-const db = getFirestore(app);
+let db;
+try {
+  db = initializeFirestore(app, {
+    localCache: persistentLocalCache({
+      tabManager: persistentMultipleTabManager()
+    })
+  });
+} catch(e) {
+  console.warn("Persistent cache fallback:", e);
+  db = getFirestore(app);
+}
+
+// Auto-redirect from 127.0.0.1 to localhost for Firebase OAuth compatibility
+if (window.location.hostname === '127.0.0.1') {
+  window.location.hostname = 'localhost';
+}
 
 window.currentUserUid = null;
+window.isDemoMode = false;
 window.appRecords = [];
 window.appTraders = [];
 window.appDistributions = [];
 window.appExpenses = [];
+
+getRedirectResult(auth).catch(err => {
+  console.warn("Redirect result error:", err);
+});
 
 onAuthStateChanged(auth, async (user) => {
   const loadingView = document.getElementById('loading-screen');
@@ -496,6 +531,7 @@ onAuthStateChanged(auth, async (user) => {
   if(loadingView) loadingView.style.display = 'none';
 
   if (user) {
+    window.isDemoMode = false;
     window.currentUserUid = user.uid;
     if(loginView) loginView.style.display = 'none';
     if(mainAppView) mainAppView.style.display = 'block';
@@ -505,7 +541,7 @@ onAuthStateChanged(auth, async (user) => {
     setTimeout(() => { connPill.classList.remove('show'); }, 2500);
     
     await fetchCloudData(); 
-  } else {
+  } else if (!window.isDemoMode) {
     window.currentUserUid = null;
     window.appRecords = [];
     window.appTraders = [];
@@ -519,15 +555,134 @@ onAuthStateChanged(auth, async (user) => {
   }
 });
 
-window.connectGoogleManually = () => {
-  const provider = new GoogleAuthProvider();
-  signInWithPopup(auth, provider).catch(error => {
+window.connectGoogleManually = async () => {
+  const btn = document.getElementById('googleLoginBtn');
+  const errBox = document.getElementById('loginErrorMsg');
+  if (errBox) errBox.style.display = 'none';
+
+  // 1. Check if running on file:// protocol
+  if (window.location.protocol === 'file:') {
+    const msg = `<b>⚠️ फाईल थेट ब्राउझरमध्ये उघडली आहे (file://)</b><br><br>
+    Google Login सुरक्षेसाठी लोकल वेब सर्व्हर आवश्यक आहे.<br><br>
+    <b>कसे सुरू करायचे?</b><br>
+    टर्मिनलमध्ये हा कमांड चालवा:<br>
+    <code style="background:rgba(0,0,0,0.35);padding:3px 6px;border-radius:4px;display:inline-block;margin:4px 0;">python3 -m http.server 8000</code><br>
+    आणि ब्राउझरमध्ये <b>http://localhost:8000</b> उघडा.<br><br>
+    <i>किंवा खालील 'ऑफलाइन / लोकल डेमो मोड' बटण दाबून थेट चाचणी करा.</i>`;
+    if (errBox) {
+      errBox.innerHTML = msg;
+      errBox.style.display = 'block';
+    } else {
+      alert("file:// वर Google Login चालत नाही. कृपया http://localhost:8000 वर उघडा किंवा डेमो मोड वापरा.");
+    }
+    return;
+  }
+
+  // 2. Check if running on 127.0.0.1 instead of localhost
+  if (window.location.hostname === '127.0.0.1') {
+    window.location.hostname = 'localhost';
+    return;
+  }
+
+  if (btn) {
+    btn.disabled = true;
+    btn.innerHTML = '⏳ लॉग इन होत आहे... थांबा';
+  }
+
+  try {
+    const provider = new GoogleAuthProvider();
+    provider.setCustomParameters({ prompt: 'select_account' });
+    await signInWithPopup(auth, provider);
+  } catch (error) {
     console.error("Login failed:", error);
-  });
+    if (btn) {
+      btn.disabled = false;
+      btn.innerHTML = '🔗 Google सह लॉग इन करा';
+    }
+
+    let userMsg = `<b>लॉग इन अयशस्वी:</b> ${error.message}`;
+    if (error.code === 'auth/unauthorized-domain') {
+      userMsg = `<b>⚠️ 'auth/unauthorized-domain' त्रुटी:</b><br><br>
+      हे डोमेन (<b>${window.location.hostname}</b>) Firebase मध्ये अधिकृत नाही.<br><br>
+      १. कृपया <b>http://localhost:${window.location.port || '8000'}</b> उघडा (127.0.0.1 ऐवजी).<br>
+      २. किंवा Firebase Console > Authentication > Settings > Authorized domains मध्ये <b>${window.location.hostname}</b> जोडा.`;
+    } else if (error.code === 'auth/popup-blocked') {
+      userMsg = `<b>⚠️ ब्राउझरने पॉपअप विंडो ब्लॉक केली आहे:</b><br><br>
+      कृपया URL बारमधील पॉपअप ब्लॉकर चिन्हावर क्लिक करून 'Always allow' करा आणि पुन्हा प्रयत्न करा.`;
+    } else if (error.code === 'auth/operation-not-supported-in-this-environment') {
+      userMsg = `<b>⚠️ या वातावरणात Google Login चालत नाही:</b><br><br>
+      कृपया <b>http://localhost</b> वर लोकल सर्व्हरने चालवा किंवा 'डेमो मोड' वापरा.`;
+    } else if (error.code === 'auth/cancelled-popup-request' || error.code === 'auth/popup-closed-by-user') {
+      userMsg = `लॉगइन रद्द केले गेले. कृपया पुन्हा प्रयत्न करा.`;
+    }
+
+    if (errBox) {
+      errBox.innerHTML = userMsg;
+      errBox.style.display = 'block';
+    } else {
+      alert(userMsg.replace(/<br>/g, '\n').replace(/<\/?[^>]+(>|$)/g, ''));
+    }
+  }
+};
+
+window.startDemoMode = () => {
+  window.currentUserUid = 'demo_user';
+  window.isDemoMode = true;
+  document.getElementById('login-screen').style.display = 'none';
+  document.getElementById('app').style.display = 'block';
+  
+  const connPill = document.getElementById('connectionPill');
+  const connPillText = document.getElementById('connectionPillText');
+  if (connPill && connPillText) {
+    connPill.className = 'connection-pill show offline';
+    connPillText.textContent = 'लोकल डेमो मोड 💻';
+  }
+  
+  try {
+    const saved = localStorage.getItem('keli_demo_data');
+    if (saved) {
+      const parsed = JSON.parse(saved);
+      window.appRecords = parsed.records || [];
+      window.appTraders = parsed.traders || [];
+      window.appDistributions = parsed.distributions || [];
+      window.appExpenses = parsed.expenses || [];
+    } else {
+      window.appTraders = [
+        { id: 'trader_demo_1', name: 'सुरेश शेठ (व्यापारी)', phone: '9822000000', village: 'रावेर', note: 'नियमित केळी व्यापारी' },
+        { id: 'trader_demo_2', name: 'राजेश पाटील', phone: '9822111111', village: 'फैजपूर', note: '' }
+      ];
+      window.appRecords = [];
+      window.appDistributions = [];
+      window.appExpenses = [];
+    }
+  } catch(e) {}
+  
+  window.renderAll();
+  window.showToast('लोकल चाचणी मोड सुरू झाला! ✓');
+};
+
+window.saveDemoToLocalStorage = () => {
+  if (!window.isDemoMode) return;
+  try {
+    localStorage.setItem('keli_demo_data', JSON.stringify({
+      records: window.appRecords || [],
+      traders: window.appTraders || [],
+      distributions: window.appDistributions || [],
+      expenses: window.appExpenses || []
+    }));
+  } catch(e) {}
 };
 
 window.logoutFirebase = () => {
   if(confirm("नक्की लॉग आउट करायचे आहे?")) {
+    if (window.isDemoMode) {
+      window.isDemoMode = false;
+      window.currentUserUid = null;
+      document.getElementById('login-screen').style.display = 'flex';
+      document.getElementById('app').style.display = 'none';
+      document.getElementById('profileOverlay').classList.remove('open');
+      return;
+    }
     signOut(auth).then(() => {
       document.getElementById('profileOverlay').classList.remove('open');
     });
@@ -537,35 +692,126 @@ window.logoutFirebase = () => {
 async function fetchCloudData() {
   if (!window.currentUserUid) return;
   try {
-    const recordsSnap = await getDocs(collection(db, "users", window.currentUserUid, "records"));
-    const tradersSnap = await getDocs(collection(db, "users", window.currentUserUid, "traders"));
+    const [recordsSnap, tradersSnap, distSnap, expSnap] = await Promise.all([
+      getDocs(collection(db, "users", window.currentUserUid, "records")),
+      getDocs(collection(db, "users", window.currentUserUid, "traders")),
+      getDocs(collection(db, "users", window.currentUserUid, "distributions")).catch(() => ({ forEach: () => {} })),
+      getDocs(collection(db, "users", window.currentUserUid, "expenses")).catch(() => ({ forEach: () => {} }))
+    ]);
 
-    window.appRecords = [];
-    window.appTraders = [];
+    const newRecs = [];
+    const newTraders = [];
+    const newDists = [];
+    const newExps = [];
 
-    recordsSnap.forEach(doc => window.appRecords.push(doc.data()));
-    tradersSnap.forEach(doc => window.appTraders.push(doc.data()));
+    recordsSnap.forEach(doc => newRecs.push(doc.data()));
+    tradersSnap.forEach(doc => newTraders.push(doc.data()));
+    distSnap.forEach(doc => newDists.push(doc.data()));
+    expSnap.forEach(doc => newExps.push(doc.data()));
+
+    window.appRecords = newRecs;
+    window.appTraders = newTraders;
+    window.appDistributions = newDists;
+    window.appExpenses = newExps;
   } catch (error) {
-    console.error("Records/Traders fetch error:", error);
-  }
-
-  try {
-    const distSnap = await getDocs(collection(db, "users", window.currentUserUid, "distributions"));
-    window.appDistributions = [];
-    distSnap.forEach(doc => window.appDistributions.push(doc.data()));
-  } catch (error) {
-    console.warn("Distributions query omitted.");
-  }
-
-  try {
-    const expSnap = await getDocs(collection(db, "users", window.currentUserUid, "expenses"));
-    window.appExpenses = [];
-    expSnap.forEach(doc => window.appExpenses.push(doc.data()));
-  } catch (error) {
-    console.warn("Expenses query omitted.");
+    console.error("Records fetch error:", error);
   }
   renderAll();
 }
+
+window.backupAllData = function() {
+  try {
+    const backupObj = {
+      app: "keli-hisaab",
+      version: 1,
+      exportedAt: new Date().toISOString(),
+      profile: getProfile(),
+      records: window.getRecords(),
+      traders: window.getTraders(),
+      distributions: window.getDistributions(),
+      expenses: window.getExpenses()
+    };
+    const jsonStr = JSON.stringify(backupObj, null, 2);
+    const blob = new Blob([jsonStr], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+    const now = new Date();
+    const pad = n => String(n).padStart(2, '0');
+    const dateStr = `${pad(now.getDate())}-${pad(now.getMonth() + 1)}-${now.getFullYear()}`;
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `keli-hisaab-backup-${dateStr}.json`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    window.showToast("डेटा बॅकअप डाउनलोड झाला ✓");
+  } catch(e) {
+    alert("बॅकअप घेताना त्रुटी: " + e.message);
+  }
+};
+
+window.restoreDataFromJSON = async function(e) {
+  const file = e.target.files && e.target.files[0];
+  if (!file) return;
+  if (!confirm("हा बॅकअप रिस्टोअर करायचा आहे का? चालू खात्यात हा डेटा सुरक्षित जतन केला जाईल.")) {
+    e.target.value = '';
+    return;
+  }
+  
+  const reader = new FileReader();
+  reader.onload = async (ev) => {
+    try {
+      const data = JSON.parse(ev.target.result);
+      if (!data || (!data.records && !data.traders)) {
+        throw new Error("अवैध बॅकअप फाईल (Invalid backup file)");
+      }
+      window.showToast("बॅकअप रिस्टोअर होत आहे...");
+      if (!window.currentUserUid) {
+        alert("कृपया आधी Google ने लॉग इन करा!");
+        return;
+      }
+      
+      if (data.profile) saveProfile(data.profile);
+      
+      if (Array.isArray(data.records)) {
+        for (const r of data.records) {
+          if (r && r.id) {
+            await setDoc(doc(db, "users", window.currentUserUid, "records", r.id), r);
+          }
+        }
+      }
+      if (Array.isArray(data.traders)) {
+        for (const t of data.traders) {
+          if (t && t.id) {
+            await setDoc(doc(db, "users", window.currentUserUid, "traders", t.id), t);
+          }
+        }
+      }
+      if (Array.isArray(data.distributions)) {
+        for (const d of data.distributions) {
+          if (d && d.id) {
+            await setDoc(doc(db, "users", window.currentUserUid, "distributions", d.id), d);
+          }
+        }
+      }
+      if (Array.isArray(data.expenses)) {
+        for (const exp of data.expenses) {
+          if (exp && exp.id) {
+            await setDoc(doc(db, "users", window.currentUserUid, "expenses", exp.id), exp);
+          }
+        }
+      }
+      
+      await fetchCloudData();
+      alert("बॅकअप यशस्वीरित्या रिस्टोअर झाला ✓");
+    } catch(err) {
+      alert("रिस्टोअर करताना त्रुटी: " + err.message);
+    } finally {
+      e.target.value = '';
+    }
+  };
+  reader.readAsText(file);
+};
 
 window.getRecords = function() { return window.appRecords || []; }
 window.getTraders = function() { return window.appTraders || []; }
@@ -986,10 +1232,12 @@ document.getElementById('actionMenuDelete').addEventListener('click', async ()=>
   
   if(!window.currentUserUid) return;
   try {
+    window.appRecords = (window.appRecords || []).filter(r => r.id !== id);
+    window.showToast(window.t('deleted'));
+    window.renderAll();
+    if(window.isDemoMode){ window.saveDemoToLocalStorage(); return; }
     const recordRef = doc(db, "users", window.currentUserUid, "records", id);
     await deleteDoc(recordRef);
-    window.showToast(window.t('deleted'));
-    await fetchCloudData(); 
   } catch (error) {
     console.error("Error deleting:", error);
   }
@@ -1162,14 +1410,18 @@ window.performUpdate = async function(){
 
   if(!window.currentUserUid) return;
   try {
-    const recordRef = doc(db, "users", window.currentUserUid, "records", rec.id);
-    await setDoc(recordRef, rec);
-    
+    const idx = (window.appRecords || []).findIndex(x => x.id === rec.id);
+    if (idx >= 0) {
+      window.appRecords[idx] = rec;
+    }
     window.hideOverlay('editConfirmOverlay');
     window.hideOverlay('formOverlay');
     window.editingRecord=null;
     window.showToast('नोंद अपडेट झाली ✓');
-    await fetchCloudData(); 
+    window.renderAll();
+    if(window.isDemoMode){ window.saveDemoToLocalStorage(); return; }
+    const recordRef = doc(db, "users", window.currentUserUid, "records", rec.id);
+    await setDoc(recordRef, rec);
   } catch(error) {
     console.error("Update Error:", error);
   }
@@ -1356,11 +1608,13 @@ document.getElementById('saveExpenseBtn').addEventListener('click', async ()=>{
     createdAt:Date.now()
   };
   try {
-    const expRef = doc(db, "users", window.currentUserUid, "expenses", exp.id);
-    await setDoc(expRef, exp);
+    window.appExpenses.unshift(exp);
     window.hideOverlay('expenseFormOverlay');
     window.showToast(window.t('expenseSaved'));
-    await fetchCloudData();
+    window.renderAll();
+    if(window.isDemoMode){ window.saveDemoToLocalStorage(); return; }
+    const expRef = doc(db, "users", window.currentUserUid, "expenses", exp.id);
+    await setDoc(expRef, exp);
   } catch(error) {
     console.error("Expense Save Error:", error);
   }
@@ -1370,10 +1624,12 @@ window.deleteExpense = async function(id){
   if(!confirm(window.t('confirmDeleteExpense')))return;
   if(!window.currentUserUid) return;
   try {
+    window.appExpenses = (window.appExpenses || []).filter(x => x.id !== id);
+    window.showToast(window.t('expenseDeleted'));
+    window.renderAll();
+    if(window.isDemoMode){ window.saveDemoToLocalStorage(); return; }
     const expRef = doc(db, "users", window.currentUserUid, "expenses", id);
     await deleteDoc(expRef);
-    window.showToast(window.t('expenseDeleted'));
-    await fetchCloudData();
   } catch(error) {
     console.error("Expense Delete Error:", error);
   }
@@ -1520,12 +1776,14 @@ document.getElementById('saveDistBtn').addEventListener('click', async ()=>{
     createdAt:Date.now()
   };
   try {
-    const distRef = doc(db, "users", window.currentUserUid, "distributions", dist.id);
-    await setDoc(distRef, dist);
+    window.appDistributions.unshift(dist);
     window.hideOverlay('distFormOverlay');
     window.showToast(window.t('distSaved'));
-    await fetchCloudData();
+    window.renderAll();
     if(recordId && origin==='detail') window.openDetail(recordId);
+    if(window.isDemoMode){ window.saveDemoToLocalStorage(); return; }
+    const distRef = doc(db, "users", window.currentUserUid, "distributions", dist.id);
+    await setDoc(distRef, dist);
   } catch(error) {
     console.error("Distribution Save Error:", error);
   }
@@ -1535,15 +1793,38 @@ window.deleteDistribution = async function(id, recordId, origin){
   if(!confirm(window.t('confirmDeleteDist')))return;
   if(!window.currentUserUid) return;
   try {
+    window.appDistributions = (window.appDistributions || []).filter(x => x.id !== id);
+    window.showToast(window.t('distDeleted'));
+    window.renderAll();
+    if(recordId && origin==='detail') window.openDetail(recordId);
+    if(window.isDemoMode){ window.saveDemoToLocalStorage(); return; }
     const distRef = doc(db, "users", window.currentUserUid, "distributions", id);
     await deleteDoc(distRef);
-    window.showToast(window.t('distDeleted'));
-    await fetchCloudData();
-    if(recordId && origin==='detail') window.openDetail(recordId);
   } catch(error) {
     console.error("Distribution Delete Error:", error);
   }
 }
+
+window.renderCurrentTab = function(){
+  if (window.curTab === 'dash') window.renderDash();
+  else if (window.curTab === 'farmM') window.renderFarmScreen('M');
+  else if (window.curTab === 'farmP') window.renderFarmScreen('P');
+  else if (window.curTab === 'records') window.renderAllRecords();
+  else if (window.curTab === 'traders') window.renderTraders();
+  else if (window.curTab === 'partners') window.renderPartners();
+  else if (window.curTab === 'expenses') window.renderExpenses();
+
+  const hasRecs=window.getRecords().length>0;
+  document.getElementById('pdfBtn').style.display=(window.curTab==='dash'&&hasRecs)?'block':'none';
+
+  ['dash-recent','farmM-records','farmP-records','all-records','dash-combined'].forEach(id=>{
+    const el=document.getElementById(id);
+    if(el && !el.dataset.longPressAttached){
+      window.attachLongPress(el);
+      el.dataset.longPressAttached='1';
+    }
+  });
+};
 
 document.querySelectorAll('.drawer-item').forEach(btn=>{
   btn.addEventListener('click',()=>{
@@ -1556,7 +1837,7 @@ document.querySelectorAll('.drawer-item').forEach(btn=>{
     document.getElementById('fabBtn').style.display=showFab?'flex':'none';
     const hasRecs=window.getRecords().length>0;
     document.getElementById('pdfBtn').style.display=(window.curTab==='dash'&&hasRecs)?'block':'none';
-    window.renderAll();
+    window.renderCurrentTab();
     window.closeDrawer();
   });
 });
@@ -2036,11 +2317,13 @@ window.saveRecord = async function(){
 
   if(!window.currentUserUid) return;
   try {
-    const recordRef = doc(db, "users", window.currentUserUid, "records", rec.id);
-    await setDoc(recordRef, rec);
+    window.appRecords.unshift(rec);
     window.hideOverlay('formOverlay');
     window.showToast(window.t('saved'));
-    await fetchCloudData();
+    window.renderAll();
+    if(window.isDemoMode){ window.saveDemoToLocalStorage(); return; }
+    const recordRef = doc(db, "users", window.currentUserUid, "records", rec.id);
+    await setDoc(recordRef, rec);
   } catch (error) {
     console.error("Save Error:", error);
   }
@@ -2206,20 +2489,54 @@ window.openDetail = function(id){
     </div>`;}).join('');
   }
   html+=`<button class="pay-btn" style="margin-top:8px" onclick="window.openDistFormForRecord('${r.id}','detail')">+ ${window.t('addDistribution')}</button>`;
+  html+=`<button class="pay-btn" style="margin-top:8px;background:#16a34a" onclick="window.shareRecordWhatsApp('${r.id}')">📲 WhatsApp वर पावती पाठवा</button>`;
   html+=`<button class="danger-btn" onclick="window.deleteRecordFromDetail('${r.id}')">${window.t('delete')}</button>`;
   document.getElementById('detailBody').innerHTML=html;
 }
 document.getElementById('detailBack').addEventListener('click',()=>{ window.hideOverlay('detailOverlay');});
 
+window.shareRecordWhatsApp = function(id) {
+  const r = window.getRecords().find(x => x.id === id);
+  if (!r) return;
+  const farmType = r.farmType === 'M' ? 'शेत म (मोरगाव)' : r.farmType === 'P' ? 'शेत प (पाटोंदी)' : 'शेत म+प (एकत्रित)';
+  const htLabel = r.harvestType === 'ghad' ? 'केळीचे घड' : r.harvestType === 'box' ? 'बॉक्स पॅकिंग' : 'फणाया';
+  
+  let msg = `🍌 *केळी तोड पावती (केळी हिशोब साथी)* 🍌\n`;
+  msg += `━━━━━━━━━━━━━━━━━━━━━\n`;
+  msg += `📅 *तारीख:* ${window.fmtDate(r.date)}\n`;
+  msg += `🤝 *व्यापारी:* ${r.traderName || '—'}\n`;
+  msg += `🌿 *शेत:* ${farmType}\n`;
+  msg += `📦 *काढणी:* ${htLabel}\n`;
+  if (r.vehicle) msg += `🚛 *वाहन:* ${r.vehicle}\n`;
+  msg += `⚖️ *निव्वळ वजन:* ${window.fmtQ(r.combinedNetWeightQ || 0)} क्विंटल\n`;
+  msg += `💰 *दर:* ₹${window.fmt(r.rate)} / क्विंटल\n`;
+  msg += `💵 *एकूण देयक (Gross):* ₹${window.fmt(r.combinedGrossIncome || 0)}\n`;
+  msg += `👷 *वजा मजुरी:* ₹${window.fmt(r.combinedLabour || 0)}\n`;
+  if (r.combinedKattar) msg += `✂️ *कटार:* ₹${window.fmt(r.combinedKattar)}\n`;
+  msg += `━━━━━━━━━━━━━━━━━━━━━\n`;
+  msg += `🟢 *अंतिम निव्वळ देयक:* ₹${window.fmt(r.combinedNetIncome || 0)}\n`;
+  msg += `📥 *मिळालेली रक्कम:* ₹${window.fmt(r.received || 0)}\n`;
+  if ((r.pending || 0) > 0) {
+    msg += `🔴 *थकबाकी (शिल्लक):* ₹${window.fmt(r.pending)}\n`;
+  }
+  msg += `━━━━━━━━━━━━━━━━━━━━━\n`;
+  if (r.note) msg += `📝 *टीप:* ${r.note}\n`;
+  
+  const waUrl = `https://wa.me/?text=${encodeURIComponent(msg)}`;
+  window.open(waUrl, '_blank');
+};
+
 window.deleteRecordFromDetail = async function(id){
   if(!confirm(window.t('confirmDelete')))return;
   if(!window.currentUserUid) return;
   try {
-    const recordRef = doc(db, "users", window.currentUserUid, "records", id);
-    await deleteDoc(recordRef);
+    window.appRecords = (window.appRecords || []).filter(r => r.id !== id);
     window.hideOverlay('detailOverlay');
     window.showToast(window.t('deleted'));
-    await fetchCloudData(); 
+    window.renderAll();
+    if(window.isDemoMode){ window.saveDemoToLocalStorage(); return; }
+    const recordRef = doc(db, "users", window.currentUserUid, "records", id);
+    await deleteDoc(recordRef);
   } catch(error) {
     console.error("Delete Error:", error);
   }
@@ -2241,11 +2558,18 @@ document.getElementById('saveTraderBtn').addEventListener('click', async ()=>{
   const tr={id:trId, name, phone:document.getElementById('tf_phone').value, village:document.getElementById('tf_village').value, note:document.getElementById('tf_note').value};
   
   try {
-    const traderRef = doc(db, "users", window.currentUserUid, "traders", trId);
-    await setDoc(traderRef, tr);
+    const existingIdx = (window.appTraders || []).findIndex(x => x.id === trId);
+    if (existingIdx >= 0) {
+      window.appTraders[existingIdx] = tr;
+    } else {
+      window.appTraders.push(tr);
+    }
     window.hideOverlay('traderFormOverlay');
     window.showToast(window.t('traderSaved'));
-    await fetchCloudData();
+    window.renderAll();
+    if(window.isDemoMode){ window.saveDemoToLocalStorage(); return; }
+    const traderRef = doc(db, "users", window.currentUserUid, "traders", trId);
+    await setDoc(traderRef, tr);
   } catch(error) {
     console.error("Trader Error:", error);
   }
@@ -2272,14 +2596,21 @@ window.openLedger = function(traderId){
 }
 
 window.deleteTrader = async function(id){
+  const hasLinkedRecs = (window.appRecords || []).some(r => r.traderId === id);
+  if (hasLinkedRecs) {
+    alert("या व्यापाऱ्याच्या नोंदी (records) जमा आहेत. हिशोबात तफावत होऊ नये म्हणून आधी त्या नोंदी तपासा.");
+    return;
+  }
   if(!confirm('व्यापारी हटवायचा आहे का?'))return;
   if(!window.currentUserUid) return;
   try {
-    const traderRef = doc(db, "users", window.currentUserUid, "traders", id);
-    await deleteDoc(traderRef);
+    window.appTraders = (window.appTraders || []).filter(t => t.id !== id);
     window.hideOverlay('ledgerOverlay');
     window.showToast(window.t('traderDeleted'));
-    await fetchCloudData();
+    window.renderAll();
+    if(window.isDemoMode){ window.saveDemoToLocalStorage(); return; }
+    const traderRef = doc(db, "users", window.currentUserUid, "traders", id);
+    await deleteDoc(traderRef);
   } catch(error) {
     console.error("Trader Delete Error:", error);
   }
@@ -2314,6 +2645,9 @@ document.getElementById('saveProfileBtn').addEventListener('click',()=>{
   window.hideOverlay('profileOverlay');
   window.renderAll();
 });
+
+document.getElementById('backupDataBtn')?.addEventListener('click', () => window.backupAllData());
+document.getElementById('restoreDataInput')?.addEventListener('change', (e) => window.restoreDataFromJSON(e));
 
 window.closeSheet = function(){document.getElementById('sheetOverlay').classList.remove('open')}
 window.openLightbox = function(src){document.getElementById('lightboxImg').src=src;document.getElementById('lightbox').classList.add('open')}
